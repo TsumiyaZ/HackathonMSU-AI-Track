@@ -1,47 +1,56 @@
 import prisma from "@/lib/prisma";
-import { getSessionUserId } from "@/lib/session";
-import { BookingsClient, BookingUIItem } from "./_components/BookingsClient";
+import BookingsClient from "./BookingsClient";
+
+export const dynamic = 'force-dynamic';
 
 export default async function BookingsPage() {
-  const userId = await getSessionUserId();
-  let hotelBookings: any[] = [];
-  try {
-    hotelBookings = await prisma.hotelBooking.findMany({
-      where: { user_id: userId! },
-      include: { hotel: true },
-      orderBy: { check_in: "desc" }
-    });
-  } catch (err) {
-    console.warn("⚠️ Database connection failed. Falling back to mock data.");
-    hotelBookings = [
-      {
-        booking_id: "TRP-2026-0815",
-        status: "CONFIRMED",
-        total_price: 28300,
-        check_in: new Date("2026-08-15"),
-        check_out: new Date("2026-08-18"),
-        hotel: { name: "Sri Panwa Phuket Luxury Pool Villa", location: "ภูเก็ต, ประเทศไทย" }
-      },
-      {
-        booking_id: "TRP-2026-0910",
-        status: "PENDING",
-        total_price: 45000,
-        check_in: new Date("2026-09-10"),
-        check_out: new Date("2026-09-15"),
-        hotel: { name: "Tokyo Inn", location: "โตเกียว, ญี่ปุ่น" }
-      }
-    ];
-  }
+  const userId = 'u-001'; // Mock user
 
-  const bookings: BookingUIItem[] = hotelBookings.map(b => ({
-    id: b.booking_id,
-    title: `ทริป ${b.hotel.name}`,
-    destination: b.hotel.location,
-    date: `${new Date(b.check_in).toLocaleDateString('th-TH')} - ${new Date(b.check_out).toLocaleDateString('th-TH')}`,
-    status: b.status,
-    price: b.total_price,
-    image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=600"
+  const flightTickets = await prisma.flightTicket.findMany({
+    where: { user_id: userId },
+    include: { flight: true }
+  });
+
+  const hotelBookings = await prisma.hotelBooking.findMany({
+    where: { user_id: userId },
+    include: { hotel: true }
+  });
+
+  // Normalize data for the table
+  const bookings = [
+    ...flightTickets.map(t => ({
+      id: t.ticket_id,
+      type: 'เที่ยวบิน',
+      title: `${t.flight.airline} (${t.flight.origin} ✈️ ${t.flight.destination})`,
+      date: t.flight.departure_time,
+      price: t.flight.price,
+      status: t.status
+    })),
+    ...hotelBookings.map(b => ({
+      id: b.booking_id,
+      type: 'โรงแรม',
+      title: b.hotel.name,
+      date: b.check_in,
+      price: b.total_price,
+      status: b.status
+    }))
+  ];
+
+  // Sort by date descending
+  bookings.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+  // Serialize dates to string
+  const serializedBookings = bookings.map(b => ({
+    ...b,
+    date: b.date.toISOString()
   }));
 
-  return <BookingsClient initialBookings={bookings} />;
+  return (
+    <div className="max-w-6xl mx-auto w-full">
+      <h1 className="font-display text-3xl font-black mb-2">ประวัติการจอง</h1>
+      <p className="text-on-surface-variant mb-8">จัดการรายการจองตั๋วเครื่องบินและโรงแรมของคุณ</p>
+      
+      <BookingsClient initialData={serializedBookings} />
+    </div>
+  );
 }

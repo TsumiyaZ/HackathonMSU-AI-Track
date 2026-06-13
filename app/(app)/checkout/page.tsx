@@ -32,14 +32,25 @@ export default function CheckoutPage() {
     if (!authed) return;
 
     setLoading(true);
-    // Simulate payment processing
-    await new Promise((r) => setTimeout(r, 2000));
-    setStep("success");
-    setLoading(false);
-    // Trigger notification simulation
-    setTimeout(() => {
-      alert("🔔 แจ้งเตือน: จองทริปสำเร็จ! ตั๋วเครื่องบินและที่พักของคุณถูกยืนยันแล้ว");
-    }, 500);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ trip: currentTrip })
+      });
+
+      if (!res.ok) throw new Error("Payment failed");
+
+      setStep("success");
+      
+      setTimeout(() => {
+        alert("🔔 แจ้งเตือน: จองทริปสำเร็จ! ตั๋วเครื่องบินและที่พักของคุณถูกบันทึกลงระบบแล้ว");
+      }, 500);
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการชำระเงิน กรุณาลองใหม่");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (step === "success") {

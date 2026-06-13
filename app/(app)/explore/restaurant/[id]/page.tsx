@@ -5,6 +5,7 @@ import { loadReviews } from "@/lib/hotels";
 import { StarRating } from "@/components/ui/StarRating";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Chip } from "@/components/ui/Chip";
+import { DirectBookButton } from "@/components/DirectBookButton";
 
 export default async function RestaurantDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -60,10 +61,18 @@ export default async function RestaurantDetailPage({ params }: { params: Promise
           </div>
 
           <div className="mt-8 flex gap-3">
-            <button className="flex-1 py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
-              <span className="material-symbols-outlined text-[20px]">motorcycle</span>
-              สั่งอาหาร
-            </button>
+            <DirectBookButton
+              item={{
+                type: 'food',
+                title: restaurant.name,
+                description: `สั่งอาหารประเภท ${restaurant.cuisine}`,
+                price: 500, // Estimated price
+                data: { res_id: restaurant.res_id }
+              }}
+              label="สั่งอาหาร"
+              icon="motorcycle"
+              className="flex-1 py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform"
+            />
             <button className="flex-1 py-4 rounded-xl glass-panel font-label text-sm hover:text-primary transition-colors border border-white/10">
               <span className="material-symbols-outlined text-[20px]">bookmark</span>
               เก็บไว้ในทริป

@@ -191,29 +191,25 @@ export default function TripResultPage({ params }: { params: { id: string } }) {
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
             <MapPin className="w-5 h-5 text-primary" /> เส้นทางทริป (Route Map)
           </h2>
-          <div className="relative w-full h-64 rounded-xl overflow-hidden bg-gradient-to-br from-surface-container to-surface-container-high border border-white/10">
-            {/* Simplified route visualization */}
-            <div className="absolute inset-0 p-6">
-              <div className="flex flex-col h-full justify-between">
+          <div className="relative w-full h-72 rounded-xl bg-gradient-to-br from-surface-container to-surface-container-high border border-white/10 overflow-hidden">
+            <div className="absolute inset-0 overflow-y-auto p-6">
+              <div className="relative min-h-full flex flex-col gap-4">
+                <div className="absolute left-[11px] top-4 bottom-4 w-0 border-l-2 border-dashed border-primary/30 z-0"></div>
                 {trip.items.map((item, i) => (
-                  <div key={item.id} className="flex items-center gap-3 text-sm">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                  <div key={item.id} className="flex items-center gap-3 text-sm relative z-10 bg-background/20 p-2 rounded-lg backdrop-blur-sm border border-white/5">
+                    <div className={`w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] font-bold ${
                       item.type === 'flight' ? 'bg-primary/20 text-primary' :
                       item.type === 'hotel' ? 'bg-secondary/20 text-secondary' :
                       item.type === 'food' ? 'bg-amber-400/20 text-amber-400' :
                       'bg-emerald-400/20 text-emerald-400'
                     }`}>{i + 1}</div>
-                    <span className="font-medium">{item.title}</span>
-                    <span className="text-on-surface-variant text-[10px] ml-auto">{item.type === 'flight' ? '🛫' : item.type === 'hotel' ? '🏨' : item.type === 'food' ? '🍽️' : '📍'} {item.time}</span>
+                    <span className="font-medium truncate">{item.title}</span>
+                    <span className="text-on-surface-variant text-[10px] ml-auto whitespace-nowrap">{item.type === 'flight' ? '🛫' : item.type === 'hotel' ? '🏨' : item.type === 'food' ? '🍽️' : '📍'} {item.time}</span>
                   </div>
                 ))}
               </div>
-              {/* Connecting line */}
-              <svg className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ opacity: 0.1 }}>
-                <line x1="12" y1="10%" x2="12" y2="90%" stroke="var(--primary)" strokeWidth="2" strokeDasharray="4" />
-              </svg>
             </div>
-            <div className="absolute bottom-3 right-3 glass-panel px-3 py-1.5 rounded-full text-[10px] text-on-surface-variant">
+            <div className="absolute bottom-3 right-3 glass-panel px-3 py-1.5 rounded-full text-[10px] text-on-surface-variant pointer-events-none shadow-lg">
               🗺️ แผนที่เส้นทางใน {trip.destination}
             </div>
           </div>

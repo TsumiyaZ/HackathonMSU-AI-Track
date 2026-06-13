@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getFlightById, loadTickets } from "@/lib/flights";
+import { DirectBookButton } from "@/components/DirectBookButton";
 
 export default async function FlightDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -50,10 +51,18 @@ export default async function FlightDetailPage({ params }: { params: Promise<{ i
           </div>
 
           <div className="mt-8">
-            <button className="w-full py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
-              <span className="material-symbols-outlined text-[20px]">bolt</span>
-              จองเที่ยวบินนี้
-            </button>
+            <DirectBookButton
+              item={{
+                type: 'flight',
+                title: `${flight.airline} (${flight.origin} - ${flight.destination})`,
+                description: `เที่ยวบินวันที่ ${new Date(flight.departure_time).toLocaleDateString('th-TH')}`,
+                price: flight.price,
+                data: { flight_id: flight.flight_id }
+              }}
+              label="จองเที่ยวบินนี้"
+              icon="bolt"
+              className="w-full py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform"
+            />
           </div>
         </div>
       </div>

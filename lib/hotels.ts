@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import type {
   Hotel,
   HotelBooking,
@@ -224,6 +225,50 @@ export async function getHotelSentiment(hotelId: string): Promise<HotelSentiment
   const score = (avg - 3) / 2;
   const positives = reviews.filter((r) => r.rating >= 4).map((r) => r.comment);
   const negatives = reviews.filter((r) => r.rating <= 3).map((r) => r.comment);
+
+  // Use DeepSeek API if available
+  const apiKey = process.env.OPENCODE_API_KEY || process.env.GEMINI_API_KEY;
+  if (apiKey) {
+    try {
+      const prompt = `Analyze these hotel reviews and provide a brief Thai sentiment summary.
+Reviews: ${JSON.stringify(reviews.map(r => ({ rating: r.rating, comment: r.comment })))}
+
+Return ONLY a JSON object:
+{
+  "summary": "Thai summary (1-2 sentences)",
+  "highlights": ["top positive points (max 3)"],
+  "warnings": ["top negative points (max 3)"],
+  "score": (number from -1 to 1 based on sentiment)
+}`;
+
+      const response = await fetch('https://opencode.ai/zen/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'deepseek-v4-flash-free',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.3
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const text = data.choices[0]?.message?.content || "";
+        const cleanJson = text.replace(/```json?\n?/gi, '').replace(/```\n?/g, '').trim();
+        const parsed = JSON.parse(cleanJson);
+
+        return {
+          ...parsed,
+          sample_size: reviews.length,
+        };
+      }
+    } catch (e) {
+      console.error("Gemini sentiment error:", e);
+    }
+  }
 
   return {
     summary:

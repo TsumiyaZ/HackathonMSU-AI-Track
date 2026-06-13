@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Chip } from "@/components/ui/Chip";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { StarRating } from "@/components/ui/StarRating";
-import { AuthButton } from "@/components/AuthButton";
+import { DirectBookButton } from "@/components/DirectBookButton";
 
 import {
   getBookingsForHotel,
@@ -240,10 +240,16 @@ export default async function HotelDetailPage({
                 </label>
               </div>
 
-              <AuthButton
+              <DirectBookButton
+                item={{
+                  type: 'hotel',
+                  title: hotel.name,
+                  description: `เข้าพัก ${hotel.city}, ${hotel.country}`,
+                  price: hotel.price_per_night_thb,
+                  data: { hotel_id: hotel.id }
+                }}
                 label="จองทันที"
                 icon="bolt"
-                redirectTo={`/explore/hotel/${id}`}
                 className="mt-5 w-full py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2"
               />
               <button className="mt-2 w-full py-3 rounded-xl glass-panel text-on-surface font-label text-sm hover:text-primary transition-colors">

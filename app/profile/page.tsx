@@ -156,11 +156,11 @@ export default function ProfilePage() {
 
             <div className="flex gap-3 pt-4">
               <button
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/dashboard")}
                 className="px-6 py-4 rounded-xl glass-panel font-label text-sm font-bold flex items-center gap-2 hover:text-primary transition-all border border-white/10"
               >
                 <ArrowLeft className="w-5 h-5" />
-                กลับหน้าหลัก
+                กลับไป Dashboard
               </button>
               <button
                 onClick={handleSave}

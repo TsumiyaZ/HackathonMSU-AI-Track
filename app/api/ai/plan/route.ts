@@ -6,13 +6,10 @@ export async function POST(req: Request) {
   try {
     const { prompt, preferences } = await req.json();
 
-    if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json({ success: false, error: 'GEMINI_API_KEY is not set' }, { status: 500 });
+    const apiKey = process.env.OPENCODE_API_KEY || process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json({ success: false, error: 'API Key is not set' }, { status: 500 });
     }
-
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    // Use gemini-2.5-flash since 1.5 is deprecated
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
     // 1. Data Minimization (Query DB)
     // To prevent Context Window bloat, we take a limited set or filter by keywords if needed.
@@ -58,8 +55,26 @@ export async function POST(req: Request) {
       CRITICAL RULE: NEVER output 0 for price. If a price is missing, use your world knowledge to estimate a realistic price in THB.
     `;
 
-    const result = await model.generateContent(systemInstruction);
-    const text = result.response.text();
+    // 3. Generate content with DeepSeek via OpenCode API
+    const response = await fetch('https://opencode.ai/zen/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-v4-flash-free',
+        messages: [{ role: 'user', content: systemInstruction }],
+        temperature: 0.5
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    let text = data.choices[0]?.message?.content || "";
     
     // 3. Structured Output Parsing
     // Clean up markdown json tags if Gemini includes them
