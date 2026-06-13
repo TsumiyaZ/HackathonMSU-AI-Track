@@ -116,7 +116,7 @@ export default async function BookingDetailPage({ params }: { params: { id: stri
               <div className="mt-2">
                 <p className="text-xs text-on-surface-variant mb-1">สิ่งอำนวยความสะดวก</p>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {booking.hotel.amenities.slice(0, 3).map((amenity, idx) => (
+                  {booking.hotel.amenities.slice(0, 3).map((amenity: string, idx: number) => (
                     <span key={idx} className="text-xs bg-white/10 px-2 py-0.5 rounded">{amenity}</span>
                   ))}
                   {booking.hotel.amenities.length > 3 && <span className="text-xs text-on-surface-variant">+{booking.hotel.amenities.length - 3}</span>}

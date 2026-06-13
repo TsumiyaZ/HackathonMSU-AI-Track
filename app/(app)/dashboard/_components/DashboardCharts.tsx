@@ -42,14 +42,14 @@ export function DashboardCharts({ expenseData, monthlySpend }: DashboardChartsPr
                 fill="#8884d8"
                 paddingAngle={5}
                 dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }: any) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
               >
                 {expenseData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip 
-                formatter={(value: number) => `฿${value.toLocaleString()}`}
+                formatter={(value: any) => `฿${Number(value).toLocaleString()}`}
                 contentStyle={{ backgroundColor: 'rgba(20,20,30,0.9)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
               />
               <Legend />
@@ -68,9 +68,9 @@ export function DashboardCharts({ expenseData, monthlySpend }: DashboardChartsPr
             >
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
               <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" />
-              <YAxis stroke="rgba(255,255,255,0.5)" tickFormatter={(value) => `฿${value/1000}k`} />
+              <YAxis stroke="rgba(255,255,255,0.5)" tickFormatter={(value: any) => `฿${Number(value)/1000}k`} />
               <Tooltip 
-                formatter={(value: number) => `฿${Number(value).toLocaleString()}`}
+                formatter={(value: any) => `฿${Number(value).toLocaleString()}`}
                 contentStyle={{ backgroundColor: 'rgba(20,20,30,0.9)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
                 cursor={{ fill: 'rgba(255,255,255,0.05)' }}
               />

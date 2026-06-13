@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTripStore } from "@/lib/store";
-import { Bot, Sparkles, Send, Loader2 } from "lucide-react";
+import { Bot, Sparkles, Send, Loader2, Settings } from "lucide-react";
 
 export default function PlanPage() {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const setTrip = useTripStore(state => state.setTrip);
+
+  const userPreferences = useTripStore(state => state.userPreferences);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +22,7 @@ export default function PlanPage() {
       const res = await fetch("/api/ai/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, preferences: {} }),
+        body: JSON.stringify({ prompt, preferences: userPreferences || {} }),
       });
 
       const data = await res.json();
@@ -77,6 +79,14 @@ export default function PlanPage() {
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
             </button>
           </form>
+
+          {userPreferences && (
+            <div className="mt-4 text-xs text-on-surface-variant glass-panel p-3 rounded-xl inline-flex items-center gap-2 mx-auto">
+              <Settings className="w-3 h-3" />
+              ใช้ค่าโปรไฟล์: {userPreferences.budgetLevel === 'low' ? 'ประหยัด' : userPreferences.budgetLevel === 'medium' ? 'ปานกลาง' : 'พรีเมียม'}
+              {userPreferences.foodRestrictions.length > 0 && ` • อาหาร: ${userPreferences.foodRestrictions.join(', ')}`}
+            </div>
+          )}
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <button onClick={() => setPrompt("เที่ยวภูเก็ต 3 วัน 2 คืน พักหรูติดทะเล")} className="glass text-sm px-4 py-2 rounded-full hover:bg-surface/80 transition-colors">

@@ -32,7 +32,7 @@ interface TripState {
   userPreferences: UserProfile | null;
   setTrip: (trip: Itinerary) => void;
   setUserPreferences: (prefs: UserProfile) => void;
-  swapActivity: (oldId: string, newId: string) => void;
+  swapActivity: (oldId: string, newItem: TripItem) => void;
 }
 
 export const useTripStore = create<TripState>((set) => ({
