@@ -13,8 +13,9 @@ export default function CheckoutPage() {
   const [step, setStep] = useState<"review" | "payment" | "success">("review");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "qr">("card");
   const [loading, setLoading] = useState(false);
+  const [finalTrip, setFinalTrip] = useState<any>(null); // To hold data for the success screen after clearing store
 
-  if (!currentTrip) {
+  if (!currentTrip && step !== "success") {
     return (
       <div className="max-w-2xl mx-auto py-20 text-center">
         <span className="material-symbols-outlined text-[64px] text-on-surface-variant">shopping_cart_off</span>
@@ -41,10 +42,12 @@ export default function CheckoutPage() {
 
       if (!res.ok) throw new Error("Payment failed");
 
+      setFinalTrip(currentTrip);
       setStep("success");
       
       setTimeout(() => {
         alert("🔔 แจ้งเตือน: จองทริปสำเร็จ! ตั๋วเครื่องบินและที่พักของคุณถูกบันทึกลงระบบแล้ว");
+        useTripStore.getState().setTrip(null); // Clear the trip from the store
       }, 500);
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการชำระเงิน กรุณาลองใหม่");
@@ -53,7 +56,7 @@ export default function CheckoutPage() {
     }
   };
 
-  if (step === "success") {
+  if (step === "success" && finalTrip) {
     return (
       <div className="max-w-lg mx-auto py-20 text-center">
         <div className="glass-panel-strong p-12 rounded-3xl relative overflow-hidden">
@@ -63,10 +66,10 @@ export default function CheckoutPage() {
               <CheckCircle className="w-10 h-10 text-emerald-400" />
             </div>
             <h1 className="font-display text-3xl font-bold mb-2">จองทริปสำเร็จ! 🎉</h1>
-            <p className="text-on-surface-variant mb-2">ยินดีด้วย! ทริป {currentTrip.destination} ของคุณถูกยืนยันเรียบร้อย</p>
+            <p className="text-on-surface-variant mb-2">ยินดีด้วย! ทริป {finalTrip.destination} ของคุณถูกยืนยันเรียบร้อย</p>
             <div className="glass-panel p-4 rounded-xl mt-6 text-left">
               <p className="text-sm text-on-surface-variant">รหัสการจอง: <span className="font-mono text-primary">TRP-{Date.now().toString(36).toUpperCase()}</span></p>
-              <p className="text-sm text-on-surface-variant mt-1">ยอดชำระ: <span className="font-bold text-primary">฿{currentTrip.totalPrice.toLocaleString()}</span></p>
+              <p className="text-sm text-on-surface-variant mt-1">ยอดชำระ: <span className="font-bold text-primary">฿{finalTrip.totalPrice.toLocaleString()}</span></p>
             </div>
             <div className="flex gap-3 mt-8 justify-center">
               <Link href="/bookings" className="px-6 py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold">
@@ -81,6 +84,9 @@ export default function CheckoutPage() {
       </div>
     );
   }
+
+  // To prevent TS errors below if currentTrip becomes null
+  if (!currentTrip) return null;
 
   return (
     <div className="max-w-3xl mx-auto py-8">

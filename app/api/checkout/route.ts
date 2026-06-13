@@ -9,7 +9,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid trip data' }, { status: 400 });
     }
 
-    const userId = 'u-001'; // Mock user
+    const userId = 'u001'; // Mock user
 
     // Create dummy bookings for flights and hotels found in the trip
     const flightItems = trip.items.filter((i: any) => i.type === 'flight');
@@ -17,14 +17,22 @@ export async function POST(req: Request) {
 
     const createdFlights = [];
     for (const item of flightItems) {
-      const flightData = item.data;
-      if (!flightData?.flight_id) continue;
+      const flightData = item.data || {};
+      let flightId = flightData.flight_id || flightData.id;
+      
+      // Fallback if AI didn't provide a valid ID
+      if (!flightId) {
+        const anyFlight = await prisma.flight.findFirst();
+        if (anyFlight) flightId = anyFlight.flight_id;
+      }
+      
+      if (!flightId) continue;
       
       const newTicket = await prisma.flightTicket.create({
         data: {
           ticket_id: `ft-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
           user_id: userId,
-          flight_id: flightData.flight_id,
+          flight_id: flightId,
           seat: '14A', // Mock seat
           status: 'CONFIRMED'
         }
@@ -34,14 +42,22 @@ export async function POST(req: Request) {
 
     const createdHotels = [];
     for (const item of hotelItems) {
-      const hotelData = item.data;
-      if (!hotelData?.hotel_id) continue;
+      const hotelData = item.data || {};
+      let hotelId = hotelData.hotel_id || hotelData.id;
+
+      // Fallback if AI didn't provide a valid ID
+      if (!hotelId) {
+        const anyHotel = await prisma.hotel.findFirst();
+        if (anyHotel) hotelId = anyHotel.hotel_id;
+      }
+
+      if (!hotelId) continue;
 
       const newBooking = await prisma.hotelBooking.create({
         data: {
           booking_id: `hb-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
           user_id: userId,
-          hotel_id: hotelData.hotel_id,
+          hotel_id: hotelId,
           check_in: new Date(),
           check_out: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // Mock 3 days
           guests: 2,

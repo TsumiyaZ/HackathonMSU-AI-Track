@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import { Chip } from "@/components/ui/Chip";
 
 type Props = {
@@ -50,22 +50,31 @@ export function HotelFilters({ cities, amenities }: Props) {
         }
       }
       const qs = sp.toString();
-      startTransition(() => {
-        router.push(qs ? `/explore/hotels?${qs}` : "/explore/hotels");
-      });
+      
+      // Prevent infinite loops by checking if the query string actually changed
+      if (qs !== params.toString()) {
+        startTransition(() => {
+          router.push(qs ? `/explore/hotels?${qs}` : "/explore/hotels");
+        });
+      }
     },
-    [router],
+    [router, params],
   );
 
-  const apply = () =>
-    push({
-      search,
-      city,
-      minStars,
-      maxPrice,
-      sort,
-      amenities: selectedAmenities,
-    });
+  // 2-way binding: Auto search when inputs change (debounced)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      push({
+        search,
+        city,
+        minStars,
+        maxPrice,
+        sort,
+        amenities: selectedAmenities,
+      });
+    }, 500); // 500ms debounce
+    return () => clearTimeout(handler);
+  }, [search, city, minStars, maxPrice, sort, selectedAmenities, push]);
 
   const reset = () => {
     setSearch("");
@@ -83,6 +92,19 @@ export function HotelFilters({ cities, amenities }: Props) {
     );
   };
 
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
+  const AMENITIES_LIMIT = 8;
+  
+  const displayedAmenities = useMemo(() => {
+    if (showAllAmenities) return amenities;
+    const base = amenities.slice(0, AMENITIES_LIMIT);
+    // Ensure currently selected amenities are always visible even if collapsed
+    const selectedNotIncluded = selectedAmenities.filter(a => !base.includes(a) && amenities.includes(a));
+    return [...base, ...selectedNotIncluded];
+  }, [amenities, showAllAmenities, selectedAmenities]);
+
+  const hasMoreAmenities = amenities.length > AMENITIES_LIMIT;
+
   return (
     <div className="glass-panel-strong rounded-2xl p-5 flex flex-col gap-5">
       {/* Search row */}
@@ -94,7 +116,6 @@ export function HotelFilters({ cities, amenities }: Props) {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && apply()}
             placeholder="ค้นหาโรงแรม, เมือง, สไตล์..."
             className="bg-transparent flex-1 outline-none text-sm placeholder:text-on-surface-variant/60"
           />
@@ -102,19 +123,7 @@ export function HotelFilters({ cities, amenities }: Props) {
 
         <select
           value={sort}
-          onChange={(e) => {
-            setSort(e.target.value);
-            startTransition(() =>
-              push({
-                search,
-                city,
-                minStars,
-                maxPrice,
-                sort: e.target.value,
-                amenities: selectedAmenities,
-              }),
-            );
-          }}
+          onChange={(e) => setSort(e.target.value)}
           className="glass-input rounded-xl px-4 py-2.5 text-sm min-w-[180px] cursor-pointer"
         >
           <option value="">เรียงลำดับ</option>
@@ -181,23 +190,39 @@ export function HotelFilters({ cities, amenities }: Props) {
       {/* Amenities */}
       {amenities.length > 0 && (
         <div className="flex flex-col gap-2">
-          <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
-            สิ่งอำนวยความสะดวก
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {amenities.map((a) => {
+          <div className="flex justify-between items-center">
+            <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
+              สิ่งอำนวยความสะดวก
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2 items-center">
+            {displayedAmenities.map((a) => {
               const active = selectedAmenities.includes(a);
               return (
                 <button
                   key={a}
                   type="button"
                   onClick={() => toggleAmenity(a)}
-                  className="focus:outline-none"
+                  className="focus:outline-none transition-transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <Chip variant={active ? "primary" : "outline"}>{a}</Chip>
                 </button>
               );
             })}
+            
+            {hasMoreAmenities && (
+              <button
+                type="button"
+                onClick={() => setShowAllAmenities(!showAllAmenities)}
+                className="text-[11px] font-label uppercase tracking-wider text-primary hover:text-primary/80 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors flex items-center gap-1"
+              >
+                {showAllAmenities ? (
+                  <>แสดงน้อยลง <span className="material-symbols-outlined text-[14px]">expand_less</span></>
+                ) : (
+                  <>+ ดูเพิ่มอีก {amenities.length - AMENITIES_LIMIT} รายการ</>
+                )}
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -209,12 +234,6 @@ export function HotelFilters({ cities, amenities }: Props) {
           className="px-5 py-2 rounded-xl bg-surface border border-border text-on-surface font-label text-sm hover:bg-surface-hover hover:border-primary/50 transition-all shadow-sm"
         >
           รีเซ็ต
-        </button>
-        <button
-          onClick={apply}
-          className="px-6 py-2 rounded-xl bg-primary text-white border border-primary font-label text-sm font-bold shadow-md hover:bg-primary/90 hover:shadow-lg transition-all flex items-center gap-2"
-        >
-          กรองผลลัพธ์
         </button>
       </div>
     </div>

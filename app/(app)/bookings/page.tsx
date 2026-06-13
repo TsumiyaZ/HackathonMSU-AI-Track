@@ -4,7 +4,7 @@ import BookingsClient from "./BookingsClient";
 export const dynamic = 'force-dynamic';
 
 export default async function BookingsPage() {
-  const userId = 'u-001'; // Mock user
+  const userId = 'u001'; // Mock user
 
   const flightTickets = await prisma.flightTicket.findMany({
     where: { user_id: userId },

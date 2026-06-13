@@ -18,11 +18,14 @@ export async function GET(req: Request) {
       return NextResponse.json({ answer: 'ระบบ AI ขัดข้อง: ไม่พบ API Key กรุณาติดต่อผู้ดูแลระบบ' });
     }
 
-    // 1. Fetch available contextual data to ground the AI
-    const hotels = await prisma.hotel.findMany({ take: 30 });
-    const restaurants = await prisma.restaurant.findMany({ take: 30 });
-    const flights = await prisma.flight.findMany({ take: 30 });
-    const generalLocations = await loadLocations();
+    // 1. Fetch available contextual data to ground the AI (Optimized: Parallel fetching + smaller context size)
+    const [hotels, restaurants, flights, allLocations] = await Promise.all([
+      prisma.hotel.findMany({ take: 10 }),
+      prisma.restaurant.findMany({ take: 10 }),
+      prisma.flight.findMany({ take: 10 }),
+      loadLocations()
+    ]);
+    const generalLocations = allLocations.slice(0, 10);
 
     // 3. Construct System Prompt with Context
     const systemInstruction = `
@@ -56,7 +59,8 @@ export async function GET(req: Request) {
           { role: 'system', content: systemInstruction },
           { role: 'user', content: query }
         ],
-        temperature: 0.7
+        temperature: 0.7,
+        max_tokens: 300
       })
     });
 

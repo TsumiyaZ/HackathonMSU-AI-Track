@@ -30,7 +30,7 @@ export interface UserProfile {
 interface TripState {
   currentTrip: Itinerary | null;
   userPreferences: UserProfile | null;
-  setTrip: (trip: Itinerary) => void;
+  setTrip: (trip: Itinerary | null) => void;
   setUserPreferences: (prefs: UserProfile) => void;
   swapActivity: (oldId: string, newItem: TripItem) => void;
 }
