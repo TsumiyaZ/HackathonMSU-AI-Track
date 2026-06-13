@@ -1,10 +1,13 @@
 import prisma from "@/lib/prisma";
+import { getSessionUserId } from "@/lib/session";
 import { BookingsClient, BookingUIItem } from "./_components/BookingsClient";
 
 export default async function BookingsPage() {
+  const userId = await getSessionUserId();
   let hotelBookings: any[] = [];
   try {
     hotelBookings = await prisma.hotelBooking.findMany({
+      where: { user_id: userId! },
       include: { hotel: true },
       orderBy: { check_in: "desc" }
     });
@@ -35,9 +38,9 @@ export default async function BookingsPage() {
     title: `ทริป ${b.hotel.name}`,
     destination: b.hotel.location,
     date: `${new Date(b.check_in).toLocaleDateString('th-TH')} - ${new Date(b.check_out).toLocaleDateString('th-TH')}`,
-    status: b.status, // e.g. CONFIRMED, PENDING, COMPLETED, CANCELLED
+    status: b.status,
     price: b.total_price,
-    image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=600" // default hotel image since DB doesn't have one
+    image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=600"
   }));
 
   return <BookingsClient initialBookings={bookings} />;

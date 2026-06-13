@@ -1,25 +1,29 @@
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
+import { getSessionUserId } from '@/lib/session';
 import { DashboardCharts } from './_components/DashboardCharts';
 
 export default async function DashboardPage() {
-  // Fetch real data from database
-  // In a real app with auth, we would filter by the logged-in user_id
+  const userId = await getSessionUserId();
   let hotelBookings: any[] = [];
   let flightTickets: any[] = [];
   let foodOrders: any[] = [];
 
   try {
     hotelBookings = await prisma.hotelBooking.findMany({
+      where: { user_id: userId! },
       include: { hotel: true },
       orderBy: { check_in: 'desc' }
     });
 
     flightTickets = await prisma.flightTicket.findMany({
+      where: { user_id: userId! },
       include: { flight: true }
     });
 
-    foodOrders = await prisma.foodOrder.findMany();
+    foodOrders = await prisma.foodOrder.findMany({
+      where: { user_id: userId! }
+    });
   } catch (error) {
     console.warn("⚠️ Database connection failed. Falling back to empty arrays.");
   }
