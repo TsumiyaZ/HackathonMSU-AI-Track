@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useTripStore } from "@/lib/store";
 import { Bot, Sparkles, Send, Loader2, Settings } from "lucide-react";
 
+import { requireAuth } from "@/lib/auth-check";
+
 export default function PlanPage() {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,6 +18,9 @@ export default function PlanPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
+
+    const authed = await requireAuth("/plan");
+    if (!authed) return;
 
     setLoading(true);
     try {

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTripStore } from "@/lib/store";
 import { Sparkles, CheckCircle, CreditCard, QrCode, ArrowLeft, Loader2 } from "lucide-react";
+import { requireAuth } from "@/lib/auth-check";
 import Link from "next/link";
 
 export default function CheckoutPage() {
@@ -27,6 +28,9 @@ export default function CheckoutPage() {
   }
 
   const handleConfirm = async () => {
+    const authed = await requireAuth("/checkout");
+    if (!authed) return;
+
     setLoading(true);
     // Simulate payment processing
     await new Promise((r) => setTimeout(r, 2000));

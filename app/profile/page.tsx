@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTripStore } from "@/lib/store";
-import { User, Save, LogOut, Sparkles } from "lucide-react";
+import { User, Save, LogOut, Sparkles, ArrowLeft, Home } from "lucide-react";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -155,6 +155,13 @@ export default function ProfilePage() {
             </div>
 
             <div className="flex gap-3 pt-4">
+              <button
+                onClick={() => router.push("/")}
+                className="px-6 py-4 rounded-xl glass-panel font-label text-sm font-bold flex items-center gap-2 hover:text-primary transition-all border border-white/10"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                กลับหน้าหลัก
+              </button>
               <button
                 onClick={handleSave}
                 className="flex-1 py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform"

@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 type Item = { href: string; label: string; icon: string };
 
 const PRIMARY: Item[] = [
-  { href: "/dashboard", label: "หน้าหลัก", icon: "dashboard" },
+  { href: "/", label: "หน้าหลัก", icon: "home" },
+  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/plan", label: "วางแผน", icon: "auto_awesome" },
   { href: "/explore/hotels", label: "Explore", icon: "explore" },
   { href: "/bookings", label: "การจอง", icon: "event_available" },
@@ -52,7 +53,7 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
       <div className="flex-1 flex flex-col gap-1 font-label text-sm">
         {PRIMARY.map((item) => {
           const active =
-            item.href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(item.href);
+            item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}

@@ -6,7 +6,7 @@ import { useState, type FormEvent } from "react";
 
 type Mode = "login" | "register";
 
-export function AuthForm({ mode }: { mode: Mode }) {
+export function AuthForm({ mode, redirectTo = "/" }: { mode: Mode; redirectTo?: string }) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +34,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
         setLoading(false);
         return;
       }
-      router.push("/profile");
+      router.push(redirectTo);
       router.refresh();
     } catch {
       setError("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้");
