@@ -20,9 +20,12 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
   const pathname = usePathname();
 
   return (
+    /* Desktop-only sidebar — hidden on mobile via 'hidden md:flex' */
     <nav className={`transition-all duration-300 fixed left-0 top-0 h-full bg-surface-container/30 backdrop-blur-2xl border-r border-white/10 shadow-[10px_0_30px_rgba(0,0,0,0.5)] flex-col py-8 z-40 hidden md:flex overflow-hidden ${isOpen ? "w-64" : "w-20"}`}>
+
+      {/* Brand */}
       <div className={`px-6 mb-8 flex items-center ${isOpen ? "gap-4" : "justify-center px-0"}`}>
-        <div className="w-10 h-10 shrink-0 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center ai-glow">
+        <div className="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center ai-glow">
           <span className="material-symbols-outlined text-background" style={{ fontVariationSettings: "'FILL' 1" }}>
             smart_toy
           </span>
@@ -37,6 +40,7 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
         </div>
       </div>
 
+      {/* CTA Button */}
       <div className={`px-4 mb-8 transition-all duration-300 ${isOpen ? "" : "px-2"}`}>
         <Link
           href="/plan"
@@ -50,7 +54,8 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
         </Link>
       </div>
 
-      <div className="flex-1 flex flex-col gap-1 font-label text-sm">
+      {/* Nav Items */}
+      <div className="flex-1 flex flex-col gap-0.5 font-label text-sm">
         {PRIMARY.map((item) => {
           const active =
             item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
@@ -60,8 +65,8 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
               href={item.href}
               className={
                 active
-                  ? `flex items-center gap-3 bg-primary/15 text-primary border-r-4 border-primary py-3 transition-all duration-200 ${isOpen ? "px-6" : "px-0 justify-center"}`
-                  : `flex items-center gap-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface py-3 transition-all duration-200 ${isOpen ? "px-6" : "px-0 justify-center"}`
+                  ? `flex items-center gap-3 bg-primary/15 text-primary border-r-[3px] border-primary py-3 rounded-l-xl transition-all duration-200 ${isOpen ? "px-6" : "px-0 justify-center"}`
+                  : `flex items-center gap-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface py-3 rounded-xl transition-all duration-200 ${isOpen ? "px-6 mx-2" : "px-0 justify-center"}`
               }
               title={!isOpen ? item.label : undefined}
             >
@@ -79,6 +84,7 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
         })}
       </div>
 
+      {/* Help link */}
       <div className="mt-auto font-label text-sm">
         <a
           className={`flex items-center gap-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface py-3 transition-all duration-200 ${isOpen ? "px-6" : "px-0 justify-center"}`}

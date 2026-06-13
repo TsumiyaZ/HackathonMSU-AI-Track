@@ -33,7 +33,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-background text-on-surface">
-         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="tickethub-theme">
             {children}
          </ThemeProvider>
       </body>

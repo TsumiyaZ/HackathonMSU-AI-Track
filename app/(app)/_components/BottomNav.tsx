@@ -1,0 +1,64 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+type NavItem = { href: string; label: string; icon: string };
+
+const NAV_ITEMS: NavItem[] = [
+  { href: "/dashboard", label: "หน้าหลัก", icon: "home" },
+  { href: "/explore/hotels", label: "สำรวจ", icon: "explore" },
+  { href: "/plan", label: "วางแผน", icon: "auto_awesome" },
+  { href: "/bookings", label: "การจอง", icon: "event_available" },
+  { href: "/profile", label: "โปรไฟล์", icon: "account_circle" },
+];
+
+export function BottomNav() {
+  const pathname = usePathname();
+
+  return (
+    <nav className="bottom-nav md:hidden">
+      {NAV_ITEMS.map((item) => {
+        const isActive =
+          item.href === "/dashboard"
+            ? pathname === "/dashboard" || pathname === "/"
+            : pathname.startsWith(item.href);
+        const isPlan = item.href === "/plan";
+
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`bottom-nav-item${isActive ? " active" : ""}${isPlan ? " bottom-nav-cta" : ""}`}
+            aria-label={item.label}
+          >
+            {isPlan ? (
+              <div className="bottom-nav-cta-bubble">
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: "22px", fontVariationSettings: "'FILL' 1" }}
+                >
+                  {item.icon}
+                </span>
+              </div>
+            ) : (
+              <>
+                <span
+                  className="material-symbols-outlined"
+                  style={{
+                    fontSize: "22px",
+                    fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0",
+                  }}
+                >
+                  {item.icon}
+                </span>
+                <span className="bottom-nav-label">{item.label}</span>
+                {isActive && <span className="bottom-nav-dot" />}
+              </>
+            )}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
