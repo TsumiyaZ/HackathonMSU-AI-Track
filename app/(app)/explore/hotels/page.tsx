@@ -3,6 +3,7 @@ import { HotelFilters } from "@/components/hotels/HotelFilters";
 import { getAllAmenities, getHotelCities, listHotels } from "@/lib/hotels";
 import type { HotelListFilters } from "@/lib/types";
 
+
 type SearchParams = Promise<{
   search?: string;
   city?: string;

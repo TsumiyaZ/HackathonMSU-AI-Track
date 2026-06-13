@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { Chip } from "@/components/ui/Chip";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { StarRating } from "@/components/ui/StarRating";
+import { AuthButton } from "@/components/AuthButton";
+
 import {
   getBookingsForHotel,
   getHotelById,
@@ -238,10 +240,12 @@ export default async function HotelDetailPage({
                 </label>
               </div>
 
-              <button className="mt-5 w-full py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2">
-                <span className="material-symbols-outlined text-[18px]">bolt</span>
-                จองทันที
-              </button>
+              <AuthButton
+                label="จองทันที"
+                icon="bolt"
+                redirectTo={`/explore/hotel/${id}`}
+                className="mt-5 w-full py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2"
+              />
               <button className="mt-2 w-full py-3 rounded-xl glass-panel text-on-surface font-label text-sm hover:text-primary transition-colors">
                 เพิ่มลงทริปกับ AI
               </button>

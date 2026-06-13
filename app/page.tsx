@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthStatusButton } from "@/components/AuthStatusButton";
 
 type NavTile = {
   href: string;
@@ -56,7 +57,10 @@ const TILES: NavTile[] = [
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-on-surface grid-bg">
-      <section className="relative px-6 md:px-12 pt-16 md:pt-24 pb-12 max-w-[1280px] mx-auto">
+      <div className="sticky top-0 z-50 flex items-center justify-end px-6 md:px-12 py-4 max-w-[1280px] mx-auto">
+        <AuthStatusButton />
+      </div>
+      <section className="relative px-6 md:px-12 pt-8 md:pt-16 pb-12 max-w-[1280px] mx-auto">
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-secondary/15 rounded-full blur-3xl pointer-events-none" />
         <div className="relative flex flex-col items-center text-center gap-6">
