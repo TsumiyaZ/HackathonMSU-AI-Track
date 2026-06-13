@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="th"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trip Architect - Hotel Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#001a42",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-variant": "#323537",
+                        "on-primary-container": "#00285d",
+                        "inverse-primary": "#005ac2",
+                        "tertiary-container": "#8d90a0",
+                        "on-tertiary-container": "#252936",
+                        "inverse-surface": "#e0e3e5",
+                        "tertiary": "#c3c6d7",
+                        "secondary-fixed": "#e9ddff",
+                        "on-secondary": "#3c0091",
+                        "on-tertiary": "#2c303d",
+                        "on-background": "#e0e3e5",
+                        "secondary": "#d0bcff",
+                        "outline": "#8c909f",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "tertiary-fixed": "#dfe2f3",
+                        "surface-container-highest": "#323537",
+                        "secondary-container": "#571bc1",
+                        "background": "#101415",
+                        "on-secondary-fixed": "#23005c",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#101415",
+                        "surface-tint": "#adc6ff",
+                        "primary": "#adc6ff",
+                        "primary-container": "#4d8eff",
+                        "inverse-on-surface": "#2d3133",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-tertiary-fixed": "#171b28",
+                        "tertiary-fixed-dim": "#c3c6d7",
+                        "on-tertiary-fixed-variant": "#434654",
+                        "surface-container-high": "#272a2c",
+                        "on-primary-fixed-variant": "#004395",
+                        "outline-variant": "#424754",
+                        "surface-bright": "#363a3b",
+                        "on-secondary-container": "#c4abff",
+                        "on-primary": "#002e6a",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#191c1e",
+                        "surface-container-lowest": "#0b0f10",
+                        "surface-container": "#1d2022",
+                        "surface": "#101415",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-surface": "#e0e3e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "base": "8px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "display": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .ai-glow {
+            box-shadow: 0 0 30px rgba(173, 198, 255, 0.15);
+        }
+        .btn-primary-gradient {
+            background: linear-gradient(135deg, #adc6ff 0%, #d0bcff 100%);
+            color: #101415;
+            box-shadow: 0 0 15px rgba(173, 198, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-surface/10 backdrop-blur-xl border-b border-white/10 shadow-[0_0_20px_rgba(173,198,255,0.1)] w-full h-16 ml-64 hidden md:flex justify-between items-center px-margin-desktop">
+<div class="flex items-center gap-8">
+<div class="font-display text-headline-md font-bold text-primary">Trip Architect</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-primary hover:text-primary transition-colors duration-300 cursor-pointer active:scale-95" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="material-symbols-outlined text-primary hover:text-primary transition-colors duration-300 cursor-pointer active:scale-95" style="font-variation-settings: 'FILL' 0;">settings</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/20">
+<img alt="User profile photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfnbI1AcAjE9XvCXUgYJwUTfq39Pw3yIhnyClErDcX0IWGPitevODL5AxR21BNHNiTp4TpvT7vxsIp1ihuMbWJHrpEZwzbb5u9wolo1QTWRAlfqv-sawBB11su20p-81K0WmSQPIXRoCWu9tAowNV2pwNqMhrr_9Pw-l0oXdQc3wW9dLgi507o9Qmlso4zgaI3YAZQd_KddnwOIWKmsJBoWrYnZ2w58-f_4qCwYaSxAWvTKUnkqi4961mJ1SrBg3X0xv39Yy7a_qM"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-64 bg-surface-container/20 backdrop-blur-2xl border-r border-white/10 shadow-[10px_0_30px_rgba(0,0,0,0.5)] flex flex-col py-8 z-50 hidden md:flex">
+<div class="px-6 mb-8 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center ai-glow">
+<span class="material-symbols-outlined text-background" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h1 class="font-display text-headline-md font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Trip Architect</h1>
+<p class="font-label-sm text-on-surface-variant">Navigating the Nebula</p>
+</div>
+</div>
+<div class="px-4 mb-8">
+<button class="w-full py-3 rounded-xl btn-primary-gradient font-label-md font-bold flex items-center justify-center gap-2 active:scale-98 transition-transform">
+<span class="material-symbols-outlined text-background">add</span>
+                สร้างทริปใหม่
+            </button>
+</div>
+<div class="flex-1 flex flex-col gap-2 font-display text-label-md">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                หน้าหลัก
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+                วางแผน
+            </a>
+<a class="flex items-center gap-3 bg-primary/20 text-primary border-r-4 border-primary px-6 py-3 hover:bg-white/10 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_available</span>
+                การจอง
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">forum</span>
+                แชท
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+                โปรไฟล์
+            </a>
+</div>
+<div class="mt-auto font-display text-label-md">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+                ความช่วยเหลือ
+            </a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-16 min-h-screen pb-24 px-margin-mobile md:px-margin-desktop flex flex-col gap-gutter max-w-container-max mx-auto">
+<!-- Breadcrumb & Nav -->
+<div class="flex items-center gap-2 mt-8 text-on-surface-variant font-label-md">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors text-[20px]">arrow_back</span>
+<span class="cursor-pointer hover:text-primary transition-colors">กลับสู่ผลการค้นหา</span>
+</div>
+<!-- Hero Gallery Bento -->
+<div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-[512px] min-h-[400px] rounded-2xl overflow-hidden">
+<div class="md:col-span-2 md:row-span-2 relative group cursor-pointer overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A breathtaking view of a modern luxury resort pool at twilight. The pool's surface perfectly reflects the deep indigo sky and the warm, golden light spilling from the surrounding contemporary architectural suites. The setting embodies a high-end, exclusive travel experience with clean lines, dark tones, and subtle neon accents in a futuristic yet tranquil atmosphere. The scene evokes serene exploration and premium AI-curated travel." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD8v5KUFlkCyM961y_-ke00ezInfo6wWHXChzX8X77QVBaOaGNFmWaSM1WypSIrJCDaweX4LpQfo5yVnKKZrzsq36lXtzRv2Qf_uL6X4x6m0wOCHE0m00_V47XHTRAWLUcrQ53wn8m7BzeMZF4VTAYnUCYUl0Y_NI6xl_X5XDxfwxk9HcQv15K0W0C4ih65dqKUxRskme382dD2rvh89JV9p5XJcha_3X0kuTZ9pQZxmng5QYCFev6IeIJGuyBuPEFpuPTDbsdHzpc');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent"></div>
+</div>
+<div class="hidden md:block relative group cursor-pointer overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Interior of a highly sophisticated, futuristic hotel suite. A sleek, low-profile bed with crisp white linens sits in the center, surrounded by dark wood paneling and subtle, integrated ambient LED lighting in cool blue tones. Large floor-to-ceiling windows offer a glimpse of a vibrant cityscape at night. The mood is calm, intelligent, and deeply luxurious, aligning with a high-end AI concierge aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBq-Xoz3-vIlLm9UzLrqk_JAto8d7-93T_qF2xthfmjyuJhdtasje2KuifqYRxO3az5P1s4QbSjk0Lhun7L8G2J_U9WMhTWI-4S32FkqP0uD41nS4adz5S2E3ex44Exe28ocXJYbLZ4S36DkHerjobDums01qiUY1mav2ccPkkZv6njW2jOR6IImZY9t3QybikdjjjJDOke93rL3_NmwQFQmNy5iyYuW3gzG_oINbsKgpqAuUOepzCx6ZoK23bCCEwGyrErBpS3bqg');"></div>
+</div>
+<div class="hidden md:block relative group cursor-pointer overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A close-up of a high-end hotel spa amenity, featuring dark stone textures, pristine white towels, and a minimalist glass vanity. Soft, diffused lighting highlights the premium materials, while subtle glowing accents suggest advanced, smart-room integration. The composition feels serene, clean, and perfectly suited for a premium travel curation interface with a modern, slightly futuristic edge." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBUjx4DOc0Ihx8eErkcRrtw8nv9veWjx9WhZjwMU2_r6-hFBkCI0vfGrcZyoYAtxFb39-fQ40pQ4LtDkSR4m88zA1S9VaWfK1pkIiFRIKdEEK1Q7-EPdi1j00yDx9RN1TRyHVYOWmhS9kvxk1YmC5MwkUsIB5KY8cu7_Mbjl77BUHoB4GBLw8NWWzq633HnCjheuKsSNafycYW2KcyUYS9dfnbo4O-AQMUaSwfkXsvk1ik-5r2AbnTOLnTMRKtiiVJWvL-kPD7ybaQ');"></div>
+</div>
+<div class="hidden md:block md:col-span-2 relative group cursor-pointer overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="An elegant, atmospheric hotel bar and lounge area captured in low light. Rich, dark velvet seating contrasts with glowing, amber-lit glass shelves showcasing premium spirits. The interior design blends classic luxury with modern, sharp geometric lines. The ambiance is sophisticated, mysterious, and perfectly aligned with a dark-mode, high-contrast digital travel aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDM2qgE7IVkuN2DHLvaqCZdx2rjKGW2WVjWWtckXePNFh9uP1YgCHNJbL8WdPHpnwWeDTe4fOcbEV5rVuN-P-PDpQkTeBvWCwnf55wsPcyp7MjekZTcV5xjX7Zqztf46GuNs7mgA4qcY_LyjomEOPs_5jTipZsP8vy4TnKdDc1doEtyAgqAdF6kkXrKfl02l64GFWy9uTKLJE2S-NiN-8GB-Ea_0Wcq6Z4bXmjOhEHqTQPBIW0o5QkLXKdlU3kxTHlbeHnnVfJjLRM');"></div>
+<div class="absolute inset-0 bg-background/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="font-label-md text-primary font-bold bg-surface/80 px-4 py-2 rounded-full backdrop-blur-md">ดูรูปภาพทั้งหมด (42)</span>
+</div>
+</div>
+</div>
+<!-- Title & Badges -->
+<div class="flex flex-col gap-4">
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 rounded-full bg-secondary-container/20 border border-secondary/30 text-secondary font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span> AI แนะนำ
+                </span>
+<span class="px-3 py-1 rounded-full glass-panel text-on-surface-variant font-label-sm">
+                    Luxury
+                </span>
+<span class="px-3 py-1 rounded-full glass-panel text-on-surface-variant font-label-sm">
+                    ใจกลางเมือง
+                </span>
+</div>
+<h1 class="font-display text-display text-on-surface">The Celestial Grand</h1>
+<p class="font-body-lg text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">location_on</span>
+                สุขุมวิท, กรุงเทพมหานคร
+            </p>
+</div>
+<!-- 2 Column Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mt-8">
+<!-- Left Column: Content -->
+<div class="lg:col-span-2 flex flex-col gap-12">
+<!-- AI Sentiment -->
+<section class="glass-panel p-8 rounded-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+<h2 class="font-display text-headline-md text-on-surface mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">psychology</span>
+                        AI Sentiment Summary
+                    </h2>
+<p class="text-on-surface-variant font-body-lg mb-8 leading-relaxed">
+                        จากรีวิว 1,240 รายการในช่วง 6 เดือนที่ผ่านมา ผู้เข้าพักชื่นชอบการบริการที่เหนือระดับและเทคโนโลยีภายในห้องพักที่ทันสมัย บรรยากาศเงียบสงบแม้ตั้งอยู่ใจกลางเมือง อย่างไรก็ตาม บางความเห็นระบุว่าสระว่ายน้ำมีขนาดเล็กกว่าที่คาดไว้
+                    </p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container/30 p-6 rounded-xl border border-white/5">
+<h3 class="font-label-md text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">thumb_up</span> จุดเด่น (Pros)
+                            </h3>
+<ul class="space-y-3 text-on-surface-variant text-sm">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check_circle</span>
+                                    เตียงนอนคุณภาพสูงและระบบปรับแสงสว่างอัตโนมัติ
+                                </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check_circle</span>
+                                    พนักงานบริการดีเยี่ยมและจดจำรายละเอียดลูกค้าได้
+                                </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[16px] mt-0.5">check_circle</span>
+                                    ทำเลสะดวก ใกล้สถานีรถไฟฟ้าเพียง 3 นาที
+                                </li>
+</ul>
+</div>
+<div class="bg-surface-container/30 p-6 rounded-xl border border-white/5">
+<h3 class="font-label-md text-error mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">thumb_down</span> ข้อควรระวัง (Cons)
+                            </h3>
+<ul class="space-y-3 text-on-surface-variant text-sm">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-[16px] mt-0.5">warning</span>
+                                    สระว่ายน้ำอาจแออัดในช่วงเย็น
+                                </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-[16px] mt-0.5">warning</span>
+                                    ราคาห้องอาหารเช้าค่อนข้างสูง
+                                </li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Amenities -->
+<section>
+<h2 class="font-display text-headline-md text-on-surface mb-6">สิ่งอำนวยความสะดวก</h2>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-[28px]">wifi</span>
+<span class="font-body-md text-on-surface-variant">Wi-Fi ความเร็วสูง</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-[28px]">pool</span>
+<span class="font-body-md text-on-surface-variant">สระว่ายน้ำไร้ขอบ</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-[28px]">fitness_center</span>
+<span class="font-body-md text-on-surface-variant">ฟิตเนส 24 ชม.</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-[28px]">local_bar</span>
+<span class="font-body-md text-on-surface-variant">บาร์บนชั้นดาดฟ้า</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-[28px]">spa</span>
+<span class="font-body-md text-on-surface-variant">สปาระดับพรีเมียม</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-[28px]">restaurant</span>
+<span class="font-body-md text-on-surface-variant">ห้องอาหารมิชลิน</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Booking Widget -->
+<div class="lg:col-span-1">
+<div class="sticky top-24 glass-panel p-8 rounded-2xl ai-glow border-primary/20">
+<div class="flex justify-between items-end mb-6">
+<div>
+<p class="text-on-surface-variant font-label-sm mb-1">ราคาเริ่มต้น</p>
+<h3 class="font-display text-headline-lg font-bold text-on-surface">฿12,500</h3>
+</div>
+<p class="text-on-surface-variant font-body-md">/ คืน</p>
+</div>
+<div class="space-y-4 mb-8">
+<div class="bg-surface-container/50 border border-white/10 rounded-xl p-4 flex justify-between items-center cursor-pointer hover:border-primary/50 transition-colors">
+<div>
+<p class="text-on-surface-variant font-label-sm">เช็คอิน - เช็คเอาท์</p>
+<p class="text-on-surface font-body-md font-medium mt-1">14 ต.ค. - 16 ต.ค.</p>
+</div>
+<span class="material-symbols-outlined text-primary">calendar_month</span>
+</div>
+<div class="bg-surface-container/50 border border-white/10 rounded-xl p-4 flex justify-between items-center cursor-pointer hover:border-primary/50 transition-colors">
+<div>
+<p class="text-on-surface-variant font-label-sm">ผู้เข้าพัก</p>
+<p class="text-on-surface font-body-md font-medium mt-1">2 ผู้ใหญ่, 1 ห้อง</p>
+</div>
+<span class="material-symbols-outlined text-primary">group</span>
+</div>
+</div>
+<button class="w-full py-4 rounded-xl btn-primary-gradient font-display font-bold text-[18px] mb-4 hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(173,198,255,0.4)]">
+                        Book Now
+                    </button>
+<p class="text-center text-on-surface-variant font-label-sm">
+                        คุณยังไม่ถูกหักเงินจนกว่าจะยืนยันในหน้าถัดไป
+                    </p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

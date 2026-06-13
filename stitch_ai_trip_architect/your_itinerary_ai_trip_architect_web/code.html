@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="th"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trip Architect - วางแผน</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#001a42",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-variant": "#323537",
+                        "on-primary-container": "#00285d",
+                        "inverse-primary": "#005ac2",
+                        "tertiary-container": "#8d90a0",
+                        "on-tertiary-container": "#252936",
+                        "inverse-surface": "#e0e3e5",
+                        "tertiary": "#c3c6d7",
+                        "secondary-fixed": "#e9ddff",
+                        "on-secondary": "#3c0091",
+                        "on-tertiary": "#2c303d",
+                        "on-background": "#e0e3e5",
+                        "secondary": "#d0bcff",
+                        "outline": "#8c909f",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "tertiary-fixed": "#dfe2f3",
+                        "surface-container-highest": "#323537",
+                        "secondary-container": "#571bc1",
+                        "background": "#101415",
+                        "on-secondary-fixed": "#23005c",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#101415",
+                        "surface-tint": "#adc6ff",
+                        "primary": "#adc6ff",
+                        "primary-container": "#4d8eff",
+                        "inverse-on-surface": "#2d3133",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-tertiary-fixed": "#171b28",
+                        "tertiary-fixed-dim": "#c3c6d7",
+                        "on-tertiary-fixed-variant": "#434654",
+                        "surface-container-high": "#272a2c",
+                        "on-primary-fixed-variant": "#004395",
+                        "outline-variant": "#424754",
+                        "surface-bright": "#363a3b",
+                        "on-secondary-container": "#c4abff",
+                        "on-primary": "#002e6a",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#191c1e",
+                        "surface-container-lowest": "#0b0f10",
+                        "surface-container": "#1d2022",
+                        "surface": "#101415",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-surface": "#e0e3e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "base": "8px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "display": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #101415;
+            color: #e0e3e5;
+            background-image: radial-gradient(circle at 50% 0%, rgba(77, 142, 255, 0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 100% 100%, rgba(87, 27, 193, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+        
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(173, 198, 255, 0.15);
+            border-color: rgba(173, 198, 255, 0.3);
+        }
+
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Custom Scrollbar for columns */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Timeline Connector */
+        .timeline-line {
+            position: absolute;
+            left: 19px;
+            top: 24px;
+            bottom: -24px;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(173, 198, 255, 0.5), rgba(173, 198, 255, 0.1));
+            z-index: 0;
+        }
+        
+        .timeline-node {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="font-display text-body-md antialiased overflow-hidden h-screen flex">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-64 bg-surface-container/20 backdrop-blur-2xl border-r border-white/10 shadow-[10px_0_30px_rgba(0,0,0,0.5)] flex flex-col py-8 z-50 hidden md:flex">
+<div class="px-6 mb-12">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-[0_0_15px_rgba(173,198,255,0.4)]">
+<span class="material-symbols-outlined text-on-primary">trip_origin</span>
+</div>
+<div>
+<h1 class="font-display text-headline-md font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary leading-none">Trip Architect</h1>
+</div>
+</div>
+<p class="font-display text-label-sm text-tertiary-container ml-13">Navigating the Nebula</p>
+</div>
+<button class="mx-6 mb-8 py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary-container text-white font-headline-md text-[16px] font-bold shadow-[0_0_15px_rgba(77,142,255,0.3)] hover:shadow-[0_0_25px_rgba(77,142,255,0.5)] transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+            สร้างทริปใหม่
+        </button>
+<div class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:bg-white/10 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                หน้าหลัก
+            </a>
+<a class="flex items-center gap-3 bg-primary/20 text-primary border-r-4 border-primary px-6 py-3 font-display text-label-md active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                วางแผน
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:bg-white/10 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">event_available</span>
+                การจอง
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:bg-white/10 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">forum</span>
+                แชท
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:bg-white/10 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+                โปรไฟล์
+            </a>
+</div>
+<div class="mt-auto">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:bg-white/10 hover:text-on-surface transition-all duration-200 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+                ความช่วยเหลือ
+            </a>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full h-16 bg-surface/10 backdrop-blur-xl border-b border-white/10 shadow-[0_0_20px_rgba(173,198,255,0.1)] flex justify-between items-center px-margin-desktop ml-64 z-40 hidden md:flex" style="width: calc(100% - 16rem);">
+<div class="flex items-center gap-8 h-full">
+<!-- Search on left -->
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-tertiary-container">search</span>
+<input class="bg-black/30 border border-white/10 rounded-full py-1.5 pl-10 pr-4 text-body-md text-on-surface placeholder-tertiary-container focus:outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(173,198,255,0.2)] transition-all w-64" placeholder="ค้นหาสถานที่, กิจกรรม..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-white/10 hover:text-primary transition-colors duration-300 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-white/10 hover:text-primary transition-colors duration-300 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/20 ml-2">
+<img alt="User profile photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_1iSrI-pTlKm5V0DA7pfKRj2j7ow_CxTN4firORNaY2U3m_D2nNk7CisTYQX-lY48mFTXEIAZvfcUSDOApg9S_5LzNfEkYpTZjX9k8hbJtEuIqaHudwQZFAVQh_fpdUFzFsvIGkomzs9W_GpuPENNxRUoh1TfOKIrVXspBntFIrYcX8APcD6VdF_YZygpvQxop15pXzktdbJVWWUx3NGeHqKVG-JiHn3Ij72BfJQYbdfYQDWkgT8p_ttkS3FFflCXIRVSViJCKok"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-64 mt-0 md:mt-16 h-[calc(100vh-4rem)] p-margin-mobile md:p-gutter flex flex-col overflow-hidden">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-6 shrink-0">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-3 py-1 rounded-full bg-secondary-container/30 text-secondary font-label-sm border border-secondary-container">AI Recommended</span>
+<span class="px-3 py-1 rounded-full bg-surface-variant text-on-surface-variant font-label-sm">3 วัน 2 คืน</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">โตเกียว: ผสมผสานวัฒนธรรมและอนาคต</h2>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 rounded-xl glass-panel text-on-surface font-label-md hover:bg-white/10 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">share</span>
+                    Share
+                </button>
+<button class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-on-primary-fixed font-label-md shadow-[0_0_15px_rgba(173,198,255,0.3)] hover:shadow-[0_0_20px_rgba(173,198,255,0.5)] transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    Download PDF
+                </button>
+</div>
+</div>
+<!-- Three Column Layout -->
+<div class="flex-1 grid grid-cols-12 gap-gutter min-h-0">
+<!-- Column 1: Daily Timeline (3 cols) -->
+<div class="col-span-3 glass-panel rounded-xl flex flex-col overflow-hidden">
+<div class="p-4 border-b border-white/10 shrink-0 bg-surface/50">
+<h3 class="font-headline-md text-[18px] text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">calendar_today</span>
+                        วันที่ 1: วันพฤหัสบดี
+                    </h3>
+</div>
+<div class="p-4 overflow-y-auto custom-scrollbar flex-1 relative">
+<!-- Morning -->
+<div class="relative pb-8">
+<div class="timeline-line"></div>
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-primary/30 flex items-center justify-center timeline-node shrink-0 text-primary">
+<span class="material-symbols-outlined text-[20px]">routine</span>
+</div>
+<div>
+<h4 class="font-label-md text-primary mb-1">เช้า (09:00 - 12:00)</h4>
+<div class="glass-card rounded-lg p-3 cursor-pointer glow-hover transition-all bg-primary/10 border-primary/30">
+<p class="font-label-md text-on-surface mb-1">ศาลเจ้าเมจิ &amp; สวนโยโยงิ</p>
+<p class="font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 3 ชม.
+                                    </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Afternoon -->
+<div class="relative pb-8">
+<div class="timeline-line"></div>
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-white/20 flex items-center justify-center timeline-node shrink-0 text-tertiary">
+<span class="material-symbols-outlined text-[20px]">light_mode</span>
+</div>
+<div class="w-full">
+<h4 class="font-label-md text-tertiary-container mb-1">บ่าย (13:00 - 17:00)</h4>
+<div class="glass-card rounded-lg p-3 mb-2 cursor-pointer glow-hover transition-all opacity-70 hover:opacity-100">
+<p class="font-label-md text-on-surface mb-1">มื้อเที่ยง: ซูชิสายพาน</p>
+</div>
+<div class="glass-card rounded-lg p-3 cursor-pointer glow-hover transition-all opacity-70 hover:opacity-100">
+<p class="font-label-md text-on-surface mb-1">ช้อปปิ้งที่ฮาราจูกุ</p>
+<p class="font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 2.5 ชม.
+                                    </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Evening -->
+<div class="relative">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-white/20 flex items-center justify-center timeline-node shrink-0 text-tertiary">
+<span class="material-symbols-outlined text-[20px]">dark_mode</span>
+</div>
+<div class="w-full">
+<h4 class="font-label-md text-tertiary-container mb-1">เย็น (18:00 เป็นต้นไป)</h4>
+<div class="glass-card rounded-lg p-3 cursor-pointer glow-hover transition-all opacity-70 hover:opacity-100">
+<p class="font-label-md text-on-surface mb-1">ชิบูย่า สกาย &amp; มื้อค่ำ</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 2: Detailed Activity Cards (5 cols) -->
+<div class="col-span-5 overflow-y-auto custom-scrollbar pr-2 flex flex-col gap-4">
+<!-- Active Card -->
+<div class="glass-card rounded-xl overflow-hidden shadow-[0_0_30px_rgba(77,142,255,0.1)] border-primary/30 relative">
+<!-- Ambient glow for active card -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
+<div class="h-48 relative overflow-hidden">
+<div class="absolute top-3 left-3 z-10 px-2 py-1 rounded bg-black/60 backdrop-blur-md text-primary font-label-sm flex items-center gap-1 border border-white/10">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 09:00 - 12:00
+                        </div>
+<img alt="ศาลเจ้าเมจิ" class="w-full h-full object-cover" data-alt="A serene, high-quality photograph of the Meiji Shrine in Tokyo during a bright, clear morning. The massive wooden torii gate stands majestically surrounded by a lush, deep green forest. Sunlight filters through the dense canopy, creating a peaceful, contemplative mood. The aesthetic is clean, highly detailed, and cinematic, fitting perfectly into a modern, light-filled UI design with a focus on tranquility and premium travel experiences." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSI5RbAQO_FcP0p54JpA3Fg3ucuHIm9jUpOar-WyxoyW_DnkDMH_2ROoHlsiKvm_dqXgJGrjDQg5li14wYhOp0met8AZ4BIduOZE4INdytDnUyeSV61bBZPKAKp42PYvZq1MHApRGlcFoF9LUBwY4QfFFtSrW19rm-n0bKS-ORdeuujKfnfNb94h9GoiiTRWJSQufb17ZXiCmfcOyTs8-LY23iGMs9BoMjOQAc34Qxb_mdr4jlyd1H2tGPeTnReg4C8_aWXSDVWk8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
+</div>
+<div class="p-5 relative z-10">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-on-surface text-[22px]">ศาลเจ้าเมจิ &amp; สวนโยโยงิ</h3>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite_border</span>
+</button>
+</div>
+<p class="text-on-surface-variant text-body-md mb-4 leading-relaxed">
+                            สัมผัสความสงบใจกลางเมืองหลวงที่ศาลเจ้าชินโตที่สำคัญที่สุดของโตเกียว เดินเล่นผ่านป่าทึบที่ปลูกโดยอาสาสมัครกว่าแสนต้น AI แนะนำให้มาช่วงเช้าเพื่อหลีกเลี่ยงฝูงชนและรับแสงแดดอ่อนๆ
+                        </p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-3 py-1 rounded-full glass-panel text-tertiary font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">directions_walk</span> เดินเยอะ
+                            </span>
+<span class="px-3 py-1 rounded-full glass-panel text-tertiary font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">park</span> ธรรมชาติ
+                            </span>
+<span class="px-3 py-1 rounded-full glass-panel text-tertiary font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">payments</span> เข้าชมฟรี
+                            </span>
+</div>
+<div class="p-3 rounded-lg bg-surface-container/50 border border-white/5 flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary mt-0.5">tips_and_updates</span>
+<div>
+<h4 class="font-label-md text-on-surface mb-1">AI Tip</h4>
+<p class="text-label-sm text-on-surface-variant">อย่าลืมเขียนแผ่นไม้เอมะ (Ema) เพื่อขอพร และสังเกตถังสาเกจำลองที่ตั้งเรียงรายอยู่ระหว่างทางเดินเข้า</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Upcoming Card (Dimmed) -->
+<div class="glass-card rounded-xl overflow-hidden opacity-70 hover:opacity-100 transition-opacity duration-300">
+<div class="h-32 relative">
+<div class="absolute top-3 left-3 z-10 px-2 py-1 rounded bg-black/60 backdrop-blur-md text-on-surface font-label-sm flex items-center gap-1 border border-white/10">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 13:00 - 14:30
+                        </div>
+<img alt="ซูชิ" class="w-full h-full object-cover" data-alt="A close-up, appetizing shot of premium conveyor belt sushi in a modern Tokyo restaurant. Vibrant, fresh cuts of salmon and tuna rest on perfectly formed rice. The lighting is warm and inviting, highlighting the glossy texture of the fish. The setting feels contemporary and clean, matching a high-end, food-focused travel aesthetic within a sleek, dark-mode UI context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD811pDF2ZelLRiFtElCw_9n3OkfA6paPDxVhHYQrl4T_G0Pfnglx5DduyIG6qJjlw3Ux4KVLjZkBqkWEjaP9Gsijd6Xk4G_074irUtOO_UYx7LVQkjBRb2X_Qr7PmU9g7lm51osmcHGgctxbBx5fFHoLCgg-PTd3laD2DyZoBBTrfrkktztP4dAq_1aykCTNk2xEoERGR-3VEWXSgqERhRwpLsIL6QNECYydjIOGeOAC9Wpazlto5Mu9XJASlvwMQezGz3svNjfdU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
+</div>
+<div class="p-4">
+<h3 class="font-headline-md text-[18px] text-on-surface mb-1">มื้อเที่ยง: ซูชิสายพาน Kura Sushi</h3>
+<p class="text-on-surface-variant text-label-sm line-clamp-2">สัมผัสประสบการณ์ซูชิสายพานที่มีเกมให้เล่นเมื่อทานครบ 5 จาน จองคิวล่วงหน้าผ่านแอปพลิเคชันแล้ว</p>
+</div>
+</div>
+</div>
+<!-- Column 3: Map & Weather (4 cols) -->
+<div class="col-span-4 flex flex-col gap-4">
+<!-- Weather Alert Widget -->
+<div class="glass-card rounded-xl p-4 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+<div class="flex justify-between items-center relative z-10">
+<div>
+<h4 class="font-label-md text-on-surface-variant mb-1">สภาพอากาศวันนี้ (ชิบูย่า)</h4>
+<div class="flex items-end gap-2">
+<span class="font-display text-[32px] font-semibold text-on-surface leading-none">18°C</span>
+<span class="text-primary font-label-sm mb-1">แจ่มใส</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[40px] text-primary" style="font-variation-settings: 'FILL' 1;">clear_day</span>
+</div>
+<div class="mt-3 pt-3 border-t border-white/10 relative z-10 flex items-center gap-2 text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-secondary">info</span>
+                        อากาศเย็นสบายในตอนเช้า แนะนำให้พกเสื้อคลุมบางๆ
+                    </div>
+</div>
+<!-- Interactive Map Placeholder -->
+<div class="flex-1 glass-card rounded-xl overflow-hidden relative flex flex-col min-h-[300px]">
+<div class="p-3 border-b border-white/10 bg-surface/50 flex justify-between items-center absolute top-0 w-full z-10 backdrop-blur-md">
+<h4 class="font-label-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">map</span>
+                            เส้นทางวันนี้
+                        </h4>
+<button class="text-primary font-label-sm hover:underline">ขยายแผนที่</button>
+</div>
+<!-- Map Image Placeholder -->
+<div class="flex-1 relative bg-surface-container-low" data-location="Tokyo Shibuya Harajuku area map abstract" style="">
+<img alt="Map" class="w-full h-full object-cover opacity-50" data-alt="A stylized, high-tech abstract map of Tokyo focusing on the Shibuya and Harajuku areas. The map uses a dark mode color palette with deep navy blues and blacks, accented by glowing electric blue and vibrant purple lines representing transit routes and streets. It looks like a sophisticated, futuristic interface from a sci-fi movie, perfectly aligning with the 'Navigating the Nebula' AI Trip Architect brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJjJpWjJs7t_9Yn3CHMuYk8mGBp4TAqae-ntcQhgzvEvVgiR83DCzkYKs8KOOSfSMaV7HPCuiNkvN7nkAssNwMLBO3h31L3HFo0CtbKHU4vr3udfpxsMG66E3RtQHjrdm9JHDq07QfgbskoWnn40AaQZljtPdLi03ndUdAXe5uUuW_dPlJuFe1h5jE0x7uKMILH57qjx1PwDvx854vOCIMh_9Y1q1APQH71CGwnXLsvLCzgp7eGd_uK1cQz6kZ5ShYzWoEpq7nd0Q"/>
+<!-- Map Pins -->
+<div class="absolute top-[40%] left-[30%] flex flex-col items-center">
+<div class="bg-primary text-on-primary-fixed text-[10px] font-bold px-2 py-0.5 rounded shadow-[0_0_10px_rgba(173,198,255,0.5)] mb-1">1. เมจิ</div>
+<div class="w-4 h-4 bg-primary rounded-full border-2 border-background shadow-[0_0_10px_rgba(173,198,255,0.8)] animate-pulse"></div>
+</div>
+<div class="absolute top-[60%] left-[50%] flex flex-col items-center opacity-70">
+<div class="bg-surface-variant text-on-surface text-[10px] px-2 py-0.5 rounded mb-1 border border-white/10">2. ซูชิ</div>
+<div class="w-3 h-3 bg-tertiary rounded-full border-2 border-background"></div>
+</div>
+<!-- Connector Line (SVG) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 0;">
+<path d="M 120 120 Q 150 180 200 180" fill="none" stroke="rgba(173,198,255,0.4)" stroke-dasharray="4 4" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Transit Info -->
+<div class="absolute bottom-3 left-3 right-3 glass-panel rounded-lg p-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">train</span>
+<div>
+<p class="font-label-sm text-on-surface">Harajuku Sta. -&gt; Shibuya Sta.</p>
+<p class="text-[10px] text-on-surface-variant">Yamanote Line • 3 min</p>
+</div>
+</div>
+<span class="font-label-md text-primary">¥150</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

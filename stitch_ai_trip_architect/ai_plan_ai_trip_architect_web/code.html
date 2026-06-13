@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="th"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>วางแผน - Trip Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#001a42",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-variant": "#323537",
+                        "on-primary-container": "#00285d",
+                        "inverse-primary": "#005ac2",
+                        "tertiary-container": "#8d90a0",
+                        "on-tertiary-container": "#252936",
+                        "inverse-surface": "#e0e3e5",
+                        "tertiary": "#c3c6d7",
+                        "secondary-fixed": "#e9ddff",
+                        "on-secondary": "#3c0091",
+                        "on-tertiary": "#2c303d",
+                        "on-background": "#e0e3e5",
+                        "secondary": "#d0bcff",
+                        "outline": "#8c909f",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "tertiary-fixed": "#dfe2f3",
+                        "surface-container-highest": "#323537",
+                        "secondary-container": "#571bc1",
+                        "background": "#101415",
+                        "on-secondary-fixed": "#23005c",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#101415",
+                        "surface-tint": "#adc6ff",
+                        "primary": "#adc6ff",
+                        "primary-container": "#4d8eff",
+                        "inverse-on-surface": "#2d3133",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-tertiary-fixed": "#171b28",
+                        "tertiary-fixed-dim": "#c3c6d7",
+                        "on-tertiary-fixed-variant": "#434654",
+                        "surface-container-high": "#272a2c",
+                        "on-primary-fixed-variant": "#004395",
+                        "outline-variant": "#424754",
+                        "surface-bright": "#363a3b",
+                        "on-secondary-container": "#c4abff",
+                        "on-primary": "#002e6a",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#191c1e",
+                        "surface-container-lowest": "#0b0f10",
+                        "surface-container": "#1d2022",
+                        "surface": "#101415",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-surface": "#e0e3e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "base": "8px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "display": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"],
+                        "label-sm": ["Geist", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "label-md": ["Geist", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "headline-lg-mobile": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "display": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nebula-glow {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            filter: blur(150px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: pulse-glow 10s infinite alternate ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.3; }
+            50% { transform: scale(1.1) translate(20px, -20px); opacity: 0.5; }
+            100% { transform: scale(0.9) translate(-20px, 20px); opacity: 0.3; }
+        }
+        .ai-orb-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ai-orb-core {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--tw-colors-primary) 0%, transparent 70%);
+            box-shadow: 0 0 50px var(--tw-colors-primary);
+            animation: orb-pulse 3s infinite ease-in-out;
+        }
+        .ai-orb-ring {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 2px solid rgba(173, 198, 255, 0.3);
+            animation: orb-spin 8s linear infinite;
+        }
+        .ai-orb-ring-2 {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 1px dashed rgba(173, 198, 255, 0.5);
+            animation: orb-spin-reverse 12s linear infinite;
+        }
+        @keyframes orb-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 80px var(--tw-colors-primary); }
+        }
+        @keyframes orb-spin { 100% { transform: rotate(360deg); } }
+        @keyframes orb-spin-reverse { 100% { transform: rotate(-360deg); } }
+        
+        .card-hover:hover {
+            border-color: rgba(173, 198, 255, 0.4);
+            box-shadow: 0 0 30px rgba(173, 198, 255, 0.1);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen overflow-x-hidden selection:bg-primary/30 font-body-md text-body-md">
+<!-- Ambient Background -->
+<div class="nebula-glow bg-primary-container top-[-200px] left-[-200px]"></div>
+<div class="nebula-glow bg-secondary-container bottom-[-300px] right-[-100px]" style="animation-delay: -5s;"></div>
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-64 border-r border-white/10 shadow-[10px_0_30px_rgba(0,0,0,0.5)] bg-surface-container/20 backdrop-blur-2xl flex flex-col py-8 z-50">
+<!-- Header -->
+<div class="px-6 mb-10 flex flex-col gap-2">
+<h1 class="font-display text-headline-md font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Trip Architect</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Navigating the Nebula</p>
+</div>
+<!-- CTA -->
+<div class="px-6 mb-8">
+<button class="w-full bg-gradient-to-r from-inverse-primary to-secondary-container rounded-xl py-3 px-4 flex items-center justify-center gap-2 font-label-md text-label-md font-bold text-white shadow-[0_0_15px_rgba(173,198,255,0.3)] hover:shadow-[0_0_25px_rgba(173,198,255,0.5)] transition-all duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                สร้างทริปใหม่
+            </button>
+</div>
+<!-- Main Nav Links -->
+<div class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                หน้าหลัก
+            </a>
+<a class="flex items-center gap-3 bg-primary/20 text-primary border-r-4 border-primary px-6 py-3 font-display text-label-md hover:bg-white/10 hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                วางแผน
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">event_available</span>
+                การจอง
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">forum</span>
+                แชท
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+                โปรไฟล์
+            </a>
+</div>
+<!-- Footer Nav -->
+<div class="mt-auto">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+                ความช่วยเหลือ
+            </a>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="w-full h-16 border-b border-white/10 shadow-[0_0_20px_rgba(173,198,255,0.1)] bg-surface/10 backdrop-blur-xl flex justify-between items-center px-margin-desktop w-full ml-64 fixed top-0 z-40 box-border" style="width: calc(100% - 16rem);">
+<div class="flex items-center">
+<!-- Search placeholder if needed on left based on JSON -->
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-white/20">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="Close up portrait of a young person with soft studio lighting. Deep navy blue background, futuristic cyberpunk aesthetics. The person looks confident and calm. Cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwly7c3j8SlwCArLv5qjJ0VLHUu6FZqEI5BSIhMT9_2YFv_mk4MyLo5aZj2QE_nZeNSvkWG9I3Nh7bmyDq-9vXd5Mor4-Nxuv-DZ51cIRDquXNozBMA9fJVyEmg4epgxCuheXxJS7YRuCSXMaKSX8ZvnWIyu5j3Z_4oe2eh9gB2JOSUfSZXPONjymbCeb5jvhr7pA-pRk1qI_bMZPSS3lNhhGsKHhyMrAoafF7wb-dsxAh5cN-wfkr5shBQYmVpCY3xKI3jKyuTBw"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-32 px-margin-desktop min-h-screen flex flex-col relative z-10">
+<!-- Central AI Interaction Area -->
+<div class="flex-1 flex flex-col items-center justify-center min-h-[409px] mb-12">
+<div class="ai-orb-container mb-8">
+<div class="ai-orb-ring-2"></div>
+<div class="ai-orb-ring"></div>
+<div class="ai-orb-core"></div>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-2 text-center drop-shadow-[0_0_10px_rgba(173,198,255,0.5)]">กำลังประมวลผลแผนการเดินทางของคุณ...</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-center max-w-lg">Trip Architect กำลังวิเคราะห์ข้อมูลเที่ยวบิน โรงแรม และสถานที่น่าสนใจ เพื่อจัดตารางเวลาที่ดีที่สุดสำหรับคุณ</p>
+</div>
+<!-- Preset Cards Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto w-full mb-16">
+<!-- Card 1 -->
+<button class="glass-panel rounded-xl p-6 text-left flex flex-col gap-4 card-hover transition-all duration-300 group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary/30 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">beach_access</span>
+</div>
+<span class="px-3 py-1 rounded-full bg-secondary/20 text-secondary font-label-sm text-label-sm border border-secondary/30">AI Recommended</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">ทริปทะเลประหยัดงบ</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">เส้นทางแนะนำสำหรับผู้ที่ต้องการพักผ่อนริมหาดในงบประมาณที่ควบคุมได้</p>
+</div>
+</button>
+<!-- Card 2 -->
+<button class="glass-panel rounded-xl p-6 text-left flex flex-col gap-4 card-hover transition-all duration-300 group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary/30 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-label-sm border border-white/10">Popular</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">3 วันในภูเก็ต</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">แผนการเดินทางยอดฮิต ครอบคลุมจุดเช็คอินสำคัญและร้านอาหารท้องถิ่น</p>
+</div>
+</button>
+</div>
+<!-- Chat Input Area (Fixed Bottom) -->
+<div class="fixed bottom-0 left-64 right-0 p-8 bg-gradient-to-t from-background via-background to-transparent z-30 pointer-events-none flex justify-center">
+<div class="w-full max-w-3xl glass-panel rounded-full p-2 flex items-center gap-2 pointer-events-auto shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-t border-white/20">
+<button class="p-3 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<input class="flex-1 bg-transparent border-none text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0 font-body-md text-body-md px-2" placeholder="บอกฉันว่าคุณอยากไปไหน หรืออยากทำอะไรในทริปนี้..." type="text"/>
+<button class="p-3 bg-primary text-on-primary-fixed rounded-full hover:bg-primary-container transition-colors shadow-[0_0_15px_rgba(173,198,255,0.4)] flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="th"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nebula - สมัครสมาชิก</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#dfe2f3",
+                        "on-primary": "#002e6a",
+                        "inverse-surface": "#e0e3e5",
+                        "error-container": "#93000a",
+                        "secondary-container": "#571bc1",
+                        "surface-variant": "#323537",
+                        "inverse-on-surface": "#2d3133",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-primary-container": "#00285d",
+                        "surface-container-highest": "#323537",
+                        "tertiary": "#c3c6d7",
+                        "on-tertiary": "#2c303d",
+                        "secondary": "#d0bcff",
+                        "surface-container-low": "#191c1e",
+                        "on-secondary-container": "#c4abff",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#8d90a0",
+                        "surface-bright": "#363a3b",
+                        "tertiary-fixed-dim": "#c3c6d7",
+                        "surface-tint": "#adc6ff",
+                        "outline-variant": "#424754",
+                        "primary-fixed": "#d8e2ff",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "on-surface": "#e0e3e5",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-lowest": "#0b0f10",
+                        "on-tertiary-fixed": "#171b28",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "on-secondary-fixed": "#23005c",
+                        "on-secondary": "#3c0091",
+                        "on-tertiary-fixed-variant": "#434654",
+                        "on-primary-fixed": "#001a42",
+                        "on-background": "#e0e3e5",
+                        "on-surface-variant": "#c2c6d6",
+                        "background": "#101415",
+                        "surface": "#101415",
+                        "error": "#ffb4ab",
+                        "surface-container": "#1d2022",
+                        "secondary-fixed": "#e9ddff",
+                        "primary": "#adc6ff",
+                        "outline": "#8c909f",
+                        "on-tertiary-container": "#252936",
+                        "on-error": "#690005",
+                        "primary-container": "#4d8eff",
+                        "surface-dim": "#101415",
+                        "inverse-primary": "#005ac2",
+                        "surface-container-high": "#272a2c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "margin-desktop": "48px",
+                        "base": "8px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "display": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Geist"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-glow {
+            box-shadow: 0 0 30px rgba(173, 198, 255, 0.15);
+        }
+        .input-glass {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(140, 144, 159, 0.3);
+            transition: all 0.3s ease;
+        }
+        .input-glass:focus {
+            border-color: #adc6ff;
+            box-shadow: 0 0 10px rgba(173, 198, 255, 0.2);
+            outline: none;
+        }
+        .btn-primary-gradient {
+            background: linear-gradient(135deg, #4d8eff 0%, #571bc1 100%);
+            box-shadow: 0 0 15px rgba(87, 27, 193, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-primary-gradient:hover {
+            box-shadow: 0 0 25px rgba(87, 27, 193, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex overflow-hidden">
+<!-- Ambient Background Glows -->
+<div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+<div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary-container/20 blur-[120px]"></div>
+<div class="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-secondary-container/10 blur-[150px]"></div>
+</div>
+<!-- Left Side: Visual / Hero -->
+<div class="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-margin-desktop bg-surface-container-lowest">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Cosmic background" class="w-full h-full object-cover opacity-40 mix-blend-screen" data-alt="A breathtaking, hyper-realistic view of a deep space nebula in vibrant electric blue and deep purple hues. The cosmic dust and stars create a sense of vast, infinite exploration. The scene is illuminated by ethereal, glowing starlight, perfectly complementing a futuristic, high-end AI application interface. The mood is calm, intelligent, and deeply mysterious, embodying the concept of navigating the unknown." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG47xFSUOCgsLweTqYmLG_4D2wRC9FTkupEV2OuSik3lQbs6FUGhzxdBZ8XZA26ooWalb_WfUSCQPDbAIO8Ma29rZxLLtC7O5HkUsXa1fRyTp0qIVBLfoWj9z5k4zkHIGkgXhL2dTiT2yzcYona83PexMAhlJCW5R2lAC4HwjAt4bpB-LEfjA5larEw5_3Pmoj0n3t4s6uKIdKP7UoIFB54A37lngkEvIa9fsu6lJ0KmOEn4I2yv5ZHC52h-R34Opg2y6ynZOQ82A"/>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent"></div>
+</div>
+<!-- Brand / Logo -->
+<div class="relative z-10 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-display text-display text-primary tracking-tighter">Nebula</span>
+</div>
+<!-- Hero Content -->
+<div class="relative z-10 max-w-lg mb-24">
+<h1 class="font-display text-display text-on-background mb-6 leading-tight">
+                เริ่มต้นการเดินทาง<br/>ด้วย AI อัจฉริยะ
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                สัมผัสประสบการณ์การวางแผนการเดินทางแห่งอนาคต Nebula จะช่วยออกแบบทริปที่สมบูรณ์แบบเฉพาะคุณ ด้วยพลังของ AI ที่เข้าใจทุกความต้องการ
+            </p>
+</div>
+</div>
+<!-- Right Side: Registration Form -->
+<div class="w-full lg:w-1/2 flex items-center justify-center p-margin-mobile md:p-gutter lg:p-margin-desktop relative z-10">
+<div class="w-full max-w-md glass-panel rounded-xl p-8 md:p-10 neon-glow relative">
+<!-- Mobile Logo (visible only on small screens) -->
+<div class="lg:hidden flex items-center gap-3 justify-center mb-8">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-display text-headline-lg-mobile text-primary tracking-tighter">Nebula</span>
+</div>
+<!-- Header -->
+<div class="text-center mb-8">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background mb-2">สร้างบัญชีผู้ใช้</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">เข้าร่วมเป็นส่วนหนึ่งของนักเดินทางแห่งอนาคต</p>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-6" method="POST">
+<!-- Name Input -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface block" for="name">ชื่อ - นามสกุล</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">person</span>
+</div>
+<input class="input-glass w-full pl-10 pr-4 py-3 rounded-lg font-body-md text-body-md text-on-background placeholder-on-surface-variant/50 focus:ring-1 focus:ring-primary" id="name" name="name" placeholder="ระบุชื่อของคุณ" required="" type="text"/>
+</div>
+</div>
+<!-- Email Input -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface block" for="email">อีเมล</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">mail</span>
+</div>
+<input class="input-glass w-full pl-10 pr-4 py-3 rounded-lg font-body-md text-body-md text-on-background placeholder-on-surface-variant/50 focus:ring-1 focus:ring-primary" id="email" name="email" placeholder="name@example.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface block" for="password">รหัสผ่าน</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">lock</span>
+</div>
+<input class="input-glass w-full pl-10 pr-12 py-3 rounded-lg font-body-md text-body-md text-on-background placeholder-on-surface-variant/50 focus:ring-1 focus:ring-primary" id="password" name="password" placeholder="อย่างน้อย 8 ตัวอักษร" required="" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-xl">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Terms -->
+<div class="flex items-start gap-3">
+<div class="flex items-center h-5 mt-0.5">
+<input class="w-4 h-4 bg-black/30 border-outline rounded text-primary focus:ring-primary focus:ring-offset-background" id="terms" name="terms" required="" type="checkbox"/>
+</div>
+<div class="text-sm">
+<label class="font-body-md text-label-md text-on-surface-variant" for="terms">
+                            ฉันยอมรับ <a class="text-primary hover:underline" href="#">ข้อตกลงการใช้งาน</a> และ <a class="text-primary hover:underline" href="#">นโยบายความเป็นส่วนตัว</a>
+</label>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full btn-primary-gradient py-3.5 rounded-xl font-headline-md text-[16px] text-white flex justify-center items-center gap-2" type="submit">
+                    สมัครสมาชิก
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="mt-8 mb-6 flex items-center">
+<div class="flex-grow border-t border-white/10"></div>
+<span class="px-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">หรือสมัครด้วย</span>
+<div class="flex-grow border-t border-white/10"></div>
+</div>
+<!-- Social Login -->
+<div class="grid grid-cols-2 gap-4">
+<button class="glass-panel py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-white/10 transition-colors">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGgeFmTyA0bkHibkrnznw9HEvVV5Dm4MkrT-LIbYnjtfZ3fM-D9fCPGvRarTINlG7iC_iN_l7x65xueQ6I_givjuSeK6DgaIFKZA8yHsOJTY-ULSXy26gTvdKEaFRALCQnZjNd_pkGIVGch7MKHv4iNcmoWdt-_Pqb_aTwHIdTX-1KGfhrVDqUap10b9pJwHyqM-HqyL92GMgfChHAiMJANiCFZozM0KL9YXUjAr3hpjJSEUTlByPwsIOLDpPpxpE9_NnMEsX1hEw"/>
+<span class="font-label-md text-label-md text-on-surface">Google</span>
+</button>
+<button class="glass-panel py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-white/10 transition-colors">
+<img alt="Apple" class="w-5 h-5 filter invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBExjT_rgmL5RevSOOdaLQdnMMXIdETJk2hMWKLrlQo0sTLiBo0oEk3zUfb64Lu3sVcO7y3v0YOJCu8d0DNYaEOC17lPwiA5FTOf9K-RSIRgaUlYUsb93bT8DpPys_xd05e2EER1kfNvqzEqtkTS_YkG_TwOJTG_PnZKe_2eyESpo6F6OpEuCMcMErShyDgpJcOcNF0l9oYfnrzGJFGtgrC7BOfkxGbpIlU5JghQ0FelE-bd_MFvNSIB9FeMu48Xwp9vhr6-yB7fjs"/>
+<span class="font-label-md text-label-md text-on-surface">Apple</span>
+</button>
+</div>
+<!-- Login Link -->
+<p class="mt-8 text-center font-body-md text-body-md text-on-surface-variant">
+                มีบัญชีอยู่แล้ว? 
+                <a class="text-primary hover:text-primary-container font-semibold transition-colors" href="#">เข้าสู่ระบบ</a>
+</p>
+</div>
+</div>
+</body></html>

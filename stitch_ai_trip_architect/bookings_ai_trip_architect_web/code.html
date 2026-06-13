@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="th"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trip Architect - การจอง</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#93000a",
+                    "on-primary-fixed": "#001a42",
+                    "on-error": "#690005",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-variant": "#323537",
+                    "on-primary-container": "#00285d",
+                    "inverse-primary": "#005ac2",
+                    "tertiary-container": "#8d90a0",
+                    "on-tertiary-container": "#252936",
+                    "inverse-surface": "#e0e3e5",
+                    "tertiary": "#c3c6d7",
+                    "secondary-fixed": "#e9ddff",
+                    "on-secondary": "#3c0091",
+                    "on-tertiary": "#2c303d",
+                    "on-background": "#e0e3e5",
+                    "secondary": "#d0bcff",
+                    "outline": "#8c909f",
+                    "secondary-fixed-dim": "#d0bcff",
+                    "on-secondary-fixed-variant": "#5516be",
+                    "tertiary-fixed": "#dfe2f3",
+                    "surface-container-highest": "#323537",
+                    "secondary-container": "#571bc1",
+                    "background": "#101415",
+                    "on-secondary-fixed": "#23005c",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#101415",
+                    "surface-tint": "#adc6ff",
+                    "primary": "#adc6ff",
+                    "primary-container": "#4d8eff",
+                    "inverse-on-surface": "#2d3133",
+                    "on-surface-variant": "#c2c6d6",
+                    "on-tertiary-fixed": "#171b28",
+                    "tertiary-fixed-dim": "#c3c6d7",
+                    "on-tertiary-fixed-variant": "#434654",
+                    "surface-container-high": "#272a2c",
+                    "on-primary-fixed-variant": "#004395",
+                    "outline-variant": "#424754",
+                    "surface-bright": "#363a3b",
+                    "on-secondary-container": "#c4abff",
+                    "on-primary": "#002e6a",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-low": "#191c1e",
+                    "surface-container-lowest": "#0b0f10",
+                    "surface-container": "#1d2022",
+                    "surface": "#101415",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-surface": "#e0e3e5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1440px",
+                    "base": "8px",
+                    "margin-desktop": "48px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "display": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "label-sm": [
+                            "Geist"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "label-md": [
+                            "Geist"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "display": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "1",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "1",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-active {
+            box-shadow: inset 0 0 20px rgba(173, 198, 255, 0.1);
+        }
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+<!-- Global Nav Shell: SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex flex-col py-8 z-50 fixed left-0 top-0 h-full w-64 bg-surface-container/20 backdrop-blur-2xl border-r border-white/10 shadow-[10px_0_30px_rgba(0,0,0,0.5)]">
+<div class="px-6 mb-12 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-[0_0_15px_rgba(173,198,255,0.3)]">
+<span class="material-symbols-outlined text-background" style="font-variation-settings: 'FILL' 1;">trip_origin</span>
+</div>
+<div>
+<h1 class="font-display text-headline-md font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Trip Architect</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">Navigating the Nebula</p>
+</div>
+</div>
+<div class="px-6 mb-8">
+<button class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-container to-secondary-container text-white font-label-md text-label-md font-bold shadow-[0_0_15px_rgba(77,142,255,0.2)] hover:shadow-[0_0_25px_rgba(77,142,255,0.4)] transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-white">add</span>
+                สร้างทริปใหม่
+            </button>
+</div>
+<div class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                หน้าหลัก
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+                วางแผน
+            </a>
+<!-- Active State: การจอง -->
+<a class="flex items-center gap-3 bg-primary/20 text-primary border-r-4 border-primary px-6 py-3 font-display text-label-md hover:bg-white/10 hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="event_available" style="font-variation-settings: 'FILL' 1;">event_available</span>
+                การจอง
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+                แชท
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+                โปรไฟล์
+            </a>
+</div>
+<div class="mt-auto">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-white/5 px-6 py-3 font-display text-label-md hover:text-on-surface transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+                ความช่วยเหลือ
+            </a>
+</div>
+</nav>
+<!-- Global Nav Shell: TopNavBar (Desktop Only) -->
+<header class="hidden md:flex justify-between items-center px-margin-desktop w-full ml-64 bg-surface/10 backdrop-blur-xl w-full h-16 border-b border-white/10 shadow-[0_0_20px_rgba(173,198,255,0.1)] fixed top-0 right-0 z-40" style="width: calc(100% - 16rem);">
+<div class="flex items-center gap-8">
+<h2 class="font-display text-headline-md font-bold text-primary">การจอง</h2>
+<div class="flex items-center gap-6">
+<!-- Top Nav Links (Contextual) -->
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-display text-body-md cursor-pointer active:scale-95" href="#">ทั้งหมด</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-display text-body-md cursor-pointer active:scale-95" href="#">ที่กำลังจะมาถึง</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-display text-body-md cursor-pointer active:scale-95" href="#">ที่ผ่านมา</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-display text-body-md cursor-pointer active:scale-95" href="#">ยกเลิกแล้ว</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-black/30 border border-white/10 rounded-full py-1.5 pl-9 pr-4 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all w-64 placeholder:text-on-surface-variant/50" placeholder="ค้นหาการจอง..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<img alt="User profile photo" class="w-8 h-8 rounded-full border border-white/20 object-cover" data-alt="A close up portrait of a confident young professional woman with warm ambient lighting. The style is modern, sleek, and high-quality, fitting a premium digital interface. The background is softly blurred with deep navy tones to complement a high-tech, futuristic luxury aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxrI3dc7pC8ALpIxY2iQL1WEQY8vf8_URMiXkyIOi27nv4i3jYJj3FloTpWUJIpEQzD1qxmDhZoxjTtCj22Qbzb82LwwFP_R8Enh8lil0VmsDJVZ_qArrAmQgtRByy4a2O43MFcmNnoMVvBm3TaLEKCzx6vGyG13hpbzq-PF0RMNGZtGUM9qEW93yzyciLaHM1OHcQVVPYQ5UORiGJQi_I_WyjeNVqXDeS-UF-AGswgI8POTdXJGcDKiuSFC0D_d3xhjp_UBystT4"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-24 px-margin-desktop pb-24 min-h-screen">
+<div class="max-w-container-max mx-auto">
+<!-- Filters -->
+<div class="flex items-center gap-3 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-4 py-1.5 rounded-full bg-primary/20 text-primary border border-primary/30 font-label-md text-label-md whitespace-nowrap">ทั้งหมด</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high border border-white/5 font-label-md text-label-md transition-colors whitespace-nowrap">เที่ยวบิน</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high border border-white/5 font-label-md text-label-md transition-colors whitespace-nowrap">โรงแรม</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high border border-white/5 font-label-md text-label-md transition-colors whitespace-nowrap flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">diamond</span>
+                    Luxury
+                </button>
+</div>
+<!-- Bookings Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-gutter">
+<!-- Card 1: Japan Airlines (Boarded/Completed intent) -->
+<article class="glass-card rounded-xl p-6 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(173,198,255,0.05)] transition-all duration-500">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-primary/20 transition-all duration-500"></div>
+<div class="flex justify-between items-start mb-6 relative z-10">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-2xl">flight</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Japan Airlines</h3>
+<p class="font-body-md text-body-md text-on-surface-variant/70">เที่ยวบิน JL 32</p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container text-tertiary border border-white/10 font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                            เดินทางแล้ว
+                        </span>
+</div>
+<div class="grid grid-cols-3 gap-4 mb-6 relative z-10">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant/60 mb-1">จาก</p>
+<p class="font-headline-lg text-headline-lg text-on-surface">BKK</p>
+<p class="font-body-md text-body-md text-on-surface-variant/80">กรุงเทพฯ</p>
+</div>
+<div class="flex flex-col items-center justify-center pt-4">
+<span class="material-symbols-outlined text-primary/50 mb-1">more_horiz</span>
+<div class="w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+<p class="font-label-sm text-label-sm text-on-surface-variant/60 mt-1">6h 15m</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant/60 mb-1">ถึง</p>
+<p class="font-headline-lg text-headline-lg text-on-surface">HND</p>
+<p class="font-body-md text-body-md text-on-surface-variant/80">โตเกียว</p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-white/5 relative z-10">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant/60">วันที่</p>
+<p class="font-body-md text-body-md text-on-surface">15 ต.ค. 2023</p>
+</div>
+<button class="text-primary font-label-md text-label-md hover:text-primary-container transition-colors flex items-center gap-1">
+                            ดูรายละเอียด <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</article>
+<!-- Card 2: Aman Tokyo (Issued/Upcoming) -->
+<article class="glass-card rounded-xl p-6 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(208,188,255,0.05)] transition-all duration-500 glow-active">
+<div class="absolute top-0 right-0 w-48 h-48 bg-secondary/10 rounded-full blur-3xl -mr-20 -mt-20 group-hover:bg-secondary/20 transition-all duration-500"></div>
+<div class="flex justify-between items-start mb-6 relative z-10">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center shadow-[0_0_15px_rgba(208,188,255,0.1)]">
+<span class="material-symbols-outlined text-secondary text-2xl">hotel</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Aman Tokyo</h3>
+<p class="font-body-md text-body-md text-on-surface-variant/70 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">diamond</span>
+                                    Premier Room
+                                </p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">task_alt</span>
+                            ยืนยันแล้ว
+                        </span>
+</div>
+<div class="flex gap-6 mb-6 relative z-10">
+<div class="flex-1">
+<p class="font-label-sm text-label-sm text-on-surface-variant/60 mb-1">เช็คอิน</p>
+<p class="font-body-lg text-body-lg text-on-surface font-medium">16 ต.ค. 2023</p>
+<p class="font-body-md text-body-md text-on-surface-variant/70">15:00</p>
+</div>
+<div class="w-px bg-white/10"></div>
+<div class="flex-1">
+<p class="font-label-sm text-label-sm text-on-surface-variant/60 mb-1">เช็คเอาท์</p>
+<p class="font-body-lg text-body-lg text-on-surface font-medium">19 ต.ค. 2023</p>
+<p class="font-body-md text-body-md text-on-surface-variant/70">12:00</p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-white/5 relative z-10">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-container border border-surface flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">person</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container border border-surface flex items-center justify-center z-0">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">person</span>
+</div>
+</div>
+<button class="bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-2 rounded-lg font-label-md text-label-md text-on-surface transition-colors flex items-center gap-2">
+                            จัดการการจอง
+                        </button>
+</div>
+</article>
+<!-- Card 3: Cathay Pacific (Cancelled) -->
+<article class="glass-card rounded-xl p-6 relative overflow-hidden group opacity-60 hover:opacity-100 transition-opacity duration-300">
+<div class="flex justify-between items-start mb-6 relative z-10">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-error-container/20 border border-error/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-2xl">flight_takeoff</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface line-through decoration-error/50">Cathay Pacific</h3>
+<p class="font-body-md text-body-md text-on-surface-variant/70">เที่ยวบิน CX 701</p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-error-container/30 text-error border border-error/20 font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">cancel</span>
+                            ยกเลิกแล้ว
+                        </span>
+</div>
+<div class="grid grid-cols-3 gap-4 mb-6 relative z-10">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant/60 mb-1">จาก</p>
+<p class="font-headline-lg text-headline-lg text-on-surface opacity-50">HKG</p>
+</div>
+<div class="flex flex-col items-center justify-center pt-4 opacity-50">
+<div class="w-full h-px bg-white/10"></div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant/60 mb-1">ถึง</p>
+<p class="font-headline-lg text-headline-lg text-on-surface opacity-50">BKK</p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-white/5 relative z-10">
+<p class="font-label-sm text-label-sm text-error/80">คืนเงินสำเร็จ (12 ต.ค. 2023)</p>
+<button class="text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors flex items-center gap-1">
+                            ดูรายละเอียด
+                        </button>
+</div>
+</article>
+</div>
+</div>
+</main>
+</body></html>
