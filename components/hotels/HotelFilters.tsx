@@ -203,16 +203,16 @@ export function HotelFilters({ cities, amenities }: Props) {
       )}
 
       {/* Actions */}
-      <div className="flex flex-wrap gap-3 justify-end pt-2 border-t border-white/5">
+      <div className="flex flex-wrap gap-3 justify-end pt-2 border-t border-border">
         <button
           onClick={reset}
-          className="px-5 py-2 rounded-xl glass-panel text-on-surface-variant font-label text-sm hover:text-on-surface transition-colors"
+          className="px-5 py-2 rounded-xl bg-surface border border-border text-on-surface font-label text-sm hover:bg-surface-hover hover:border-primary/50 transition-all shadow-sm"
         >
           รีเซ็ต
         </button>
         <button
           onClick={apply}
-          className="px-6 py-2 rounded-xl btn-primary-gradient font-label text-sm font-bold"
+          className="px-6 py-2 rounded-xl bg-primary text-white border border-primary font-label text-sm font-bold shadow-md hover:bg-primary/90 hover:shadow-lg transition-all flex items-center gap-2"
         >
           กรองผลลัพธ์
         </button>

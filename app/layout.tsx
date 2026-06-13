@@ -19,18 +19,24 @@ export const metadata: Metadata = {
   description: "Navigating the Nebula — Smart Itinerary & Booking Synergy Platform.",
 };
 
+import { ThemeProvider } from "@/components/ThemeProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="th" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="th" className={`${inter.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
         />
       </head>
-      <body className="min-h-full bg-background text-on-surface">{children}</body>
+      <body className="min-h-full bg-background text-on-surface">
+         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+            {children}
+         </ThemeProvider>
+      </body>
     </html>
   );
 }

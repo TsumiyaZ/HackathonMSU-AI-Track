@@ -21,7 +21,7 @@ const TILES: NavTile[] = [
     title: "วางแผนทริปกับ AI",
     description: "พิมพ์สั้นๆ ว่าคุณอยากไปไหน AI จัดทริปให้ใน 1 คลิก",
     icon: "auto_awesome",
-    ready: false,
+    ready: true,
   },
   {
     href: "/bookings",

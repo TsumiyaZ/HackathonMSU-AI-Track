@@ -1,92 +1,134 @@
 @import "tailwindcss";
 
-/* =========================================================
-   Aetheric Intelligence — Design Tokens
-   Source: stitch_ai_trip_architect/aetheric_intelligence/DESIGN.md
-   ========================================================= */
-
 @theme {
-  /* ----- Surface / Background ----- */
-  --color-surface: #101415;
-  --color-surface-dim: #101415;
-  --color-surface-bright: #363a3b;
-  --color-surface-container-lowest: #0b0f10;
-  --color-surface-container-low: #191c1e;
-  --color-surface-container: #1d2022;
-  --color-surface-container-high: #272a2c;
-  --color-surface-container-highest: #323537;
-  --color-on-surface: #e0e3e5;
-  --color-on-surface-variant: #c2c6d6;
-  --color-inverse-surface: #e0e3e5;
-  --color-inverse-on-surface: #2d3133;
-  --color-outline: #8c909f;
-  --color-outline-variant: #424754;
-  --color-surface-tint: #adc6ff;
-  --color-surface-variant: #323537;
-  --color-background: #101415;
-  --color-on-background: #e0e3e5;
+  /* Dynamic Colors based on root variables */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-on-background: var(--foreground);
+  
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-variant: var(--surface-variant);
+  
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
 
-  /* ----- Primary (Electric Blue) ----- */
-  --color-primary: #adc6ff;
-  --color-on-primary: #002e6a;
-  --color-primary-container: #4d8eff;
-  --color-on-primary-container: #00285d;
-  --color-inverse-primary: #005ac2;
-  --color-primary-fixed: #d8e2ff;
-  --color-primary-fixed-dim: #adc6ff;
-  --color-on-primary-fixed: #001a42;
-  --color-on-primary-fixed-variant: #004395;
+  --color-border: var(--border);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
 
-  /* ----- Secondary (Vibrant Purple) ----- */
-  --color-secondary: #d0bcff;
-  --color-on-secondary: #3c0091;
-  --color-secondary-container: #571bc1;
-  --color-on-secondary-container: #c4abff;
-  --color-secondary-fixed: #e9ddff;
-  --color-secondary-fixed-dim: #d0bcff;
-  --color-on-secondary-fixed: #23005c;
-  --color-on-secondary-fixed-variant: #5516be;
-
-  /* ----- Tertiary ----- */
-  --color-tertiary: #c3c6d7;
-  --color-on-tertiary: #2c303d;
-  --color-tertiary-container: #8d90a0;
-  --color-on-tertiary-container: #252936;
-  --color-tertiary-fixed: #dfe2f3;
-  --color-tertiary-fixed-dim: #c3c6d7;
-  --color-on-tertiary-fixed: #171b28;
-  --color-on-tertiary-fixed-variant: #434654;
-
-  /* ----- Error ----- */
-  --color-error: #ffb4ab;
-  --color-on-error: #690005;
-  --color-error-container: #93000a;
-  --color-on-error-container: #ffdad6;
-
-  /* ----- Typography ----- */
+  /* Font mapping */
   --font-display: var(--font-inter), "Inter", system-ui, sans-serif;
   --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
   --font-label: var(--font-geist), "Geist", ui-monospace, monospace;
-
-  /* ----- Radius ----- */
-  --radius-sm: 0.25rem;
-  --radius-DEFAULT: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-full: 9999px;
-
-  /* ----- Spacing ----- */
-  --spacing-container-max: 1440px;
-  --spacing-gutter: 24px;
-  --spacing-margin-mobile: 16px;
-  --spacing-margin-desktop: 48px;
 }
 
+/* Light Mode (Default) */
 :root {
-  color-scheme: dark;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  
+  --surface: #ffffff;
+  --surface-dim: #f1f5f9;
+  --surface-bright: #ffffff;
+  --surface-hover: #f1f5f9;
+  --surface-variant: #e2e8f0;
+  
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8fafc;
+  --surface-container: #f1f5f9;
+  --surface-container-high: #e2e8f0;
+  --surface-container-highest: #cbd5e1;
+  
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --inverse-surface: #0f172a;
+  --inverse-on-surface: #f8fafc;
+  
+  --primary: #3b82f6;
+  --on-primary: #ffffff;
+  --primary-container: #dbeafe;
+  --on-primary-container: #1e3a8a;
+  
+  --secondary: #8b5cf6;
+  --on-secondary: #ffffff;
+  --secondary-container: #ede9fe;
+  --on-secondary-container: #4c1d95;
+
+  --border: #cbd5e1;
+  --outline: #94a3b8;
+  --outline-variant: #cbd5e1;
+
+  /* Glassmorphism Variables */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-border-strong: rgba(0, 0, 0, 0.12);
+  --glass-shadow: rgba(0, 0, 0, 0.04);
+}
+
+/* Dark Mode */
+.dark {
   --background: #101415;
   --foreground: #e0e3e5;
+  
+  --surface: #101415;
+  --surface-dim: #101415;
+  --surface-bright: #363a3b;
+  --surface-hover: #272a2c;
+  --surface-variant: #323537;
+  
+  --surface-container-lowest: #0b0f10;
+  --surface-container-low: #191c1e;
+  --surface-container: #1d2022;
+  --surface-container-high: #272a2c;
+  --surface-container-highest: #323537;
+  
+  --on-surface: #e0e3e5;
+  --on-surface-variant: #c2c6d6;
+  --inverse-surface: #e0e3e5;
+  --inverse-on-surface: #2d3133;
+  
+  --primary: #adc6ff;
+  --on-primary: #002e6a;
+  --primary-container: #4d8eff;
+  --on-primary-container: #00285d;
+  
+  --secondary: #d0bcff;
+  --on-secondary: #3c0091;
+  --secondary-container: #571bc1;
+  --on-secondary-container: #c4abff;
+
+  --border: #424754;
+  --outline: #8c909f;
+  --outline-variant: #424754;
+
+  /* Glassmorphism Variables */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-bg-strong: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-strong: rgba(255, 255, 255, 0.2);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
 }
 
 html,
@@ -96,60 +138,70 @@ body {
   font-family: var(--font-inter), "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* =========================================================
-   Utility helpers — Glassmorphism / Glow
-   ========================================================= */
-
 @layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px var(--glass-shadow);
+  }
   .glass-panel {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(20px) saturate(1.1);
-    -webkit-backdrop-filter: blur(20px) saturate(1.1);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px var(--glass-shadow);
   }
   .glass-panel-strong {
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--glass-bg-strong);
     backdrop-filter: blur(28px) saturate(1.2);
     -webkit-backdrop-filter: blur(28px) saturate(1.2);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--glass-border-strong);
+    box-shadow: 0 12px 40px var(--glass-shadow);
   }
   .glass-input {
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border-strong);
+    color: var(--foreground);
+    box-shadow: inset 0 2px 4px var(--glass-shadow);
   }
   .glass-input:focus,
   .glass-input:focus-within {
-    border-color: #adc6ff;
-    box-shadow: 0 0 0 3px rgba(173, 198, 255, 0.18);
+    border-color: var(--primary);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     outline: none;
   }
-  .ai-glow {
-    box-shadow: 0 0 30px rgba(173, 198, 255, 0.15);
-  }
-  .ai-glow-strong {
-    box-shadow: 0 0 60px rgba(173, 198, 255, 0.25);
-  }
   .btn-primary-gradient {
-    background: linear-gradient(135deg, #adc6ff 0%, #d0bcff 100%);
-    color: #101415;
-    box-shadow: 0 0 15px rgba(173, 198, 255, 0.3);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: var(--on-primary);
+    border: 1px solid var(--primary);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    font-weight: 600;
   }
   .btn-primary-gradient:hover {
-    box-shadow: 0 0 24px rgba(173, 198, 255, 0.45);
+    box-shadow: 0 6px 24px rgba(59, 130, 246, 0.45);
+    transform: translateY(-1px);
   }
   .text-gradient {
-    background: linear-gradient(90deg, #adc6ff 0%, #d0bcff 100%);
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .grid-bg {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(var(--border) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .ai-glow {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+  }
+  .ai-glow-strong {
+    box-shadow: 0 0 60px rgba(59, 130, 246, 0.25);
   }
   .scrollbar-hidden::-webkit-scrollbar {
     display: none;
@@ -157,11 +209,27 @@ body {
   .scrollbar-hidden {
     scrollbar-width: none;
   }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--surface-variant) 25%,
+      var(--surface-hover) 50%,
+      var(--surface-variant) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
 }
 
-/* =========================================================
-   Material Symbols (used for nav/icons in mockup parity)
-   ========================================================= */
 .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
