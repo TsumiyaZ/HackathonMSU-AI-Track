@@ -28,21 +28,28 @@ const TILES: NavTile[] = [
     title: "การจองของฉัน",
     description: "ดู ค้นหา และจัดการการจองทั้งหมดในที่เดียว",
     icon: "event_available",
-    ready: false,
+    ready: true,
   },
   {
     href: "/chat",
     title: "Travel Buddy",
     description: "แชทบอทผู้ช่วยถามพิกัด สถานที่ และไอเดียการเที่ยว",
     icon: "forum",
-    ready: false,
+    ready: true,
+  },
+  {
+    href: "/checkout",
+    title: "ชำระเงิน",
+    description: "จองแบบ 1-Click พร้อมบริการชำระเงินจำลอง",
+    icon: "credit_card",
+    ready: true,
   },
   {
     href: "/profile",
     title: "โปรไฟล์ของฉัน",
     description: "ตั้งค่าความชอบเพื่อให้ AI แนะนำทริปที่ตรงใจ",
     icon: "account_circle",
-    ready: false,
+    ready: true,
   },
 ];
 
