@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 AI Trip Architect - Navigating the Nebula
 
-## Getting Started
+ยินดีต้อนรับสู่โปรเจกต์ **AI Trip Architect** แอปพลิเคชันจัดทริปการเดินทางอัจฉริยะด้วยเทคโนโลยี AI (Google Gemini) และฐานข้อมูลประสิทธิภาพสูง (Supabase + Prisma) สำหรับงาน Hackathon!
 
-First, run the development server:
+## 🛠️ การติดตั้งและรันโปรเจกต์ (Setup Guide)
 
+หากคุณเพิ่ง Pull โค้ดมาจาก GitHub กรุณาทำตามขั้นตอนด้านล่างนี้ **ทีละขั้นตอน** เพื่อให้ระบบ AI และฐานข้อมูลทำงานได้อย่างสมบูรณ์
+
+### 1. ติดตั้ง Dependencies (สำคัญมาก)
+เนื่องจากโปรเจกต์มีการใช้ไลบรารีใหม่ๆ (เช่น AI, Themes) คุณต้องติดตั้งแพ็กเกจทั้งหมดก่อน:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. ตั้งค่า Environment Variables (.env)
+คุณต้องมีคีย์สำหรับเชื่อมต่อฐานข้อมูล (Supabase) และ Gemini AI 
+1. สร้างไฟล์ชื่อ `.env` ไว้ที่โฟลเดอร์นอกสุดของโปรเจกต์
+2. คัดลอกข้อความด้านล่างนี้ไปใส่ในไฟล์ `.env` (ขอ API Key จากเพื่อนในทีม):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+# ฐานข้อมูล PostgreSQL (Supabase)
+DATABASE_URL="postgresql://postgres.[YOUR-SUPABASE-ID]:[YOUR-PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.[YOUR-SUPABASE-ID]:[YOUR-PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Google Gemini AI Key
+GEMINI_API_KEY="ใส่_API_KEY_ของคุณที่นี่"
+```
 
-## Learn More
+### 3. อัปเดตโครงสร้างฐานข้อมูล (Prisma)
+หลังจากใส่ `.env` เสร็จแล้ว ต้องทำให้ระบบรู้จักตารางในฐานข้อมูลของเราก่อน:
+```bash
+npx prisma generate
+```
+*(หากฐานข้อมูลยังไม่มีตาราง ให้ใช้คำสั่ง `npx prisma db push` แทน)*
 
-To learn more about Next.js, take a look at the following resources:
+### 4. รันโปรเจกต์
+เมื่อติดตั้งทุกอย่างเสร็จสิ้น สามารถรัน Development Server ได้เลย:
+```bash
+npm run dev
+```
+จากนั้นเปิด [http://localhost:3000](http://localhost:3000) ในเบราว์เซอร์เพื่อเริ่มใช้งาน!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ⚠️ ปัญหาที่พบบ่อย (Troubleshooting)
 
-## Deploy on Vercel
+**Q: เกิด Error `SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON` ตอนให้ AI จัดทริป**
+**A:** ปัญหานี้เกิดจากการที่หน้าบ้าน (Frontend) ได้รับหน้าจอ Error ของ Next.js (เป็น HTML) แทนที่จะเป็นข้อมูลทริป (JSON) 
+วิธีแก้: 
+1. ปิดเซิร์ฟเวอร์ก่อน (`Ctrl + C`)
+2. เช็คให้แน่ใจว่าทำขั้นตอนที่ 1 (`npm install`) และขั้นตอนที่ 3 (`npx prisma generate`) ครบถ้วนแล้ว
+3. เช็คไฟล์ `.env` ว่าค่า `GEMINI_API_KEY` ถูกต้อง
+4. รัน `npm run dev` ใหม่อีกครั้ง
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Built with ❤️ for AI Hackathon*
