@@ -22,7 +22,7 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
     <nav className={`transition-all duration-300 fixed left-0 top-0 h-full bg-surface-container/30 backdrop-blur-2xl border-r border-white/10 shadow-[10px_0_30px_rgba(0,0,0,0.5)] flex-col py-8 z-40 hidden md:flex overflow-hidden ${isOpen ? "w-64" : "w-20"}`}>
 
       {/* Brand */}
-      <div className={`px-6 mb-8 flex items-center ${isOpen ? "gap-4" : "justify-center px-0"}`}>
+      <Link href="/home" className={`px-6 mb-8 flex items-center hover:opacity-80 transition-opacity ${isOpen ? "gap-4" : "justify-center px-0"}`}>
         <div className="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center ai-glow">
           <span className="material-symbols-outlined text-background" style={{ fontVariationSettings: "'FILL' 1" }}>
             smart_toy
@@ -36,7 +36,7 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
             Navigating the Nebula
           </p>
         </div>
-      </div>
+      </Link>
 
       {/* CTA Button */}
       <div className={`px-4 mb-8 transition-all duration-300 ${isOpen ? "" : "px-2"}`}>

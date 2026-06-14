@@ -5,14 +5,11 @@ import { usePathname } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { BottomNav } from "./BottomNav";
-import { ChatDrawer } from "./ChatDrawer";
 
 export function AppLayoutClient({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const pathname = usePathname();
-  const isChat = pathname === '/chat';
 
   return (
     <div className="min-h-screen bg-background text-on-surface grid-bg">
@@ -22,19 +19,15 @@ export function AppLayoutClient({ children }: { children: ReactNode }) {
       <TopBar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       {/* Page content */}
       <main
-        className={`transition-all duration-300 pt-16 min-h-screen
-          ${isChat ? 'pb-4 md:pb-8' : 'pb-24 md:pb-8'}
-          px-4 md:px-12
+        className={`transition-all duration-300 pt-16 min-h-screen pb-24 md:pb-8 px-4 md:px-12
           ${isSidebarOpen ? "md:ml-64" : "md:ml-20"}`}
       >
-        <div className={`max-w-[1440px] mx-auto ${isChat ? 'pt-4' : 'py-6 md:py-8'} flex flex-col gap-6`}>
+        <div className={`max-w-[1440px] mx-auto py-6 md:py-8 flex flex-col gap-6`}>
           {children}
         </div>
       </main>
       {/* Mobile bottom navigation — hidden on desktop */}
-      <BottomNav onOpenChat={() => setIsChatOpen(true)} />
-      {/* Floating chat drawer — available on all pages */}
-      <ChatDrawer isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      <BottomNav />
     </div>
   );
 }

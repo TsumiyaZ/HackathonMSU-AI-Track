@@ -38,13 +38,7 @@ const TILES: NavTile[] = [
     icon: "event_available",
     ready: true,
   },
-  {
-    href: "/chat",
-    title: "Travel Buddy",
-    description: "แชทบอทผู้ช่วยถามพิกัด สถานที่ และไอเดียการเที่ยว",
-    icon: "forum",
-    ready: true,
-  },
+
   {
     href: "/checkout",
     title: "ชำระเงิน",
@@ -86,14 +80,14 @@ export default function Home() {
         {/* Top bar */}
         <div className="relative z-10 flex items-center justify-between px-6 pt-12 pb-4">
           {/* Logo */}
-          <div className="flex items-center gap-2.5 splash-fade-1">
+          <Link href="/home" className="flex items-center gap-2.5 splash-fade-1 hover:opacity-80 transition-opacity">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center"
               style={{ background: "rgba(255,255,255,0.20)", backdropFilter: "blur(8px)", border: "1.5px solid rgba(255,255,255,0.35)" }}>
               <span className="material-symbols-outlined text-white text-[20px]"
                 style={{ fontVariationSettings: "'FILL' 1" }}>flight</span>
             </div>
             <span className="font-display text-xl font-black text-white tracking-tight">TicketHub</span>
-          </div>
+          </Link>
           {/* Auth */}
           <div className="splash-fade-1">
             <AuthStatusButton />
@@ -166,7 +160,7 @@ export default function Home() {
           {/* ── Ripple CTA Button ── */}
           <div className="splash-fade-4 flex flex-col items-center gap-4 mt-2">
             <Link
-              href="/explore"
+              href="/home"
               id="splash-cta"
               className="ripple-btn relative w-16 h-16 rounded-full flex items-center justify-center"
               style={{
@@ -193,7 +187,6 @@ export default function Home() {
             {[
               { href: "/plan", label: "วางแผนทริป", icon: "auto_awesome" },
               { href: "/bookings", label: "การจอง", icon: "event_available" },
-              { href: "/chat", label: "Travel Buddy", icon: "forum" },
             ].map((item) => (
               <Link
                 key={item.href}

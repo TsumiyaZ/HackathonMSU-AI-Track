@@ -28,7 +28,7 @@ export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val
         </button>
 
         {/* Mobile brand logo — hidden on desktop */}
-        <Link href="/" className="flex items-center gap-2 md:hidden">
+        <Link href="/home" className="flex items-center gap-2 md:hidden">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-secondary flex items-center justify-center">
             <span
               className="material-symbols-outlined text-background text-[16px]"
@@ -49,15 +49,7 @@ export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val
       {/* Right — actions */}
       <div className="flex items-center gap-2 md:gap-5">
         <ThemeToggle />
-        <button
-          aria-label="การแจ้งเตือน"
-          className="relative text-on-surface-variant hover:text-primary transition-colors"
-        >
-          <span className="material-symbols-outlined text-[22px]">
-            notifications
-          </span>
-          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-secondary ring-2 ring-surface" />
-        </button>
+
         <button
           aria-label="ตั้งค่า"
           className="text-on-surface-variant hover:text-primary transition-colors hidden md:block"
