@@ -15,7 +15,7 @@ export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val
   }, []);
 
   return (
-    <header className={`transition-all duration-300 fixed top-0 right-0 left-0 ${isOpen ? "md:left-64" : "md:left-20"} z-30 h-16 bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-[0_0_20px_rgba(173,198,255,0.08)] flex items-center justify-between px-4 md:px-8`}>
+    <header className={`transition-all duration-300 fixed top-0 right-0 left-0 ${isOpen ? "md:left-64" : "md:left-20"} z-30 h-16 bg-surface/85 backdrop-blur-xl border-b border-border/80 shadow-[0_8px_24px_rgba(15,23,42,0.06)] flex items-center justify-between px-4 md:px-8 dark:bg-surface/60 dark:border-white/10 dark:shadow-[0_0_20px_rgba(173,198,255,0.08)]`}>
       {/* Left — Brand (mobile) + hamburger (desktop) */}
       <div className="flex items-center gap-3">
         {/* Desktop sidebar toggle */}
@@ -77,7 +77,7 @@ export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val
         ) : (
           <Link
             href="/auth/login"
-            className="px-4 py-2 rounded-xl glass-panel-strong font-label text-sm hover:text-primary transition-colors flex items-center gap-2 border border-white/10"
+            className="outline-soft px-4 py-2 rounded-xl font-label text-sm transition-colors flex items-center gap-2 dark:glass-panel-strong dark:border-white/10"
           >
             <span className="material-symbols-outlined text-[18px]">login</span>
             <span className="hidden sm:inline">Sign In</span>

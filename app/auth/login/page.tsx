@@ -22,7 +22,7 @@ export default async function LoginPage(props: { searchParams?: SearchParams }) 
 
       <Link
         href="/"
-        className="absolute top-6 left-6 md:left-12 px-5 py-2.5 rounded-xl glass-panel-strong font-label text-sm hover:text-primary transition-colors flex items-center gap-2 border border-white/10"
+        className="absolute top-6 left-6 md:left-12 px-5 py-2.5 rounded-xl outline-soft font-label text-sm transition-colors flex items-center gap-2 dark:glass-panel-strong dark:border-white/10"
       >
         <span className="material-symbols-outlined text-[18px]">arrow_back</span>
         กลับหน้าต้อนรับ

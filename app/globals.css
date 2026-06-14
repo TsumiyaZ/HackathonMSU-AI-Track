@@ -56,49 +56,49 @@
    Text: #050505 (near-black, formal)
    ============================================= */
 :root {
-  --background: #f0f2f5;
+  --background: #edf1f7;
   --foreground: #050505;
 
   --surface: #ffffff;
-  --surface-dim: #e4e6eb;
+  --surface-dim: #e7ebf2;
   --surface-bright: #ffffff;
-  --surface-hover: #f2f2f2;
-  --surface-variant: #e4e6eb;
+  --surface-hover: #f4f7fb;
+  --surface-variant: #dde4ee;
 
   --surface-container-lowest: #ffffff;
-  --surface-container-low: #f7f8fa;
-  --surface-container: #f0f2f5;
-  --surface-container-high: #e4e6eb;
-  --surface-container-highest: #ced0d4;
+  --surface-container-low: #f8fafc;
+  --surface-container: #f1f5f9;
+  --surface-container-high: #e5ecf5;
+  --surface-container-highest: #d6e0eb;
 
   /* Text: ชัดเจน formal */
   --on-surface: #050505;
-  --on-surface-variant: #65676b;
+  --on-surface-variant: #5f6b7a;
   --inverse-surface: #050505;
   --inverse-on-surface: #f0f2f5;
 
   /* Facebook Blue */
-  --primary: #1877f2;
+  --primary: #1666db;
   --on-primary: #ffffff;
-  --primary-container: #e7f0fd;
-  --on-primary-container: #0a4eac;
+  --primary-container: #dceafe;
+  --on-primary-container: #0d4ea8;
 
   /* Messenger Purple-ish secondary */
-  --secondary: #0866ff;
+  --secondary: #0f6ff2;
   --on-secondary: #ffffff;
-  --secondary-container: #e7f0fd;
-  --on-secondary-container: #0a4eac;
+  --secondary-container: #e3f0ff;
+  --on-secondary-container: #0d4ea8;
 
-  --border: #ced0d4;
-  --outline: #8a8d91;
-  --outline-variant: #dadde1;
+  --border: #c7d2df;
+  --outline: #7b8796;
+  --outline-variant: #d5dee9;
 
   /* Cards — solid, formal (no blur) */
   --glass-bg: #ffffff;
   --glass-bg-strong: #ffffff;
-  --glass-border: #ced0d4;
-  --glass-border-strong: #ced0d4;
-  --glass-shadow: rgba(0, 0, 0, 0.10);
+  --glass-border: #c4d0dd;
+  --glass-border-strong: #afbdcc;
+  --glass-shadow: rgba(15, 23, 42, 0.08);
 }
 
 /* =============================================
@@ -162,27 +162,42 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+body {
+  background-image:
+    radial-gradient(circle at top left, rgba(15, 111, 242, 0.07), transparent 28%),
+    radial-gradient(circle at 85% 12%, rgba(22, 102, 219, 0.08), transparent 24%),
+    linear-gradient(180deg, #f7faff 0%, var(--background) 22%, var(--background) 100%);
+}
+
+.dark body {
+  background-image: none;
+}
+
 @layer utilities {
   /* Facebook-style: solid card, no blur */
   .glass {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 2px 4px var(--glass-shadow), 0 0 0 1px var(--glass-border);
+    box-shadow: 0 1px 2px var(--glass-shadow), 0 0 0 1px rgba(255, 255, 255, 0.28) inset;
   }
   .glass-panel {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 2px 8px var(--glass-shadow);
+    box-shadow: 0 1px 2px var(--glass-shadow);
+  }
+  .glass-panel:hover {
+    border-color: color-mix(in srgb, var(--glass-border-strong) 72%, var(--primary) 28%);
   }
   .glass-panel-strong {
     background: var(--glass-bg-strong);
     border: 1px solid var(--glass-border-strong);
-    box-shadow: 0 4px 12px var(--glass-shadow);
+    box-shadow: 0 2px 8px var(--glass-shadow);
   }
   .glass-input {
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--foreground);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.75) inset;
   }
   .glass-input:focus,
   .glass-input:focus-within {
@@ -191,29 +206,61 @@ body {
     box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.20);
     outline: none;
   }
-  /* Facebook-style solid button — no gradient */
   .btn-primary-gradient {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: var(--on-primary);
-    border: none;
-    box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 24px rgba(22, 102, 219, 0.18);
     font-weight: 600;
     letter-spacing: 0.01em;
   }
   .btn-primary-gradient:hover {
-    background: #166fe5;
-    box-shadow: none;
-    transform: none;
-    filter: brightness(0.95);
+    background: linear-gradient(135deg, #145cc7 0%, #0b61de 100%);
+    box-shadow: 0 10px 28px rgba(22, 102, 219, 0.22);
+    transform: translateY(-1px);
+    filter: none;
   }
   .dark .btn-primary-gradient:hover {
-    background: #1a6ed8;
+    background: linear-gradient(135deg, #2b7cf0 0%, #1a6ed8 100%);
   }
-  /* text-gradient replaced with solid primary for clarity */
   .text-gradient {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+  .outline-soft {
+    border: 1px solid var(--glass-border-strong);
+    background: color-mix(in srgb, var(--surface) 90%, var(--primary-container) 10%);
+    color: var(--foreground);
+    box-shadow: 0 1px 2px var(--glass-shadow);
+  }
+  .outline-soft:hover {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--surface) 82%, var(--primary-container) 18%);
     color: var(--primary);
-    -webkit-text-fill-color: var(--primary);
-    background: none;
+  }
+  html:not(.dark) .border-white\/5 {
+    border-color: rgba(196, 208, 221, 0.9) !important;
+  }
+  html:not(.dark) .border-white\/10 {
+    border-color: rgba(175, 189, 204, 0.95) !important;
+  }
+  html:not(.dark) .border-white\/15 {
+    border-color: rgba(160, 177, 197, 0.98) !important;
+  }
+  html:not(.dark) .bg-white\/5 {
+    background-color: rgba(255, 255, 255, 0.72) !important;
+  }
+  html:not(.dark) .bg-white\/10 {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+  }
+  html:not(.dark) .hover\:bg-white\/5:hover {
+    background-color: rgba(255, 255, 255, 0.84) !important;
+  }
+  html:not(.dark) .hover\:bg-white\/10:hover {
+    background-color: rgba(248, 251, 255, 0.98) !important;
   }
   /* Facebook flat background — no dot grid */
   .grid-bg {
@@ -223,10 +270,10 @@ body {
     background: var(--background);
   }
   .ai-glow {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.22);
+    box-shadow: 0 0 24px rgba(22, 102, 219, 0.16);
   }
   .ai-glow-strong {
-    box-shadow: 0 0 60px rgba(59, 130, 246, 0.35);
+    box-shadow: 0 0 48px rgba(22, 102, 219, 0.24);
   }
   .scrollbar-hidden::-webkit-scrollbar {
     display: none;
@@ -321,7 +368,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 18px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 18px rgba(22, 102, 219, 0.28);
     color: white;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
