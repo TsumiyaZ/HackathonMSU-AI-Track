@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Prompt, Geist_Mono } from "next/font/google";
-import "./globals.generated.css";
+import { Anuphan, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import "./overrides.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 
-const prompt = Prompt({
-  variable: "--font-prompt",
+const anuphan = Anuphan({
+  variable: "--font-anuphan",
   subsets: ["thai", "latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: "variable",
   display: "swap",
 });
 
@@ -17,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "TicketHub",
-  description: "Navigating the Nebula — Smart Itinerary & Booking Synergy Platform.",
+  description: "AI-powered travel planning and booking for flights, hotels, and smoother trip checkouts.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -27,39 +30,19 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1877f2",
+  themeColor: "#12336f",
 };
-
-import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="th" className={`${prompt.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
+    <html lang="th" className={`${anuphan.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full bg-background text-on-surface">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="tickethub-theme">
           {children}
+          <ServiceWorkerRegistration />
         </ThemeProvider>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-               if ('serviceWorker' in navigator) {
-                 window.addEventListener('load', function() {
-                   navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                   }, function(err) {
-                     console.log('ServiceWorker registration failed: ', err);
-                   });
-                 });
-               }
-             `,
-          }}
-        />
       </body>
     </html>
   );

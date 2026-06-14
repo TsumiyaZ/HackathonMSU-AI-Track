@@ -1,3 +1,4 @@
+@import "@fontsource/material-symbols-outlined/400.css";
 @import "tailwindcss";
 
 @theme {
@@ -38,8 +39,8 @@
   --color-outline-variant: var(--outline-variant);
 
   /* Font mapping */
-  --font-display: var(--font-prompt), "Prompt", system-ui, sans-serif;
-  --font-body: var(--font-prompt), "Prompt", system-ui, sans-serif;
+  --font-display: var(--font-anuphan), "Anuphan", system-ui, sans-serif;
+  --font-body: var(--font-anuphan), "Anuphan", system-ui, sans-serif;
   --font-label: var(--font-geist), "Geist", ui-monospace, monospace;
 }
 

@@ -1,0 +1,121 @@
+:root {
+  --background: #f6f7fb;
+  --foreground: #0e172a;
+
+  --surface: #ffffff;
+  --surface-dim: #e7edf7;
+  --surface-bright: #ffffff;
+  --surface-hover: #f7f9fd;
+  --surface-variant: #dde6f3;
+
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f9fbff;
+  --surface-container: #f1f5fb;
+  --surface-container-high: #e6edf8;
+  --surface-container-highest: #dae3f0;
+
+  --on-surface: #0e172a;
+  --on-surface-variant: #5d6780;
+  --inverse-surface: #0e172a;
+  --inverse-on-surface: #f8faff;
+
+  --primary: #12336f;
+  --on-primary: #ffffff;
+  --primary-container: #dde7ff;
+  --on-primary-container: #0d2250;
+
+  --secondary: #3c78d8;
+  --on-secondary: #ffffff;
+  --secondary-container: #e3efff;
+  --on-secondary-container: #14386d;
+
+  --border: #ccd7e7;
+  --outline: #7a89a2;
+  --outline-variant: #dbe4f0;
+
+  --glass-bg: #ffffff;
+  --glass-bg-strong: #ffffff;
+  --glass-border: rgba(204, 215, 231, 0.88);
+  --glass-border-strong: rgba(122, 137, 162, 0.4);
+  --glass-shadow: rgba(15, 23, 42, 0.08);
+}
+
+.dark {
+  --background: #09111f;
+  --foreground: #edf2ff;
+
+  --surface: #0f1a2e;
+  --surface-dim: #09111f;
+  --surface-bright: #17233b;
+  --surface-hover: #17233b;
+  --surface-variant: #1a2740;
+
+  --surface-container-lowest: #060d18;
+  --surface-container-low: #0b1524;
+  --surface-container: #0f1a2e;
+  --surface-container-high: #16233b;
+  --surface-container-highest: #1d2d4a;
+
+  --on-surface: #edf2ff;
+  --on-surface-variant: #a8b5cc;
+  --inverse-surface: #edf2ff;
+  --inverse-on-surface: #0f1a2e;
+
+  --primary: #8ab3ff;
+  --on-primary: #061224;
+  --primary-container: #173569;
+  --on-primary-container: #e8f0ff;
+
+  --secondary: #5f96ff;
+  --on-secondary: #061224;
+  --secondary-container: #183d7a;
+  --on-secondary-container: #e1edff;
+
+  --border: #20314e;
+  --outline: #324564;
+  --outline-variant: #21314e;
+
+  --glass-bg: rgba(15, 26, 46, 0.92);
+  --glass-bg-strong: rgba(11, 21, 36, 0.94);
+  --glass-border: rgba(61, 88, 132, 0.45);
+  --glass-border-strong: rgba(108, 142, 200, 0.44);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+}
+
+html,
+body {
+  font-family: var(--font-body);
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  display: inline-block;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .splash-airplane,
+  .ripple-btn::before,
+  .ripple-btn::after {
+    animation: none !important;
+  }
+}

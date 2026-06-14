@@ -5,11 +5,12 @@
   "scripts": {
     "prebuild": "node scripts/prebuild.mjs",
     "dev": "next dev",
-    "build": "npm run prebuild && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@fontsource/material-symbols-outlined": "^5.2.45",
     "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^3.0.2",
     "lucide-react": "^1.18.0",
