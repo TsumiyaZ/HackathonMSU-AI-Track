@@ -410,15 +410,15 @@ export default function HomePage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  auto_awesome
+                <span className="material-symbols-outlined text-primary text-xl">
+                  star
                 </span>
-                <h2 className="font-display text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary tracking-tight">
-                  AI แนะนำที่พักสำหรับคุณ
+                <h2 className="font-display text-lg font-bold text-on-surface tracking-tight">
+                  ที่พักคัดสรรโดย AI
                 </h2>
               </div>
               <p className="text-xs text-on-surface-variant">
-                วิเคราะห์และคัดสรรที่พักที่ตรงกับสไตล์การเดินทางของคุณโดยระบบ AI
+                คัดสรรที่พักยอดนิยม เรตติ้งดีที่สุดเพื่อคุณ
               </p>
             </div>
             <Link 
@@ -449,7 +449,7 @@ export default function HomePage() {
                   href={`/explore/hotel/${hotel.id}`}
                   className="group hover-lift press-scale"
                 >
-                  <div className="relative rounded-2xl overflow-hidden flex items-end group transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30">
+                  <div className="glass-panel overflow-hidden rounded-2xl h-full flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30">
                     <div
                       className="relative h-32 w-full bg-cover bg-center"
                       style={{ backgroundImage: `url(${hotel.thumbnail_url})` }}
@@ -465,7 +465,7 @@ export default function HomePage() {
                     <div className="p-3 flex flex-col gap-2 flex-1">
                       <div>
                         <div className="flex items-center justify-between gap-1">
-                          <span className="text-xs text-primary font-bold hover:underline flex items-center gap-1 shrink-0 hover-lift press-scale">
+                          <span className="text-xs text-primary font-bold flex items-center gap-1 shrink-0">
                             <span className="material-symbols-outlined text-[11px]">location_on</span>
                             {hotel.city}
                           </span>
