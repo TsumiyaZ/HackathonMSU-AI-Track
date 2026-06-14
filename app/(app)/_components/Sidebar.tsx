@@ -110,19 +110,6 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
         })}
       </div>
 
-      {/* Help link */}
-      <div className="mt-auto font-label text-sm">
-        <a
-          className={`flex items-center gap-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface py-3 transition-all duration-200 ${isOpen ? "px-6" : "px-0 justify-center"}`}
-          href="#"
-          title={!isOpen ? "ความช่วยเหลือ" : undefined}
-        >
-          <span className="material-symbols-outlined text-[20px] shrink-0">help_outline</span>
-          <span className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? "w-auto opacity-100" : "w-0 opacity-0"}`}>
-            ความช่วยเหลือ
-          </span>
-        </a>
-      </div>
     </nav>
   );
 }

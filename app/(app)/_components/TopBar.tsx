@@ -49,16 +49,18 @@ export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val
 
       {/* Right — actions */}
       <div className="flex items-center gap-2 md:gap-5">
+        <Link
+          href="/help"
+          className="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center"
+          title="ความช่วยเหลือ"
+        >
+          <span className="material-symbols-outlined text-[22px]">help_outline</span>
+        </Link>
+
         <ThemeToggle />
 
-        <button
-          aria-label="ตั้งค่า"
-          className="text-on-surface-variant hover:text-primary transition-colors hidden md:block"
-        >
-          <span className="material-symbols-outlined text-[22px]">settings</span>
-        </button>
-
         {authed === null ? (
+
           <div className="w-8 h-8 skeleton-shimmer rounded-full" />
         ) : authed ? (
           <Link
