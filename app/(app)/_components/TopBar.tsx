@@ -6,11 +6,12 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: boolean) => void }) {
   const [authed, setAuthed] = useState<boolean | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/auth/check-session")
       .then(r => r.json())
-      .then(d => setAuthed(d.authenticated))
+      .then(d => { setAuthed(d.authenticated); if (d.user) setUserName(d.user.name); })
       .catch(() => setAuthed(false));
   }, []);
 
@@ -64,7 +65,7 @@ export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val
             href="/profile"
             className="w-9 h-9 rounded-full overflow-hidden border border-white/15 bg-gradient-to-tr from-primary/40 to-secondary/40 flex items-center justify-center font-display text-sm font-semibold text-background hover:scale-105 transition-transform cursor-pointer"
           >
-            T
+            {userName?.charAt(0).toUpperCase() || '?'}
           </Link>
         ) : (
           <Link

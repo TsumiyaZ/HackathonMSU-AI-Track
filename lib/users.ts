@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-export type UserRole = "MEMBER" | "VIP";
+export type UserRole = "MEMBER" | "VIP" | "ADMIN";
 
 export interface User {
   user_id: string;

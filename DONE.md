@@ -155,3 +155,95 @@
 - [x] `FlightFilters` — Component ค้นหาเส้นทาง, เลือกวันเดินทาง/งบประมาณ, และปุ่มสลับเส้นทาง (Swap Route)
 - [x] หน้า `/explore/flight/[id]` — หน้ารายละเอียดเที่ยวบินขนาดใหญ่ แสดงเส้นทางบินชัดเจน, รายละเอียดราคาสุทธิ, สิ่งที่รวมในตั๋วโดยสาร, สถิติผู้โดยสารบนเที่ยวบินนั้น, และตารางตั๋วเครื่องบิน
 - [x] เชื่อมต่อกับปุ่มจอง `DirectBookButton` เพื่อให้จองตั๋วจากหน้ารายละเอียดเที่ยวบินได้ทันที
+
+---
+
+## เพิ่มประสิทธิภาพ AI Planning + แก้ไข UI (14 มิ.ย. 2026)
+
+### ⚡ ปรับปรุง `POST /api/ai/plan` ให้เร็วขึ้น
+- [x] **เปลี่ยนจาก Prisma query (remote Supabase) → อ่าน JSON โดยตรง** — ตัด network latency (~10x เร็วขึ้น)
+- [x] **Parallelize การอ่านข้อมูล** — hotels, flights, restaurants โหลดพร้อมกันด้วย `Promise.all`
+- [x] **Detect destination จาก prompt** — parse คำสำคัญ (ภูเก็ต, เชียงใหม่, โตเกียว ฯลฯ) เพื่อกรองข้อมูลเฉพาะที่เกี่ยวข้อง
+- [x] **Parse จำนวนวันและงบประมาณจาก prompt** — regex ดึง `X วัน` และ `งบ Y` โดยอัตโนมัติ
+- [x] **สร้าง Itinerary ในเครื่อง (Local Generation)** — เลือก flight ถูกสุด, hotel คะแนนสูงสุดตามงบ, ร้านอาหาร top rating, activity ตาม destination
+- [x] **AI ใช้แค่เขียน Sentiment Summary** — แทนที่ให้ AI gen JSON ทั้งก้อน ลด context จาก ~90 items → text เล็กๆ
+- [x] **Timeout 5 วิ สำหรับ AI call** — ถ้า Gemini ไม่ตอบทัน ใช้ข้อความสำรอง
+- [x] **เปลี่ยนจาก OpenCode API Proxy → Gemini โดยตรง** — ตัด network hop พิเศษ
+- [x] **Activity Templates แยกตาม destination** — มีกิจกรรมแนะนำสำหรับ ภูเก็ต, เชียงใหม่, กรุงเทพ, กระบี่, โตเกียว
+
+### 👤 แก้ไข Profile Page
+- [x] เพิ่มแสดง `role` (MEMBER/VIP) เป็น badge ถัดจากข้อมูลผู้ใช้
+- [x] VIP badge สีทอง, MEMBER badge สี primary
+
+### 🖼️ แก้ไข TopBar Avatar
+- [x] **เปลี่ยนจาก hardcode "T" → แสดงตัวอักษรแรกของชื่อผู้ใช้จริง** (เช่น "สมชาย" → "ส")
+- [x] Fetch user name จาก `/api/auth/check-session` เพื่อนำมาแสดง
+
+---
+
+## ระบบ Admin (14 มิ.ย. 2026)
+
+### 🔐 Role & Authentication
+- [x] เพิ่ม `ADMIN` role ใน `UserRole` type (`lib/users.ts`)
+- [x] เพิ่ม admin user (`admin@example.com` / `099-999-9999`) ใน `data/user/users.json`
+- [x] Protect `/admin` routes ใน `middleware.ts`
+- [x] Admin API ทุก endpoint ตรวจสอบ session + role ADMIN ก่อนตอบ
+
+### 📊 Admin Dashboard (`/admin`)
+- [x] **หน้า Dashboard** — แสดงสถิติ: จำนวนโรงแรม, เที่ยวบิน, ร้านอาหาร, ผู้ใช้, การจอง
+- [x] **Tab จัดการโรงแรม** — ตารางแสดงรายการทั้งหมด, ค้นหา, แก้ไข inline (ชื่อ/ที่ตั้ง/ราคา/คะแนน), ลบ
+- [x] **Tab จัดการผู้ใช้** — ตารางผู้ใช้ทั้งหมด, เปลี่ยน role (MEMBER ↔ VIP)
+
+### 🛠️ Admin API Routes
+- [x] `GET /api/admin/stats` — สถิติรวมทุกระบบ
+- [x] `GET /api/admin/hotels` — รายการโรงแรมทั้งหมด
+- [x] `PUT /api/admin/hotels` — แก้ไขโรงแรม (เขียนทับ JSON)
+- [x] `DELETE /api/admin/hotels?id=...` — ลบโรงแรม
+- [x] `GET /api/admin/users` — รายการผู้ใช้ทั้งหมด
+- [x] `PUT /api/admin/users` — เปลี่ยน role ผู้ใช้
+
+### 🧭 Sidebar Integration
+- [x] Sidebar แสดงลิงก์ **Admin** (ไอคอน shield) เฉพาะเมื่อ user มี role ADMIN
+- [x] Active state สี amber แยกจาก primary
+
+### 👤 Profile Badge
+- [x] ADMIN badge สีทอง `bg-amber-500/20` พร้อม border
+
+---
+
+## ปรับปรุงหน้า Plan & Intent Detection (14 มิ.ย. 2026)
+
+### 🧠 Intent Detection
+- [x] เพิ่มฟังก์ชัน `isTravelRequest()` ตรวจสอบว่า prompt เกี่ยวข้องกับการท่องเที่ยวหรือไม่
+- [x] ถ้าพิมพ์ทักทาย (สวัสดี, hello, hi) → ขึ้นข้อความต้อนรับ แนะนำวิธีใช้ พร้อมตัวอย่าง
+- [x] ถ้าพิมพ์เกี่ยวกับท่องเที่ยว (ไป, เที่ยว, งบ, วัน) → สร้างแผนเที่ยวตามปกติ
+- [x] keywords ที่ใช้ตรวจสอบ: ไป, เที่ยว, trip, งบ, budget, วัน, โรงแรม, บิน, อาหาร, ฯลฯ
+
+### ⌨️ UX Improvements
+- [x] **กด Enter สร้างแผนทริป** — เพิ่ม `onKeyDown` ที่ textarea ถ้ากด Enter (ไม่กด Shift) จะ submit ทันที
+- [x] **ล้างข้อความหลังส่ง** — `setPromptInput("")` ก่อนเรียก fetch เพื่อให้กล่องข้อความ clear ทันทีที่กดส่ง
+- [x] แสดงข้อความตอบกลับ (กรณีทักทาย) ใน chat bubble สไตส์ glass-panel แทน alert
+
+---
+
+## ปรับปรุง Admin Dashboard ให้สวยงาม (14 มิ.ย. 2026)
+
+### 🎨 ดีไซน์ใหม่
+- [x] **Hero Header** — glass-panel สี amber พร้อมโล่ shield, ชื่อ admin, วันที่วันนี้
+- [x] **Tabs** — ดีไซน์ใหม่แบบ pill-style ใน glass-panel มี icon + label
+- [x] **Stat Cards** — 4 ใบใหญ่: รายได้, ผู้ใช้, จุดหมาย, การจอง — พร้อม gradient icon + ตัวเลข + รายละเอียดย่อย
+- [x] **Pie Chart (Donut) SVG** — สัดส่วนผู้ใช้ MEMBER/VIP/ADMIN แบบกำหนดเอง ไม่ต้องพึ่ง library
+- [x] **Bar Chart (Horizontal)** — ราคาโรงแรมแบ่งช่วง ≤1K–>5K พร้อม gradient bar
+- [x] **Location Bars** — จำนวนโรงแรมแยกตามจังหวัด อันดับ 1-8
+- [x] **Recent Bookings** — รายการจองล่าสุด 6 รายการ พร้อมสถานะสี
+- [x] **Summary Footer** — 4 การ์ดเล็ก: รายได้รวม, ค่าที่พักเฉลี่ย, แต้มสะสม, อัตราการจอง
+
+### 📊 ข้อมูลที่เพิ่มใน API (`/api/admin/stats`)
+- [x] `revenue` — รายได้จากการจองที่ดำเนินการ (ไม่นับ CANCELLED)
+- [x] `totalRevenue` — รายได้รวมทั้งหมด
+- [x] `totalLoyaltyPoints` — แต้มสะสมผู้ใช้ทั้งหมด
+- [x] `avgHotelPrice` — ราคาโรงแรมเฉลี่ย/คืน
+- [x] `roleBreakdown` — จำนวนผู้ใช้แยกตาม role (MEMBER/VIP/ADMIN) พร้อมสี
+- [x] `locationStats` — จำนวนโรงแรมแยกตามจังหวัด (top 8)
+- [x] `priceRanges` — จำนวนโรงแรมแบ่งตามช่วงราคา 5 ช่วง
+- [x] `recentBookings` — 10 รายการจองล่าสุด พร้อมสถานะและจำนวนคืน

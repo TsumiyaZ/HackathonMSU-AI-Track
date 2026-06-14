@@ -118,5 +118,13 @@
     "phone": "088-222-1111",
     "loyalty_points": 780,
     "role": "MEMBER"
+  },
+  {
+    "user_id": "admin",
+    "name": "Admin",
+    "email": "admin@example.com",
+    "phone": "099-999-9999",
+    "loyalty_points": 999999,
+    "role": "ADMIN"
   }
 ]

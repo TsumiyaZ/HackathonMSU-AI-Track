@@ -16,6 +16,7 @@ const LOADING_STEPS = [
 
 export default function PlanPage() {
   const [promptInput, setPromptInput] = useState("");
+  const [chatMessage, setChatMessage] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState("เชียงใหม่");
   const [days, setDays] = useState(3);
   const [budget, setBudget] = useState("medium");
@@ -74,7 +75,9 @@ export default function PlanPage() {
     const authed = await requireAuth("/plan");
     if (!authed) return;
 
+    setPromptInput("");
     setLoading(true);
+    setChatMessage(null);
     try {
       const res = await fetch("/api/ai/plan", {
         method: "POST",
@@ -84,19 +87,24 @@ export default function PlanPage() {
 
       const data = await res.json();
       if (data.success) {
-        setTrip(data.itinerary);
-        router.push(`/trip/${data.itinerary.id}`);
+        if (data.needsPrompt) {
+          setChatMessage(data.message);
+          setLoading(false);
+        } else {
+          setTrip(data.itinerary);
+          router.push(`/trip/${data.itinerary.id}`);
+        }
       } else {
         alert("Error: " + data.error);
         if (data.fallback) {
           setTrip(data.fallback);
           router.push(`/trip/${data.fallback.id}`);
         }
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
       alert("Something went wrong");
-    } finally {
       setLoading(false);
     }
   };
@@ -124,6 +132,12 @@ export default function PlanPage() {
           <textarea
             value={promptInput}
             onChange={(e) => setPromptInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
             placeholder="เช่น 'เที่ยวเชียงใหม่ 3 วัน เน้นคาเฟ่'..."
             rows={3}
             disabled={loading}
@@ -325,6 +339,20 @@ export default function PlanPage() {
           </div>
         )}
       </div>
+
+      {/* AI Response Message */}
+      {chatMessage && (
+        <div className="glass-panel p-5 rounded-2xl text-left bg-primary/5 border border-primary/20 animate-fade-in">
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Sparkles className="text-white w-4 h-4" />
+            </div>
+            <div className="text-sm whitespace-pre-line leading-relaxed text-on-surface">
+              {chatMessage}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Suggested Templates list */}
       <div className="flex flex-col gap-2.5 mt-2">

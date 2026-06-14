@@ -114,6 +114,15 @@ export default function ProfilePage() {
                     {user.phone}
                   </p>
                 )}
+                {user?.role && (
+                  <span className={`inline-block mt-2 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider ${
+                    user.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+                    user.role === 'VIP' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
+                    'bg-primary/10 text-primary border border-primary/20'
+                  }`}>
+                    {user.role === 'ADMIN' ? 'ADMIN' : user.role === 'VIP' ? 'VIP' : 'MEMBER'}
+                  </span>
+                )}
               </div>
             </div>
             

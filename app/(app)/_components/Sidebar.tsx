@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Item = { href: string; label: string; icon: string };
 
@@ -14,8 +15,18 @@ const PRIMARY: Item[] = [
   { href: "/profile", label: "โปรไฟล์", icon: "account_circle" },
 ];
 
+const ADMIN_ITEM: Item = { href: "/admin", label: "Admin", icon: "shield" };
+
 export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: boolean) => void }) {
   const pathname = usePathname();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/check-session")
+      .then(r => r.json())
+      .then(d => { if (d.user?.role === 'ADMIN') setIsAdmin(true); })
+      .catch(() => {});
+  }, []);
 
   return (
     /* Desktop-only sidebar — hidden on mobile via 'hidden md:flex' */
@@ -54,6 +65,23 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
 
       {/* Nav Items */}
       <div className="flex-1 flex flex-col gap-0.5 font-label text-sm">
+        {isAdmin && (
+          <Link
+            key={ADMIN_ITEM.href}
+            href={ADMIN_ITEM.href}
+            className={
+              pathname.startsWith(ADMIN_ITEM.href)
+                ? `flex items-center gap-3 bg-amber-500/15 text-amber-400 border-r-[3px] border-amber-500 py-3 rounded-l-xl transition-all duration-200 ${isOpen ? "px-6" : "px-0 justify-center"}`
+                : `flex items-center gap-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface py-3 rounded-xl transition-all duration-200 ${isOpen ? "px-6 mx-2" : "px-0 justify-center"}`
+            }
+            title={!isOpen ? ADMIN_ITEM.label : undefined}
+          >
+            <span className="material-symbols-outlined text-[20px] shrink-0">{ADMIN_ITEM.icon}</span>
+            <span className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? "w-auto opacity-100" : "w-0 opacity-0"}`}>
+              {ADMIN_ITEM.label}
+            </span>
+          </Link>
+        )}
         {PRIMARY.map((item) => {
           const active =
             item.href === "/home" ? pathname === "/home" : pathname.startsWith(item.href);

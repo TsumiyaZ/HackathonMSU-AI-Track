@@ -95,9 +95,33 @@ function pick<T>(arr: T[], n: number): T[] {
   return shuffled.slice(0, n);
 }
 
+function isTravelRequest(prompt: string): boolean {
+  const travelKeywords = [
+    'ไป', 'เที่ยว', 'trip', 'ทริป', 'travel', 'journey',
+    'งบ', 'budget', 'วัน', 'day', 'คืน',
+    'พัก', 'hotel', 'โรงแรม', 'ที่พัก', 'stay',
+    'บิน', 'flight', 'เครื่องบิน',
+    'อาหาร', 'restaurant', 'ร้าน', 'กิน', 'ชิม',
+    'จังหวัด', 'ประเทศ', 'city', 'destination', 'town',
+    'ทะเล', 'ภูเขา', 'ธรรมชาติ', 'วัด', 'หาด',
+    'แพลน', 'plan', ' itinerary', ',',
+  ];
+  const lower = prompt.toLowerCase();
+  return travelKeywords.some(kw => lower.includes(kw));
+}
+
 export async function POST(req: Request) {
   try {
     const { prompt, preferences } = await req.json();
+
+    // 0. ตรวจสอบว่าเป็นคำขอท่องเที่ยวหรือไม่
+    if (!isTravelRequest(prompt)) {
+      return NextResponse.json({
+        success: true,
+        needsPrompt: true,
+        message: 'สวัสดีครับ! 😊 ยินดีต้อนรับสู่ AI Trip Architect!\n\nกรุณาบอกความต้องการของคุณ เช่น:\n• "ไปภูเก็ต 3 วัน งบ 15,000 บาท"\n• "เที่ยวเชียงใหม่ งบ 8,000 สายคาเฟ่"\n• "โตเกียว 5 วัน ตะลุยชิมอาหาร"'
+      });
+    }
 
     // 1. Parse prompt
     const dest = extractDestination(prompt);
