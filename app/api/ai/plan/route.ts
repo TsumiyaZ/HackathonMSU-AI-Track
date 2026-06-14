@@ -1,102 +1,238 @@
 import { NextResponse } from 'next/server';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import prisma from '@/lib/prisma';
+
+const DATA_ROOT = path.join(process.cwd(), 'data');
+
+async function readJson<T>(relPath: string): Promise<T> {
+  const raw = await fs.readFile(path.join(DATA_ROOT, relPath), 'utf8');
+  return JSON.parse(raw) as T;
+}
+
+const DESTINATIONS: Record<string, { codes: string[]; destAirports: string[] }> = {
+  'กรุงเทพ':    { codes: ['บีเคเค', 'Bangkok', 'กรุงเทพ', 'กทม'], destAirports: ['BKK', 'DMK'] },
+  'ภูเก็ต':      { codes: ['Phuket', 'ภูเก็ต', 'ภูเก็'], destAirports: ['HKT'] },
+  'เชียงใหม่':   { codes: ['Chiang Mai', 'เชียงใหม่', 'เชียง'], destAirports: ['CNX'] },
+  'กระบี่':      { codes: ['Krabi', 'กระบี่'], destAirports: ['KBV'] },
+  'พัทยา':      { codes: ['Pattaya', 'พัทยา'], destAirports: [] },
+  'เกาะสมุย':     { codes: ['Koh Samui', 'สมุย', 'เกาะสมุย'], destAirports: ['USM'] },
+  'โตเกียว':     { codes: ['Tokyo', 'โตเกียว'], destAirports: ['NRT', 'HND'] },
+};
+
+function extractDestination(prompt: string): { name: string; destAirports: string[] } | null {
+  const lower = prompt.toLowerCase();
+  for (const [name, info] of Object.entries(DESTINATIONS)) {
+    for (const code of info.codes) {
+      if (lower.includes(code.toLowerCase())) return { name, destAirports: info.destAirports };
+    }
+  }
+  return null;
+}
+
+function extractDays(prompt: string): number {
+  const m = prompt.match(/(\d+)\s*วัน/);
+  return m ? parseInt(m[1]) : 3;
+}
+
+function extractBudget(prompt: string): number {
+  const m = prompt.match(/งบ\s*(\d[\d,]*)/);
+  if (m) return parseInt(m[1].replace(/,/g, ''));
+  const m2 = prompt.match(/(\d[\d,]*)\s*บาท/);
+  if (m2) return parseInt(m2[1].replace(/,/g, ''));
+  return 15000;
+}
+
+function formatTime(departureTime: string): string {
+  const d = new Date(departureTime);
+  return `0${d.getUTCHours()}`.slice(-2) + ':00';
+}
+
+function formatDateThai(dateStr: string): string {
+  const d = new Date(dateStr);
+  const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+  return `${d.getUTCDate()} ${months[d.getUTCMonth()]} ${d.getUTCFullYear() + 543}`;
+}
+
+function toTitleThai(text: string): string {
+  return text;
+}
+
+const ACTIVITY_TEMPLATES: Record<string, { title: string; desc: string; price: number }[]> = {
+  'ภูเก็ต': [
+    { title: 'เที่ยววัดพระใหญ่', desc: 'ชมวิวเมืองภูเก็ตจากยอดเขา', price: 0 },
+    { title: 'นั่งเรือเที่ยวอ่าวพังงา', desc: 'ล่องเรือชมเขาหินปูนและถ้ำทะเล', price: 800 },
+    { title: 'เดินถนนคนเดินภูเก็ต', desc: 'ชิมอาหารทะเลสดและของฝาก', price: 500 },
+  ],
+  'เชียงใหม่': [
+    { title: 'เที่ยวดอยสุเทพ', desc: 'ขึ้นดอยชมวัดพระธาตุสุเทพและวิวเมือง', price: 0 },
+    { title: 'เดินถนนนิมมานเหมินท์', desc: 'เดินเล่นคาเฟ่สวยและช้อปปิ้ง', price: 300 },
+    { title: 'นั่งกระเช้าดอยอินทนนท์', desc: 'ชมธรรมชาติและจุดสูงสุดของประเทศไทย', price: 600 },
+  ],
+  'กรุงเทพ': [
+    { title: 'ชมวัดพระแก้วและพระบรมมหาราชวัง', desc: 'เที่ยวชมสถาปัตยกรรมไทย', price: 500 },
+    { title: 'เดินเล่นย่านเยาวราช', desc: 'ชิมอาหารจีนและสตรีทฟู้ด', price: 300 },
+    { title: 'นั่งเรือคลองแสนแสบ', desc: 'ล่องเรือชมชีวิตสองฝั่งคลอง', price: 100 },
+  ],
+  'กระบี่': [
+    { title: 'เที่ยวหาดอ่าวนาง', desc: 'พักผ่อนและเล่นน้ำทะเลใส', price: 0 },
+    { title: 'นั่งเรือไปเกาะพีพี', desc: 'ดำน้ำตื้นและชมธรรมชาติ', price: 1200 },
+    { title: 'ปั่นจักรยานชมเมืองกระบี่', desc: 'ชมวิวภูเขาและแหล่งท่องเที่ยว', price: 300 },
+  ],
+  'โตเกียว': [
+    { title: 'เที่ยววัดเซ็นโซจิ', desc: 'วัดเก่าแก่ย่านอาซากุสะ', price: 0 },
+    { title: 'ชมชิบูย่าและฮาราจูกุ', desc: 'แหล่งช้อปปิ้งแฟชั่นและสตรีทฟู้ด', price: 500 },
+  ],
+};
+
+const DEFAULT_ACTIVITIES = [
+  { title: 'เที่ยวชมเมือง', desc: 'สำรวจสถานที่ท่องเที่ยวสำคัญ', price: 300 },
+  { title: 'ชิมร้านอาหารท้องถิ่น', desc: 'ลิ้มลองอาหารพื้นเมือง', price: 500 },
+];
+
+function pick<T>(arr: T[], n: number): T[] {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+}
 
 export async function POST(req: Request) {
   try {
     const { prompt, preferences } = await req.json();
 
-    const apiKey = process.env.OPENCODE_API_KEY || process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json({ success: false, error: 'API Key is not set' }, { status: 500 });
+    // 1. Parse prompt
+    const dest = extractDestination(prompt);
+    const days = extractDays(prompt);
+    const budget = extractBudget(prompt);
+    const destName = dest?.name || 'ภูเก็ต';
+    const destAirports = dest?.destAirports || ['HKT'];
+
+    // 2. Load data in parallel
+    const [allHotels, allFlights, allRestaurants] = await Promise.all([
+      readJson<any[]>('hotel/hotels.json'),
+      readJson<any[]>('travel/flights.json'),
+      readJson<any[]>('food/restaurants.json'),
+    ]);
+
+    // 3. Filter by destination
+    const destLower = destName.toLowerCase();
+    const hotels = allHotels.filter(h => h.location?.toLowerCase().includes(destLower));
+    const flightsTo = allFlights.filter(f => destAirports.includes(f.destination));
+    const flightsFrom = allFlights.filter(f => destAirports.includes(f.origin));
+    const restaurants = [...allRestaurants].sort((a, b) => b.rating - a.rating);
+
+    // 4. Select best items
+    const selectedFlight = flightsTo.sort((a, b) => a.price - b.price)[0] || flightsTo[0];
+    const budgetPerNight = budget / days;
+    const selectedHotel = hotels
+      .filter(h => h.price_per_night <= budgetPerNight * 1.5)
+      .sort((a, b) => b.rating - a.rating)[0] || hotels[0] || allHotels[0];
+    const selectedRestaurants = pick(restaurants, Math.min(days + 1, 3));
+    const activities = destName && ACTIVITY_TEMPLATES[destName]
+      ? pick(ACTIVITY_TEMPLATES[destName], Math.min(days, 3))
+      : pick(DEFAULT_ACTIVITIES, 2);
+
+    // 5. Build itinerary items
+    const items: any[] = [];
+    let totalPrice = 0;
+
+    if (selectedFlight) {
+      items.push({
+        id: `flight-${Date.now()}`,
+        type: 'flight',
+        time: `วันที่ 1 - ${formatTime(selectedFlight.departure_time)}`,
+        title: `${selectedFlight.airline} - บินไป${destName}`,
+        description: `ออกจาก ${selectedFlight.origin} ไป ${selectedFlight.destination} เวลา ${formatTime(selectedFlight.departure_time)}`,
+        price: selectedFlight.price,
+        data: { flight_id: selectedFlight.flight_id },
+      });
+      totalPrice += selectedFlight.price;
     }
 
-    // 1. Data Minimization (Query DB)
-    // To prevent Context Window bloat, we take a limited set or filter by keywords if needed.
-    const hotels = await prisma.hotel.findMany({ take: 30 });
-    const flights = await prisma.flight.findMany({ take: 30 });
-    const restaurants = await prisma.restaurant.findMany({ take: 30 });
+    if (selectedHotel) {
+      const hotelTotal = selectedHotel.price_per_night * days;
+      items.push({
+        id: `hotel-${Date.now()}`,
+        type: 'hotel',
+        time: `วันที่ 1 - ${days} คืน`,
+        title: `${selectedHotel.name}`,
+        description: `ที่พักระดับ ${selectedHotel.rating} ดาว ${selectedHotel.amenities?.slice(0, 3).join(', ') || ''}`,
+        price: hotelTotal,
+        data: { hotel_id: selectedHotel.hotel_id },
+      });
+      totalPrice += hotelTotal;
+    }
 
-    // 2. Prepare System Prompt & Context
-    const systemInstruction = `
-      You are an expert AI Travel Architect. 
-      Your task is to create a detailed travel itinerary based on the user's prompt. 
-      CRITICAL RULE: You MUST ONLY select flights, hotels, and restaurants from the provided "Available Data" below. Do not hallucinate places.
-      CRITICAL RULE: Return ONLY a valid JSON object. No markdown formatting, no backticks, no explanations.
-      
-      User Prompt: "${prompt}"
-      User Preferences: ${JSON.stringify(preferences || {})}
-      
-      --- Available Data (Use ONLY these) ---
-      HOTELS: ${JSON.stringify(hotels.map(h => ({ id: h.hotel_id, name: h.name, price: h.price_per_night, location: h.location, rating: h.rating })))}
-      FLIGHTS: ${JSON.stringify(flights.map(f => ({ id: f.flight_id, airline: f.airline, price: f.price, origin: f.origin, dest: f.destination, time: f.departure_time })))}
-      RESTAURANTS: ${JSON.stringify(restaurants.map(r => ({ id: r.res_id, name: r.name, rating: r.rating, cuisine: r.cuisine })))}
-      ---------------------------------------
-      
-      JSON Structure to Output:
-      {
-        "destination": "Name of destination (e.g., Phuket)",
-        "days": Number (e.g., 3),
-        "totalPrice": Number (Sum of all items),
-        "items": [
-          {
-            "id": "uuid or unique string",
-            "type": "flight", // must be 'flight', 'hotel', 'food', or 'activity'
-            "time": "08:00 AM (or Day 1 - 08:00 AM)",
-            "title": "Title of the activity in THAI",
-            "description": "Short description in THAI",
-            "price": Number, // CRITICAL: If exact price is not provided in data (e.g., restaurants, activities), you MUST ESTIMATE a realistic price in THB (e.g. 200-1500). NEVER return 0.
-            "data": {} // Insert the raw matched object (e.g. hotel_id, flight_id) so UI can use it
-          }
-        ],
-        "sentimentSummary": "A brief AI summary in THAI of why this trip is great and matches their preferences"
-      }
-      CRITICAL RULE: All text content (destination, title, description, sentimentSummary) MUST be written in the THAI language.
-      CRITICAL RULE: NEVER output 0 for price. If a price is missing, use your world knowledge to estimate a realistic price in THB.
-    `;
-
-    // 3. Generate content with DeepSeek via OpenCode API
-    const response = await fetch('https://opencode.ai/zen/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'deepseek-v4-flash-free',
-        messages: [{ role: 'user', content: systemInstruction }],
-        temperature: 0.5
-      })
+    selectedRestaurants.forEach((r, i) => {
+      const mealPrice = r.rating >= 4.5 ? 800 : r.rating >= 4 ? 500 : 350;
+      const dayNum = Math.min(i + 1, days);
+      items.push({
+        id: `food-${Date.now()}-${i}`,
+        type: 'food',
+        time: `วันที่ ${dayNum} - เที่ยง`,
+        title: `อาหาร${r.cuisine}ที่ ${r.name}`,
+        description: `ร้าน${r.cuisine} คะแนน ${r.rating}/5`,
+        price: mealPrice,
+        data: { res_id: r.res_id },
+      });
+      totalPrice += mealPrice;
     });
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
+    activities.forEach((a, i) => {
+      const dayNum = Math.min(i + 1, days);
+      items.push({
+        id: `act-${Date.now()}-${i}`,
+        type: 'activity',
+        time: `วันที่ ${dayNum} - บ่าย`,
+        title: a.title,
+        description: a.desc,
+        price: a.price,
+        data: {},
+      });
+      totalPrice += a.price;
+    });
+
+    // 6. Try Gemini for sentiment summary (fast, 5s timeout)
+    let sentimentSummary = `ทริป${destName} ${days}วัน ${budget.toLocaleString()}บาท เหมาะสำหรับผู้ที่ต้องการพักผ่อน`;
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (apiKey) {
+      try {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+        const aiResult = await Promise.race([
+          model.generateContent(
+            `เขียนสรุปสั้นๆ ภาษาไทย 2-3 ประโยค ว่า "ทริป${destName} ${days}วัน งบ${budget}บาท" น่าสนใจยังไง ` +
+            `(โรงแรม: ${selectedHotel?.name || '-'}, เที่ยวบิน: ${selectedFlight?.airline || '-'})`
+          ),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000)),
+        ]);
+        sentimentSummary = aiResult.response.text().trim();
+      } catch { }
     }
 
-    const data = await response.json();
-    let text = data.choices[0]?.message?.content || "";
-    
-    // 3. Structured Output Parsing
-    // Clean up markdown json tags if Gemini includes them
-    const jsonStr = text.replace(/```json\n?/gi, '').replace(/```\n?/g, '').trim();
-    const itinerary = JSON.parse(jsonStr);
+    const itinerary = {
+      id: `trp-${Date.now()}`,
+      destination: destName,
+      days,
+      budget,
+      totalPrice,
+      items,
+      sentimentSummary,
+    };
 
-    itinerary.id = `trp-${Date.now()}`;
-    
     return NextResponse.json({ success: true, itinerary });
   } catch (error: any) {
     console.error('AI Planning Error:', error);
-    // 4. Error Handling & Fallbacks (As per requirement 7.5)
-    return NextResponse.json({ 
-      success: false, 
-      error: error.message || "AI Error",
+    return NextResponse.json({
+      success: false,
+      error: error.message || 'AI Error',
       fallback: {
-        id: "trp-fallback",
-        destination: "ภูเก็ต (แผนสำรอง)",
+        id: 'trp-fallback',
+        destination: 'ภูเก็ต (แผนสำรอง)',
         days: 3,
         totalPrice: 15000,
         items: [],
-        sentimentSummary: "ระบบขัดข้องชั่วคราว นี่คือแผนการเดินทางสำรอง"
+        sentimentSummary: 'ระบบขัดข้องชั่วคราว นี่คือแผนการเดินทางสำรอง'
       }
     }, { status: 500 });
   }
