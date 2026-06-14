@@ -41,11 +41,8 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
         </div>
         <div className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? "w-auto opacity-100" : "w-0 opacity-0"}`}>
           <h1 className="font-display text-lg font-black text-gradient leading-tight">
-            Trip Architect
+            TicketHub
           </h1>
-          <p className="font-label text-[11px] text-on-surface-variant">
-            Navigating the Nebula
-          </p>
         </div>
       </Link>
 

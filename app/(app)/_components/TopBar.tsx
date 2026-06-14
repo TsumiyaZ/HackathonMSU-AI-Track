@@ -43,7 +43,7 @@ export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val
 
         {/* Desktop page title — hidden on mobile */}
         <h2 className="font-display text-base md:text-lg font-semibold text-on-surface hidden md:block">
-          AI Trip Architect
+          TicketHub
         </h2>
       </div>
 

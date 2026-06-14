@@ -195,9 +195,9 @@ export default function ProfilePage() {
 
           {!isEditing ? (
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <div className="rounded-2xl border border-border/70 bg-surface/70 p-5 transition-colors duration-200 hover:border-primary/30 hover:bg-surface-hover/85">
+              <div className="group rounded-2xl border border-border/70 bg-surface/70 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-hover/85 hover:shadow-[0_12px_28px_rgba(22,102,219,0.08)]">
                 <div className="mb-3 flex items-center gap-2 text-primary">
-                  <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                  <span className="material-symbols-outlined text-[20px] transition-transform duration-300 group-hover:scale-110">account_balance_wallet</span>
                   <span className="font-label text-[11px] uppercase tracking-[0.12em] text-on-surface-variant">
                     Budget
                   </span>
@@ -205,9 +205,9 @@ export default function ProfilePage() {
                 <p className="text-base font-semibold text-on-surface">{getBudgetLabel(budgetLevel)}</p>
               </div>
 
-              <div className="rounded-2xl border border-border/70 bg-surface/70 p-5 transition-colors duration-200 hover:border-primary/30 hover:bg-surface-hover/85">
+              <div className="group rounded-2xl border border-border/70 bg-surface/70 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-hover/85 hover:shadow-[0_12px_28px_rgba(22,102,219,0.08)]">
                 <div className="mb-3 flex items-center gap-2 text-primary">
-                  <span className="material-symbols-outlined text-[20px]">hotel</span>
+                  <span className="material-symbols-outlined text-[20px] transition-transform duration-300 group-hover:scale-110">hotel</span>
                   <span className="font-label text-[11px] uppercase tracking-[0.12em] text-on-surface-variant">
                     Hotel Style
                   </span>
@@ -217,9 +217,9 @@ export default function ProfilePage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border/70 bg-surface/70 p-5 transition-colors duration-200 hover:border-primary/30 hover:bg-surface-hover/85 md:col-span-1">
+              <div className="group rounded-2xl border border-border/70 bg-surface/70 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-hover/85 hover:shadow-[0_12px_28px_rgba(22,102,219,0.08)] md:col-span-1">
                 <div className="mb-3 flex items-center gap-2 text-primary">
-                  <span className="material-symbols-outlined text-[20px]">restaurant</span>
+                  <span className="material-symbols-outlined text-[20px] transition-transform duration-300 group-hover:scale-110">restaurant</span>
                   <span className="font-label text-[11px] uppercase tracking-[0.12em] text-on-surface-variant">
                     Food
                   </span>
@@ -243,16 +243,16 @@ export default function ProfilePage() {
               <div className="flex flex-col gap-3 md:col-span-3 md:flex-row md:justify-end md:pt-2">
                 <button
                   onClick={() => router.push("/home")}
-                  className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-5 py-3 text-sm font-bold text-on-surface transition-all duration-200 hover:border-primary/30 hover:text-primary"
+                  className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-5 py-3 text-sm font-bold text-on-surface transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-[0_8px_20px_rgba(22,102,219,0.06)] active:scale-95"
                 >
-                  <Home className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                  <Home className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
                   กลับหน้าหลัก
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-red-500/25 bg-red-500/10 px-5 py-3 text-sm font-bold text-red-500 transition-all duration-200 hover:bg-red-500/14 hover:shadow-[0_10px_24px_rgba(239,68,68,0.10)] dark:text-red-400"
+                  className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-red-500/25 bg-red-500/10 px-5 py-3 text-sm font-bold text-red-500 transition-all duration-300 hover:-translate-y-0.5 hover:bg-red-500/15 hover:shadow-[0_10px_24px_rgba(239,68,68,0.12)] active:scale-95 dark:text-red-400"
                 >
-                  <LogOut className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                  <LogOut className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
                   ออกจากระบบ
                 </button>
               </div>
@@ -268,7 +268,7 @@ export default function ProfilePage() {
                 </div>
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border/70 bg-surface text-on-surface-variant transition-all duration-200 hover:border-primary/25 hover:text-primary"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border/70 bg-surface text-on-surface-variant transition-all duration-300 hover:-rotate-90 hover:scale-110 hover:border-primary/30 hover:text-primary hover:shadow-md active:scale-95"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -288,10 +288,10 @@ export default function ProfilePage() {
                       <button
                         key={opt.value}
                         onClick={() => setBudgetLevel(opt.value)}
-                        className={`group relative overflow-hidden rounded-2xl border p-4 text-left transition-all duration-200 ${
+                        className={`group relative overflow-hidden rounded-2xl border p-4 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(22,102,219,0.08)] active:scale-[0.97] ${
                           active
-                            ? "border-primary/45 bg-primary/10 shadow-[0_14px_30px_rgba(22,102,219,0.12)]"
-                            : "border-border/70 bg-surface hover:border-primary/25 hover:bg-surface-hover"
+                            ? "border-primary/50 bg-gradient-to-br from-primary/10 to-primary/5 shadow-[0_14px_30px_rgba(22,102,219,0.12)] ring-1 ring-primary/20"
+                            : "border-border/70 bg-surface hover:border-primary/40 hover:bg-surface-hover"
                         }`}
                       >
                         <span
@@ -332,10 +332,10 @@ export default function ProfilePage() {
                       <button
                         key={opt.value}
                         onClick={() => setPreferredHotelStyle(opt.value)}
-                        className={`group relative overflow-hidden rounded-2xl border px-3 py-4 text-center transition-all duration-200 ${
+                        className={`group relative overflow-hidden rounded-2xl border px-3 py-4 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(22,102,219,0.08)] active:scale-[0.97] ${
                           active
-                            ? "border-primary/45 bg-primary/10 shadow-[0_14px_30px_rgba(22,102,219,0.12)]"
-                            : "border-border/70 bg-surface hover:border-primary/25 hover:bg-surface-hover"
+                            ? "border-primary/50 bg-gradient-to-br from-primary/10 to-primary/5 shadow-[0_14px_30px_rgba(22,102,219,0.12)] ring-1 ring-primary/20"
+                            : "border-border/70 bg-surface hover:border-primary/40 hover:bg-surface-hover"
                         }`}
                       >
                         <span
@@ -364,15 +364,15 @@ export default function ProfilePage() {
                       <button
                         key={item}
                         onClick={() => toggleFood(item)}
-                        className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-all duration-200 ${
+                        className={`group inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(22,102,219,0.06)] active:scale-[0.95] ${
                           active
-                            ? "border-primary/30 bg-primary/10 text-primary shadow-[0_8px_18px_rgba(22,102,219,0.10)]"
-                            : "border-border/70 bg-surface text-on-surface-variant hover:border-primary/25 hover:text-on-surface"
+                            ? "border-primary/40 bg-gradient-to-br from-primary/10 to-primary/5 text-primary shadow-[0_8px_18px_rgba(22,102,219,0.10)] ring-1 ring-primary/20"
+                            : "border-border/70 bg-surface text-on-surface-variant hover:border-primary/40 hover:text-on-surface"
                         }`}
                       >
                         <span
-                          className={`flex h-4 w-4 items-center justify-center rounded-full transition-all duration-200 ${
-                            active ? "bg-primary text-white" : "bg-surface-container text-transparent"
+                          className={`flex h-4 w-4 items-center justify-center rounded-full transition-all duration-300 ${
+                            active ? "bg-primary text-white scale-100" : "bg-surface-container text-transparent scale-75 group-hover:scale-90"
                           }`}
                         >
                           <Check className="h-3 w-3" />
@@ -387,16 +387,16 @@ export default function ProfilePage() {
               <div className="flex flex-col gap-3 pt-1 sm:flex-row">
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="flex-1 rounded-2xl border border-border bg-surface px-5 py-3 text-sm font-bold text-on-surface transition-all duration-200 hover:border-primary/25 hover:text-primary"
+                  className="flex-1 rounded-2xl border border-border bg-surface px-5 py-3 text-sm font-bold text-on-surface transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-[0_8px_20px_rgba(22,102,219,0.06)] active:scale-95"
                 >
                   ยกเลิก
                 </button>
                 <button
                   onClick={handleSave}
-                  className="group flex-[1.35] rounded-2xl btn-primary-gradient px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:shadow-[0_14px_30px_rgba(22,102,219,0.18)]"
+                  className="group flex-[1.35] rounded-2xl btn-primary-gradient px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(22,102,219,0.22)] active:scale-95"
                 >
                   <span className="inline-flex items-center justify-center gap-2">
-                    <Save className="h-4 w-4 transition-transform duration-200 group-hover:scale-105" />
+                    <Save className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                     บันทึกการตั้งค่า
                   </span>
                 </button>
