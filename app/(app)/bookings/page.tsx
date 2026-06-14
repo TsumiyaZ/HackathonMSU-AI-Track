@@ -59,9 +59,6 @@ export default async function BookingsPage() {
 
   return (
     <div className="max-w-6xl mx-auto w-full">
-      <h1 className="font-display text-3xl font-black mb-2">ประวัติการจอง</h1>
-      <p className="text-on-surface-variant mb-8">จัดการรายการจองตั๋วเครื่องบินและโรงแรมของคุณ</p>
-      
       <BookingsClient initialData={serializedBookings} />
     </div>
   );

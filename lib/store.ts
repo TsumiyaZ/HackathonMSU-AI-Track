@@ -34,6 +34,8 @@ interface TripState {
   setTrip: (trip: Itinerary | null) => void;
   setUserPreferences: (prefs: UserProfile) => void;
   swapActivity: (oldId: string, newItem: TripItem) => void;
+  lang: 'th' | 'en';
+  setLang: (lang: 'th' | 'en') => void;
 }
 
 export const useTripStore = create<TripState>()(
@@ -41,6 +43,8 @@ export const useTripStore = create<TripState>()(
     (set) => ({
       currentTrip: null,
       userPreferences: null,
+      lang: 'th',
+      setLang: (lang) => set({ lang }),
       setTrip: (trip) => set({ currentTrip: trip }),
       setUserPreferences: (prefs) => set({ userPreferences: prefs }),
       swapActivity: (oldId, newItem) => set((state) => {

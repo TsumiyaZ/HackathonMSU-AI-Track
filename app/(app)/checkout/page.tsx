@@ -6,10 +6,14 @@ import { useTripStore } from "@/lib/store";
 import { Sparkles, CheckCircle, CreditCard, QrCode, ArrowLeft, Loader2 } from "lucide-react";
 import { requireAuth } from "@/lib/auth-check";
 import Link from "next/link";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const currentTrip = useTripStore((s) => s.currentTrip);
+  const lang = useTripStore((s) => s.lang);
+  const t = TRANSLATIONS[lang];
+
   const [step, setStep] = useState<"review" | "payment" | "success">("review");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "qr">("card");
   const [loading, setLoading] = useState(false);
@@ -24,13 +28,13 @@ export default function CheckoutPage() {
         <span className="material-symbols-outlined text-[56px] md:text-[64px] text-on-surface-variant">
           shopping_cart_off
         </span>
-        <h2 className="font-display text-xl md:text-2xl font-bold mt-4">ไม่พบรายการทริป</h2>
-        <p className="text-on-surface-variant mt-2 text-sm md:text-base">กรุณาสร้างทริปก่อนดำเนินการจอง</p>
+        <h2 className="font-display text-xl md:text-2xl font-bold mt-4">{t.checkoutNoTrip}</h2>
+        <p className="text-on-surface-variant mt-2 text-sm md:text-base">{t.checkoutNoTripDesc}</p>
         <Link
           href="/plan"
           className="mt-6 inline-block px-6 md:px-8 py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold"
         >
-          กลับไปสร้างทริป
+          {t.checkoutBackToPlan}
         </Link>
       </div>
     );
@@ -63,7 +67,7 @@ export default function CheckoutPage() {
         useTripStore.getState().setTrip(null);
       }, 500);
     } catch (err: any) {
-      setErrorMsg(err.message || "เกิดข้อผิดพลาดในการชำระเงิน กรุณาตรวจสอบข้อมูลและลองใหม่อีกครั้ง");
+      setErrorMsg(err.message || t.checkoutErrorDefault);
     } finally {
       setLoading(false);
     }
@@ -79,17 +83,17 @@ export default function CheckoutPage() {
             <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mx-auto mb-4 md:mb-6">
               <CheckCircle className="w-8 h-8 md:w-10 md:h-10 text-emerald-400" />
             </div>
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">จองทริปสำเร็จ</h1>
+            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">{t.checkoutSuccess}</h1>
             <p className="text-on-surface-variant text-sm md:text-base mb-2">
-              ทริป {finalTrip.destination} ถูกยืนยันเรียบร้อยแล้ว
+              {t.checkoutConfirmed.replace("{destination}", finalTrip.destination)}
             </p>
             <div className="glass-panel p-4 rounded-xl mt-4 md:mt-6 text-left">
               <p className="text-sm text-on-surface-variant">
-                รหัสการจอง:{" "}
+                {t.checkoutBookingIdLabel}{" "}
                 <span className="font-mono text-primary">{bookingId}</span>
               </p>
               <p className="text-sm text-on-surface-variant mt-1">
-                ยอดชำระ: <span className="font-bold text-primary">฿{finalTrip.totalPrice.toLocaleString()}</span>
+                {t.checkoutPaidAmountLabel} <span className="font-bold text-primary">฿{finalTrip.totalPrice.toLocaleString()}</span>
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 mt-6 md:mt-8 justify-center">
@@ -97,13 +101,13 @@ export default function CheckoutPage() {
                 href="/bookings"
                 className="px-6 py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold text-center hover-lift press-scale"
               >
-                ดูการจองของฉัน
+                {t.checkoutViewBookingsBtn}
               </Link>
               <Link
                 href="/home"
                 className="px-6 py-3 rounded-xl glass-panel font-label text-sm hover:text-primary transition-colors text-center hover-lift press-scale"
               >
-                กลับหน้าแรก
+                {t.checkoutBackHomeBtn}
               </Link>
             </div>
           </div>
@@ -127,14 +131,14 @@ export default function CheckoutPage() {
           className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors text-sm md:text-base hover-lift press-scale"
         >
           <ArrowLeft className="w-4 h-4" />
-          กลับไปแก้ไขทริป
+          {t.checkoutBackToEdit}
         </Link>
         <button
           onClick={() => setShowCancelModal(true)}
           className="flex items-center gap-2 text-red-500 hover:text-red-400 hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-all duration-200 text-sm md:text-base font-medium hover-lift press-scale"
         >
           <span className="material-symbols-outlined text-[18px]">delete</span>
-          ยกเลิกทริปนี้
+          {t.checkoutCancelTripBtn}
         </button>
       </div>
 
@@ -145,19 +149,19 @@ export default function CheckoutPage() {
           <div className="glass-panel-strong p-4 md:p-6 rounded-2xl">
             <h2 className="font-display text-xl md:text-2xl font-bold mb-3 md:mb-4 flex items-center gap-2">
               <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-              สรุปทริป
+              {t.checkoutTripSummary}
             </h2>
             <div className="space-y-3 md:space-y-4">
               <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-white/10">
-                <span className="text-on-surface-variant text-sm md:text-base">จุดหมาย</span>
+                <span className="text-on-surface-variant text-sm md:text-base">{t.checkoutDestination}</span>
                 <span className="font-bold text-base md:text-lg">{currentTrip.destination}</span>
               </div>
               <div className="flex justify-between items-center pb-3 md:pb-4 border-b border-white/10">
-                <span className="text-on-surface-variant text-sm md:text-base">จำนวนวัน</span>
-                <span className="font-bold text-sm md:text-base">{currentTrip.days} วัน</span>
+                <span className="text-on-surface-variant text-sm md:text-base">{t.checkoutDays}</span>
+                <span className="font-bold text-sm md:text-base">{currentTrip.days} {t.daysUnit}</span>
               </div>
               <div className="space-y-2">
-                <p className="text-xs md:text-sm text-on-surface-variant font-medium">รายการในทริป:</p>
+                <p className="text-xs md:text-sm text-on-surface-variant font-medium">{t.checkoutItineraryItems}</p>
                 {currentTrip.items.map((item) => (
                   <div key={item.id} className="flex justify-between items-center p-2.5 md:p-3 rounded-xl bg-white/5">
                     <div className="flex items-center gap-2 md:gap-3 min-w-0">
@@ -188,23 +192,23 @@ export default function CheckoutPage() {
         {/* ── Right: Price Summary + Payment ── */}
         <div className="lg:col-span-2 flex flex-col gap-4 md:gap-6">
           <div className="glass-panel-strong p-4 md:p-6 rounded-2xl lg:sticky lg:top-24">
-            <h2 className="font-display text-lg md:text-xl font-bold mb-3 md:mb-4">ยอดสรุปคำสั่งจอง</h2>
+            <h2 className="font-display text-lg md:text-xl font-bold mb-3 md:mb-4">{t.checkoutOrderSummary}</h2>
 
             <div className="space-y-2 md:space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-on-surface-variant">รวมค่าบริการ</span>
+                <span className="text-on-surface-variant">{t.checkoutSubtotal}</span>
                 <span>฿{currentTrip.totalPrice.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-on-surface-variant">ภาษี (7%)</span>
+                <span className="text-on-surface-variant">{t.checkoutTax}</span>
                 <span>฿{tax.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-on-surface-variant">ค่าธรรมเนียม</span>
+                <span className="text-on-surface-variant">{t.checkoutFee}</span>
                 <span>฿{fee.toLocaleString()}</span>
               </div>
               <div className="border-t border-white/10 pt-2 md:pt-3 flex justify-between font-bold text-base md:text-lg">
-                <span>ยอดสุทธิ</span>
+                <span>{t.checkoutTotal}</span>
                 <span className="text-primary">฿{total.toLocaleString()}</span>
               </div>
             </div>
@@ -216,7 +220,7 @@ export default function CheckoutPage() {
                 className="w-full mt-4 md:mt-6 py-3 md:py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform hover-lift press-scale"
               >
                 <CreditCard className="w-4 h-4 md:w-5 md:h-5" />
-                ดำเนินการชำระเงิน
+                {t.checkoutProceedPayment}
               </button>
             )}
 
@@ -233,7 +237,7 @@ export default function CheckoutPage() {
                       }`}
                   >
                     <CreditCard className="w-4 h-4 md:w-5 md:h-5 mx-auto mb-1" />
-                    บัตรเครดิต
+                    {t.checkoutCreditCard}
                   </button>
                   <button
                     onClick={() => setPaymentMethod("qr")}
@@ -243,7 +247,7 @@ export default function CheckoutPage() {
                       }`}
                   >
                     <QrCode className="w-4 h-4 md:w-5 md:h-5 mx-auto mb-1" />
-                    สแกน QR
+                    {t.checkoutScanQR}
                   </button>
                 </div>
 
@@ -252,7 +256,7 @@ export default function CheckoutPage() {
                   <div className="space-y-2 md:space-y-3">
                     <input
                       type="text"
-                      placeholder="หมายเลขบัตร"
+                      placeholder={t.checkoutCardNumber}
                       className="w-full glass-input rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-sm outline-none"
                     />
                     <div className="grid grid-cols-2 gap-2 md:gap-3">
@@ -269,7 +273,7 @@ export default function CheckoutPage() {
                     </div>
                     <input
                       type="text"
-                      placeholder="ชื่อบนบัตร"
+                      placeholder={t.checkoutCardholderName}
                       className="w-full glass-input rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-sm outline-none"
                     />
                   </div>
@@ -281,7 +285,7 @@ export default function CheckoutPage() {
                     <div className="w-36 h-36 md:w-48 md:h-48 mx-auto bg-white rounded-xl flex items-center justify-center border border-white/20">
                       <QrCode className="w-24 h-24 md:w-32 md:h-32 text-black" />
                     </div>
-                    <p className="text-xs md:text-sm text-on-surface-variant mt-3">สแกน QR Code เพื่อชำระเงิน</p>
+                    <p className="text-xs md:text-sm text-on-surface-variant mt-3">{t.checkoutScanQRDesc}</p>
                   </div>
                 )}
 
@@ -304,7 +308,7 @@ export default function CheckoutPage() {
                   ) : (
                     <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
                   )}
-                  {loading ? "กำลังดำเนินการ..." : `ยืนยันการจอง ฿${total.toLocaleString()}`}
+                  {loading ? t.checkoutProcessing : t.checkoutConfirmBtn.replace("{total}", total.toLocaleString())}
                 </button>
               </div>
             )}
@@ -320,16 +324,16 @@ export default function CheckoutPage() {
             <div className="w-16 h-16 mx-auto bg-red-500/20 border border-red-500/30 rounded-full flex items-center justify-center mb-5 shadow-[0_0_20px_rgba(239,68,68,0.2)]">
               <span className="material-symbols-outlined text-red-500 text-[32px]">delete_forever</span>
             </div>
-            <h3 className="font-display text-xl font-bold text-on-surface mb-2">ยกเลิกทริปนี้?</h3>
+            <h3 className="font-display text-xl font-bold text-on-surface mb-2">{t.checkoutCancelConfirmTitle}</h3>
             <p className="text-on-surface-variant text-sm mb-6 leading-relaxed">
-              ข้อมูลแผนการเดินทางของคุณในทริปนี้จะถูกลบทั้งหมดและไม่สามารถกู้คืนได้ คุณแน่ใจหรือไม่?
+              {t.checkoutCancelConfirmDesc}
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowCancelModal(false)}
                 className="flex-1 py-3 rounded-xl border border-white/10 font-bold text-on-surface hover:bg-white/5 transition-colors"
               >
-                ย้อนกลับ
+                {t.checkoutBack}
               </button>
               <button
                 onClick={() => {
@@ -339,7 +343,7 @@ export default function CheckoutPage() {
                 }}
                 className="flex-1 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold shadow-[0_8px_20px_rgba(239,68,68,0.25)] transition-all active:scale-95"
               >
-                ยืนยันการยกเลิก
+                {t.checkoutConfirmCancel}
               </button>
             </div>
           </div>

@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { AuthStatusButton } from "@/components/AuthStatusButton";
+import { useTripStore } from "@/lib/store";
+import { TRANSLATIONS } from "@/lib/translations";
 
 type NavTile = {
   href: string;
-  title: string;
-  description: string;
+  titleKey: "tileExplore" | "tileFlights" | "tilePlan" | "tileBookings" | "tileCheckout" | "tileProfile";
+  descKey: "tileExploreDesc" | "tileFlightsDesc" | "tilePlanDesc" | "tileBookingsDesc" | "tileCheckoutDesc" | "tileProfileDesc";
   icon: string;
   ready: boolean;
 };
@@ -12,50 +16,52 @@ type NavTile = {
 const TILES: NavTile[] = [
   {
     href: "/explore",
-    title: "สำรวจทั้งหมด",
-    description: "เลือกดูเที่ยวบิน โรงแรม และร้านอาหารจากหน้า Explore",
+    titleKey: "tileExplore",
+    descKey: "tileExploreDesc",
     icon: "explore",
     ready: true,
   },
   {
     href: "/explore/flights",
-    title: "ดูเที่ยวบินทั้งหมด",
-    description: "เปรียบเทียบตั๋วเครื่องบินตามเส้นทาง ราคา และสายการบิน",
+    titleKey: "tileFlights",
+    descKey: "tileFlightsDesc",
     icon: "flight_takeoff",
     ready: true,
   },
   {
     href: "/plan",
-    title: "วางแผนทริปกับ AI",
-    description: "พิมพ์สั้นๆ ว่าคุณอยากไปไหน AI จัดทริปให้ใน 1 คลิก",
+    titleKey: "tilePlan",
+    descKey: "tilePlanDesc",
     icon: "auto_awesome",
     ready: true,
   },
   {
     href: "/bookings",
-    title: "การจองของฉัน",
-    description: "ดู ค้นหา และจัดการการจองทั้งหมดในที่เดียว",
+    titleKey: "tileBookings",
+    descKey: "tileBookingsDesc",
     icon: "event_available",
     ready: true,
   },
-
   {
     href: "/checkout",
-    title: "ชำระเงิน",
-    description: "จองแบบ 1-Click พร้อมบริการชำระเงินจำลอง",
+    titleKey: "tileCheckout",
+    descKey: "tileCheckoutDesc",
     icon: "credit_card",
     ready: true,
   },
   {
     href: "/profile",
-    title: "โปรไฟล์ของฉัน",
-    description: "ตั้งค่าความชอบเพื่อให้ AI แนะนำทริปที่ตรงใจ",
+    titleKey: "tileProfile",
+    descKey: "tileProfileDesc",
     icon: "account_circle",
     ready: true,
   },
 ];
 
 export default function Home() {
+  const lang = useTripStore((s) => s.lang);
+  const t = TRANSLATIONS[lang];
+
   return (
     <div className="min-h-screen bg-background text-on-surface">
 
@@ -149,11 +155,20 @@ export default function Home() {
               AeroStream · TicketHub
             </p>
             <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight max-w-md mx-auto">
-              Elevate Your<br />
-              <span style={{ color: "#93c5fd" }}>Travel Experience</span>
+              {lang === 'th' ? (
+                <>
+                  ยกระดับ<br />
+                  <span style={{ color: "#93c5fd" }}>การเดินทางของคุณ</span>
+                </>
+              ) : (
+                <>
+                  Elevate Your<br />
+                  <span style={{ color: "#93c5fd" }}>Travel Experience</span>
+                </>
+              )}
             </h1>
             <p className="text-blue-100 text-sm md:text-base max-w-xs mx-auto leading-relaxed opacity-90">
-              จองตั๋วเครื่องบิน โรงแรม และวางแผนทริปด้วย AI ในที่เดียว
+              {t.landingSub}
             </p>
           </div>
 
@@ -178,15 +193,15 @@ export default function Home() {
               </div>
             </Link>
             <span className="text-white/70 text-xs font-label tracking-widest uppercase">
-              เริ่มต้นใช้งาน
+              {t.landingStartBtn}
             </span>
           </div>
 
           {/* Quick nav pills */}
           <div className="splash-fade-4 flex flex-wrap justify-center gap-2 pb-4">
             {[
-              { href: "/plan", label: "วางแผนทริป", icon: "auto_awesome" },
-              { href: "/bookings", label: "การจอง", icon: "event_available" },
+              { href: "/plan", label: t.navPlan, icon: "auto_awesome" },
+              { href: "/bookings", label: t.navBookings, icon: "event_available" },
             ].map((item) => (
               <Link
                 key={item.href}
@@ -221,10 +236,10 @@ export default function Home() {
         <div className="flex items-end justify-between mb-5">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold text-on-surface">
-              เลือกหน้าที่คุณต้องการ
+              {t.landingChoosePage}
             </h2>
             <p className="text-on-surface-variant mt-1 text-sm">
-              ป้ายสีฟ้าคือหน้าที่พร้อมใช้งานแล้ว
+              {t.landingChoosePageDesc}
             </p>
           </div>
         </div>
@@ -265,15 +280,15 @@ export default function Home() {
                   }
                   style={tile.ready ? { background: "rgba(24,119,242,0.08)" } : { background: "rgba(0,0,0,0.04)" }}
                 >
-                  {tile.ready ? "พร้อมใช้" : "กำลังพัฒนา"}
+                  {tile.ready ? t.landingReady : t.landingInDev}
                 </span>
               </div>
               <h3 className="font-display text-lg font-semibold text-on-surface group-hover:text-primary transition-colors">
-                {tile.title}
+                {t[tile.titleKey]}
               </h3>
-              <p className="text-sm text-on-surface-variant leading-relaxed">{tile.description}</p>
+              <p className="text-sm text-on-surface-variant leading-relaxed">{t[tile.descKey]}</p>
               <div className="mt-auto pt-2 flex items-center gap-1 font-label text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                เปิดหน้า
+                {t.landingOpenPage}
                 <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
               </div>
             </Link>

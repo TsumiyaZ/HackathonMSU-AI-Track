@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTripStore } from "@/lib/store";
 import { Check, Edit3, Home, LogOut, Save, Sparkles, User, X } from "lucide-react";
+import { TRANSLATIONS } from "@/lib/translations";
 
 type SessionUser = {
   name?: string;
@@ -36,18 +37,18 @@ const HOTEL_STYLE_OPTIONS = [
   { value: "budget", label: "ประหยัด", icon: "bed" },
 ] as const;
 
-function getBudgetLabel(val: string) {
-  if (val === "low") return "ประหยัด (≤ 10,000 บาท)";
-  if (val === "medium") return "ปานกลาง (10,000 - 30,000 บาท)";
-  if (val === "high") return "พรีเมียม (≥ 30,000 บาท)";
+function getBudgetLabel(val: string, t: any, lang: string) {
+  if (val === "low") return `${t.budgetLow} (≤ 10,000 ${lang === 'th' ? 'บาท' : 'THB'})`;
+  if (val === "medium") return `${t.budgetMedium} (10,000 - 30,000 ${lang === 'th' ? 'บาท' : 'THB'})`;
+  if (val === "high") return `${t.budgetHigh} (≥ 30,000 ${lang === 'th' ? 'บาท' : 'THB'})`;
   return val;
 }
 
-function getHotelStyleLabel(val: string) {
-  if (val === "modern") return "โมเดิร์น";
-  if (val === "boutique") return "บูติก";
-  if (val === "resort") return "รีสอร์ท";
-  if (val === "budget") return "ประหยัด";
+function getHotelStyleLabel(val: string, t: any) {
+  if (val === "modern") return t.hotelModern;
+  if (val === "boutique") return t.hotelBoutique;
+  if (val === "resort") return t.hotelResort;
+  if (val === "budget") return t.hotelBudget;
   return val;
 }
 
@@ -70,6 +71,8 @@ export default function ProfilePage() {
   const router = useRouter();
   const userPreferences = useTripStore((s) => s.userPreferences);
   const setUserPreferences = useTripStore((s) => s.setUserPreferences);
+  const lang = useTripStore((s) => s.lang);
+  const t = TRANSLATIONS[lang];
 
   const [budgetLevel, setBudgetLevel] = useState(userPreferences?.budgetLevel || "medium");
   const [foodRestrictions, setFoodRestrictions] = useState<string[]>(
@@ -82,6 +85,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<SessionUser | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [showConfirmLogout, setShowConfirmLogout] = useState(false);
 
   useEffect(() => {
     fetch("/api/auth/check-session", { method: "GET" })
@@ -188,7 +192,7 @@ export default function ProfilePage() {
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/14">
                   <Sparkles className="h-4 w-4" />
                 </div>
-                <p>บันทึกการตั้งค่าเรียบร้อยแล้ว AI จะใช้ข้อมูลนี้กับทริปครั้งถัดไป</p>
+                <p>{t.savePreferencesDone}</p>
               </div>
             </div>
           )}
@@ -199,21 +203,21 @@ export default function ProfilePage() {
                 <div className="mb-3 flex items-center gap-2 text-primary">
                   <span className="material-symbols-outlined text-[20px] transition-transform duration-300 group-hover:scale-110">account_balance_wallet</span>
                   <span className="font-label text-[11px] uppercase tracking-[0.12em] text-on-surface-variant">
-                    Budget
+                    {t.budget}
                   </span>
                 </div>
-                <p className="text-base font-semibold text-on-surface">{getBudgetLabel(budgetLevel)}</p>
+                <p className="text-base font-semibold text-on-surface">{getBudgetLabel(budgetLevel, t, lang)}</p>
               </div>
 
               <div className="group rounded-2xl border border-border/70 bg-surface/70 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-hover/85 hover:shadow-[0_12px_28px_rgba(22,102,219,0.08)]">
                 <div className="mb-3 flex items-center gap-2 text-primary">
                   <span className="material-symbols-outlined text-[20px] transition-transform duration-300 group-hover:scale-110">hotel</span>
                   <span className="font-label text-[11px] uppercase tracking-[0.12em] text-on-surface-variant">
-                    Hotel Style
+                    {t.hotelStyle}
                   </span>
                 </div>
                 <p className="text-base font-semibold text-on-surface">
-                  {getHotelStyleLabel(preferredHotelStyle)}
+                  {getHotelStyleLabel(preferredHotelStyle, t)}
                 </p>
               </div>
 
@@ -221,7 +225,7 @@ export default function ProfilePage() {
                 <div className="mb-3 flex items-center gap-2 text-primary">
                   <span className="material-symbols-outlined text-[20px] transition-transform duration-300 group-hover:scale-110">restaurant</span>
                   <span className="font-label text-[11px] uppercase tracking-[0.12em] text-on-surface-variant">
-                    Food
+                    {t.foodPreferences}
                   </span>
                 </div>
                 {foodRestrictions.length > 0 ? (
@@ -236,7 +240,7 @@ export default function ProfilePage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm font-medium text-on-surface">ไม่มีข้อจำกัดเป็นพิเศษ</p>
+                  <p className="text-sm font-medium text-on-surface">{t.noFoodRestrictions}</p>
                 )}
               </div>
 
@@ -246,14 +250,14 @@ export default function ProfilePage() {
                   className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-5 py-3 text-sm font-bold text-on-surface transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-[0_8px_20px_rgba(22,102,219,0.06)] active:scale-95"
                 >
                   <Home className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
-                  กลับหน้าหลัก
+                  {t.home}
                 </button>
                 <button
-                  onClick={handleLogout}
+                  onClick={() => setShowConfirmLogout(true)}
                   className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-red-500/25 bg-red-500/10 px-5 py-3 text-sm font-bold text-red-500 transition-all duration-300 hover:-translate-y-0.5 hover:bg-red-500/15 hover:shadow-[0_10px_24px_rgba(239,68,68,0.12)] active:scale-95 dark:text-red-400"
                 >
                   <LogOut className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
-                  ออกจากระบบ
+                  {t.logout}
                 </button>
               </div>
             </div>
@@ -405,6 +409,40 @@ export default function ProfilePage() {
           )}
         </div>
       </section>
+
+      {showConfirmLogout && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+          <div className="w-full max-w-sm rounded-[24px] bg-surface p-6 border border-border/80 shadow-2xl animate-[fade-up_0.2s_ease-out]">
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center">
+                <LogOut className="h-6 w-6" />
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="font-display text-lg font-bold text-on-surface">
+                  {t.confirmLogout}
+                </h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed">
+                  {t.logoutQuestion}
+                </p>
+              </div>
+              <div className="flex w-full gap-3 mt-2">
+                <button
+                  onClick={() => setShowConfirmLogout(false)}
+                  className="flex-1 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-bold text-on-surface hover:bg-surface-hover hover:text-primary transition-all duration-200 active:scale-95"
+                >
+                  {t.cancel}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex-1 rounded-xl bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 text-sm font-bold shadow-md shadow-red-500/10 transition-all duration-200 active:scale-95"
+                >
+                  {t.logout}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

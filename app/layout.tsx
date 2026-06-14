@@ -30,7 +30,6 @@ export const viewport: Viewport = {
 };
 
 import { ThemeProvider } from "@/components/ThemeProvider";
-import RealtimeToast from "@/components/realtime/RealtimeToast";
 
 export default function RootLayout({
   children,
@@ -38,6 +37,8 @@ export default function RootLayout({
   return (
     <html lang="th" className={`${inter.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
@@ -47,7 +48,6 @@ export default function RootLayout({
          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="tickethub-theme">
             {children}
          </ThemeProvider>
-         <RealtimeToast />
          <script
            dangerouslySetInnerHTML={{
              __html: `

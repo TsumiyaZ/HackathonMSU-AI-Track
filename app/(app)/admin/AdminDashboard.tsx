@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useEventSource } from "@/hooks/useEventSource";
 import { Hotel, PlaneTakeoff, User, Radio, Wifi, WifiOff } from 'lucide-react';
+import RealtimeToast from "@/components/realtime/RealtimeToast";
 
 export default function AdminDashboard({ initialUser }: { initialUser: any }) {
   const [user] = useState(initialUser);
@@ -499,6 +500,7 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
           </div>
         </div>
       )}
+      <RealtimeToast />
     </div>
   );
 }

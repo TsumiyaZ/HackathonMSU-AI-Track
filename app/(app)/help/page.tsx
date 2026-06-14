@@ -1,12 +1,12 @@
-import Link from "next/link";
+"use client";
 
-export const metadata = {
-  title: "ความช่วยเหลือ | AI Trip Architect",
-  description: "ศูนย์ช่วยเหลือและคำถามที่พบบ่อย (FAQ)",
-};
+import Link from "next/link";
+import { useTripStore } from "@/lib/store";
 
 export default function HelpPage() {
-  const faqs = [
+  const lang = useTripStore((s) => s.lang);
+
+  const faqs = lang === 'th' ? [
     {
       q: "จะเริ่มต้นวางแผนการเดินทางด้วย AI ได้อย่างไร?",
       a: "เพียงไปที่เมนู 'วางแผน' กรอกจุดหมายปลายทาง วันที่ และสไตล์การท่องเที่ยวที่คุณชอบ AI จะสร้างแผนการเดินทางที่เหมาะสมที่สุดให้คุณทันที"
@@ -22,6 +22,23 @@ export default function HelpPage() {
     {
       q: "จะติดต่อเจ้าหน้าที่ได้อย่างไร?",
       a: "คุณสามารถติดต่อเราได้ทางอีเมล support@triparchitect.ai หรือผ่านทางแชทสดในเวลาทำการ 09:00 - 18:00 น."
+    }
+  ] : [
+    {
+      q: "How do I start planning a trip with AI?",
+      a: "Just go to the 'Plan' menu, enter your destination, dates, and preferred travel style. The AI will immediately design the most suitable itinerary for you."
+    },
+    {
+      q: "Can I edit the AI-generated itinerary?",
+      a: "Absolutely! You can freely customize, delete, or add activities, hotels, and attractions in your itinerary."
+    },
+    {
+      q: "Is booking hotels and flights through the platform safe?",
+      a: "100% safe. We connect with reliable service providers and utilize international standard secure payment systems."
+    },
+    {
+      q: "How can I contact support?",
+      a: "You can reach us via email at support@triparchitect.ai or through live chat during our business hours from 9:00 AM to 6:00 PM."
     }
   ];
 
@@ -68,10 +85,20 @@ export default function HelpPage() {
             <span className="material-symbols-outlined text-white text-[32px]">support_agent</span>
           </div>
           <h1 className="font-display text-3xl md:text-5xl font-black text-on-surface mb-4">
-            ศูนย์<span className="text-gradient">ช่วยเหลือ</span>
+            {lang === 'th' ? (
+              <>
+                ศูนย์<span className="text-gradient">ช่วยเหลือ</span>
+              </>
+            ) : (
+              <>
+                Help <span className="text-gradient">Center</span>
+              </>
+            )}
           </h1>
           <p className="text-sm md:text-base text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
-            มีคำถามหรือข้อสงสัย? เราพร้อมช่วยเหลือคุณเสมอ ค้นหาคำตอบที่พบบ่อยหรือติดต่อทีมงานของเรา
+            {lang === 'th'
+              ? "มีคำถามหรือข้อสงสัย? เราพร้อมช่วยเหลือคุณเสมอ ค้นหาคำตอบที่พบบ่อยหรือติดต่อทีมงานของเรา"
+              : "Have questions or concerns? We are always here to help. Find frequently asked questions or contact our support team."}
           </p>
         </header>
 
@@ -81,8 +108,14 @@ export default function HelpPage() {
             <div className="w-12 h-12 rounded-full bg-teal-500/10 text-teal-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-[24px]">mail</span>
             </div>
-            <h3 className="font-display text-lg font-bold text-on-surface mb-2">อีเมล</h3>
-            <p className="text-sm text-on-surface-variant mb-4">ส่งคำถามของคุณมาหาเรา เราจะตอบกลับภายใน 24 ชั่วโมง</p>
+            <h3 className="font-display text-lg font-bold text-on-surface mb-2">
+              {lang === 'th' ? "อีเมล" : "Email"}
+            </h3>
+            <p className="text-sm text-on-surface-variant mb-4">
+              {lang === 'th'
+                ? "ส่งคำถามของคุณมาหาเรา เราจะตอบกลับภายใน 24 ชั่วโมง"
+                : "Send us your questions, and we will reply within 24 hours."}
+            </p>
             <a href="mailto:support@triparchitect.ai" className="font-label text-sm text-teal-400 hover:text-teal-300 font-bold">
               support@triparchitect.ai
             </a>
@@ -92,10 +125,16 @@ export default function HelpPage() {
             <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-[24px]">forum</span>
             </div>
-            <h3 className="font-display text-lg font-bold text-on-surface mb-2">แชทสด</h3>
-            <p className="text-sm text-on-surface-variant mb-4">พูดคุยกับเจ้าหน้าที่ของเรา (09:00 - 18:00 น.)</p>
+            <h3 className="font-display text-lg font-bold text-on-surface mb-2">
+              {lang === 'th' ? "แชทสด" : "Live Chat"}
+            </h3>
+            <p className="text-sm text-on-surface-variant mb-4">
+              {lang === 'th'
+                ? "พูดคุยกับเจ้าหน้าที่ของเรา (09:00 - 18:00 น.)"
+                : "Chat with our support agents (09:00 AM - 06:00 PM)"}
+            </p>
             <button className="font-label text-sm px-5 py-2 rounded-xl bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 font-bold transition-colors">
-              เริ่มการสนทนา
+              {lang === 'th' ? "เริ่มการสนทนา" : "Start Conversation"}
             </button>
           </div>
         </div>
@@ -104,7 +143,9 @@ export default function HelpPage() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <span className="material-symbols-outlined text-teal-400">help</span>
-            <h2 className="font-display text-2xl font-bold text-on-surface">คำถามที่พบบ่อย (FAQ)</h2>
+            <h2 className="font-display text-2xl font-bold text-on-surface">
+              {lang === 'th' ? "คำถามที่พบบ่อย (FAQ)" : "Frequently Asked Questions (FAQ)"}
+            </h2>
           </div>
 
           <div className="flex flex-col gap-4">

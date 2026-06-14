@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTripStore } from "@/lib/store";
+import { TRANSLATIONS } from "@/lib/translations";
 
 type Item = { href: string; label: string; icon: string };
 
@@ -20,6 +22,18 @@ const ADMIN_ITEM: Item = { href: "/admin", label: "Admin", icon: "shield" };
 export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: boolean) => void }) {
   const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState(false);
+  const lang = useTripStore((s) => s.lang);
+  const t = TRANSLATIONS[lang];
+
+  const labelMap: Record<string, string> = {
+    "/home": t.navHome,
+    "/plan": t.navPlan,
+    "/explore": t.navExplore,
+    "/bookings": t.navBookings,
+    "/checkout": t.navCheckout,
+    "/profile": t.navProfile,
+    "/admin": t.navAdmin,
+  };
 
   useEffect(() => {
     fetch("/api/auth/check-session")
@@ -51,11 +65,11 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
         <Link
           href="/plan"
           className={`w-full py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform ${isOpen ? "" : "px-0"}`}
-          title={!isOpen ? "สร้างทริปใหม่" : undefined}
+          title={!isOpen ? t.newTrip : undefined}
         >
           <span className="material-symbols-outlined text-background text-[20px]">add</span>
           <span className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? "w-auto opacity-100" : "w-0 opacity-0 hidden"}`}>
-            สร้างทริปใหม่
+            {t.newTrip}
           </span>
         </Link>
       </div>
@@ -71,17 +85,18 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
                 ? `flex items-center gap-3 bg-amber-500/15 text-amber-400 border-r-[3px] border-amber-500 py-3 rounded-l-xl transition-all duration-200 ${isOpen ? "px-6" : "px-0 justify-center"}`
                 : `flex items-center gap-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface py-3 rounded-xl transition-all duration-200 ${isOpen ? "px-6 mx-2" : "px-0 justify-center"}`
             }
-            title={!isOpen ? ADMIN_ITEM.label : undefined}
+            title={!isOpen ? t.navAdmin : undefined}
           >
             <span className="material-symbols-outlined text-[20px] shrink-0">{ADMIN_ITEM.icon}</span>
             <span className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? "w-auto opacity-100" : "w-0 opacity-0"}`}>
-              {ADMIN_ITEM.label}
+              {t.navAdmin}
             </span>
           </Link>
         )}
         {PRIMARY.map((item) => {
           const active =
             item.href === "/home" ? pathname === "/home" : pathname.startsWith(item.href);
+          const localizedLabel = labelMap[item.href] || item.label;
           return (
             <Link
               key={item.href}
@@ -91,7 +106,7 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
                   ? `flex items-center gap-3 bg-primary/15 text-primary border-r-[3px] border-primary py-3 rounded-l-xl transition-all duration-200 ${isOpen ? "px-6" : "px-0 justify-center"}`
                   : `flex items-center gap-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface py-3 rounded-xl transition-all duration-200 ${isOpen ? "px-6 mx-2" : "px-0 justify-center"}`
               }
-              title={!isOpen ? item.label : undefined}
+              title={!isOpen ? localizedLabel : undefined}
             >
               <span
                 className="material-symbols-outlined text-[20px] shrink-0"
@@ -100,7 +115,7 @@ export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (va
                 {item.icon}
               </span>
               <span className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${isOpen ? "w-auto opacity-100" : "w-0 opacity-0"}`}>
-                {item.label}
+                {localizedLabel}
               </span>
             </Link>
           );

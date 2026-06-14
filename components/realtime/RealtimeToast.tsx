@@ -70,11 +70,11 @@ export default function RealtimeToast() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+    <div className="fixed top-20 right-4 left-auto bottom-auto z-[100] flex flex-col gap-2 w-full max-w-[calc(100%-2rem)] md:max-w-sm pointer-events-none">
       {toasts.map((t) => (
         <div
           key={t.id}
-          className={`pointer-events-auto glass-panel-strong rounded-xl border-l-4 ${t.color} p-3 flex items-start gap-3 shadow-xl animate-[slide-up_0.3s_ease-out]`}
+          className={`pointer-events-auto glass-panel-strong rounded-xl border-l-4 ${t.color} p-3 flex items-start gap-3 shadow-xl animate-[slide-down_0.3s_ease-out]`}
         >
           <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
             {t.icon}

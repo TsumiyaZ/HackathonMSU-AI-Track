@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTripStore } from "@/lib/store";
+import { TRANSLATIONS } from "@/lib/translations";
 
 type NavItem = { href: string; label: string; icon: string };
 
@@ -15,6 +17,16 @@ const NAV_ITEMS: NavItem[] = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const lang = useTripStore((s) => s.lang);
+  const t = TRANSLATIONS[lang];
+
+  const labelMap: Record<string, string> = {
+    "/home": t.navHome,
+    "/explore": t.navExplore,
+    "/plan": t.navPlan,
+    "/bookings": t.navBookings,
+    "/profile": t.navProfile,
+  };
 
   return (
     <nav className="bottom-nav md:hidden">
@@ -25,12 +37,13 @@ export function BottomNav() {
             : pathname.startsWith(item.href);
         const isPlan = item.href === "/plan";
 
+        const localizedLabel = labelMap[item.href] || item.label;
         return (
           <Link
             key={item.href}
             href={item.href}
             className={`bottom-nav-item${isActive ? " active" : ""}${isPlan ? " bottom-nav-cta" : ""}`}
-            aria-label={item.label}
+            aria-label={localizedLabel}
           >
             {isPlan ? (
               <div className="bottom-nav-cta-bubble">
@@ -52,7 +65,7 @@ export function BottomNav() {
                 >
                   {item.icon}
                 </span>
-                <span className="bottom-nav-label">{item.label}</span>
+                <span className="bottom-nav-label">{localizedLabel}</span>
                 {isActive && <span className="bottom-nav-dot" />}
               </>
             )}

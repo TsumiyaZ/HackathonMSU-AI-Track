@@ -3,10 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useTripStore } from "@/lib/store";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: boolean) => void }) {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
+  const lang = useTripStore((s) => s.lang);
+  const setLang = useTripStore((s) => s.setLang);
 
   useEffect(() => {
     fetch("/api/auth/check-session")
@@ -48,24 +52,33 @@ export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val
       </div>
 
       {/* Right — actions */}
-      <div className="flex items-center gap-2 md:gap-5">
+      <div className="flex items-center gap-2 md:gap-4">
         <Link
           href="/help"
           className="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center"
-          title="ความช่วยเหลือ"
+          title={TRANSLATIONS[lang].help}
         >
           <span className="material-symbols-outlined text-[22px]">help_outline</span>
         </Link>
 
+        {/* Language Toggle */}
+        <button
+          onClick={() => setLang(lang === 'th' ? 'en' : 'th')}
+          className="w-8 h-8 rounded-lg glass-panel hover:bg-surface-hover flex items-center justify-center text-xs font-black text-primary transition-all duration-300 hover:scale-105 cursor-pointer"
+          title={lang === 'th' ? 'Switch to English' : 'เปลี่ยนเป็นภาษาไทย'}
+        >
+          {lang.toUpperCase()}
+        </button>
+
         <ThemeToggle />
 
         {authed === null ? (
-
           <div className="w-8 h-8 skeleton-shimmer rounded-full" />
         ) : authed ? (
           <Link
             href="/profile"
             className="w-9 h-9 rounded-full overflow-hidden border border-white/15 bg-gradient-to-tr from-primary/40 to-secondary/40 flex items-center justify-center font-display text-sm font-semibold text-background hover:scale-105 transition-transform cursor-pointer"
+            title={TRANSLATIONS[lang].profile}
           >
             {userName?.charAt(0).toUpperCase() || '?'}
           </Link>
@@ -75,7 +88,7 @@ export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val
             className="outline-soft px-4 py-2 rounded-xl font-label text-sm transition-colors flex items-center gap-2 dark:glass-panel-strong dark:border-white/10"
           >
             <span className="material-symbols-outlined text-[18px]">login</span>
-            <span className="hidden sm:inline">Sign In</span>
+            <span className="hidden sm:inline">{TRANSLATIONS[lang].signIn}</span>
           </Link>
         )}
       </div>

@@ -2,9 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTripStore } from "@/lib/store";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export function AuthStatusButton() {
   const [authed, setAuthed] = useState<boolean | null>(null);
+  const lang = useTripStore((s) => s.lang);
 
   useEffect(() => {
     fetch("/api/auth/check-session")
@@ -13,16 +16,18 @@ export function AuthStatusButton() {
       .catch(() => setAuthed(false));
   }, []);
 
-  if (authed === null) return <div className="w-32 h-10 skeleton-shimmer rounded-xl" />;
+  if (authed === null) {
+    return <div className="w-28 h-9 bg-white/10 animate-pulse rounded-xl border border-white/10" />;
+  }
 
   if (authed) {
     return (
       <Link
         href="/profile"
-        className="px-5 py-2 rounded-xl glass-panel-strong font-label text-sm hover:text-primary transition-colors flex items-center gap-2 border border-white/10"
+        className="px-6 py-2.5 rounded-full font-display font-semibold text-sm text-primary bg-white hover:bg-slate-50 active:scale-95 transition-all duration-200 flex items-center gap-2.5 shadow-md shadow-black/5"
       >
-        <span className="material-symbols-outlined text-[18px]">account_circle</span>
-        โปรไฟล์
+        <span className="material-symbols-outlined text-[20px] text-primary" style={{ fontVariationSettings: "'FILL' 0" }}>person</span>
+        <span>{TRANSLATIONS[lang].profile}</span>
       </Link>
     );
   }
@@ -30,10 +35,10 @@ export function AuthStatusButton() {
   return (
     <Link
       href="/auth/login"
-      className="px-5 py-2 rounded-xl glass-panel-strong font-label text-sm hover:text-primary transition-colors flex items-center gap-2 border border-white/10"
+      className="px-6 py-2.5 rounded-full font-display font-semibold text-sm text-primary bg-white hover:bg-slate-50 active:scale-95 transition-all duration-200 flex items-center gap-2.5 shadow-md shadow-black/5"
     >
-      <span className="material-symbols-outlined text-[18px]">login</span>
-      Sign In
+      <span className="material-symbols-outlined text-[20px] text-primary" style={{ fontVariationSettings: "'FILL' 0" }}>person</span>
+      <span>{TRANSLATIONS[lang].signIn}</span>
     </Link>
   );
 }

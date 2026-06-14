@@ -4,79 +4,79 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { Hotel } from "@/lib/types";
+import { useTripStore } from "@/lib/store";
+import { TRANSLATIONS } from "@/lib/translations";
 
-/* ── Static quick actions / tips (no DB needed client-side) ── */
-const quickActions = [
-  {
-    href: "/plan",
-    icon: "auto_awesome",
-    label: "วางแผนทริป AI",
-    desc: "บอก AI ว่าอยากไปไหน จัดให้เลย",
-    color: "text-blue-500",
-    bg: "rgba(24,119,242,0.12)",
-  },
-  {
-    href: "/explore/hotels",
-    icon: "hotel",
-    label: "สำรวจโรงแรม",
-    desc: "ค้นหาที่พักที่ตรงใจทั่วไทย",
-    color: "text-emerald-500",
-    bg: "rgba(16,185,129,0.12)",
-  },
-  {
-    href: "/bookings",
-    icon: "event_available",
-    label: "การจองของฉัน",
-    desc: "ตรวจสอบและจัดการทริปที่จองไว้",
-    color: "text-violet-500",
-    bg: "rgba(139,92,246,0.12)",
-  },
-
-];
-
-const tips = [
-  {
-    icon: "tips_and_updates",
-    title: "จองล่วงหน้าประหยัดกว่า",
-    desc: "โรงแรมส่วนใหญ่ให้ราคาดีกว่าถ้าจองก่อน 7-14 วัน",
-    color: "text-amber-500",
-  },
-  {
-    icon: "explore",
-    title: "ลองเที่ยว Off-Season",
-    desc: "เดินทางนอกฤดูท่องเที่ยวราคาลดได้ถึง 40%",
-    color: "text-sky-500",
-  },
-  {
-    icon: "auto_awesome",
-    title: "ให้ AI วางแผนให้คุณ",
-    desc: "พิมพ์แค่ปลายทางและจำนวนวัน AI จัดตารางและแนะนำที่พักให้ทันที",
-    color: "text-primary",
-  },
-];
-
-const HERO_SLIDES = [
-  {
-    src: "/hero-ocean.jpg",
-    label: "หมู่เกาะกระบี่",
-    sublabel: "ทะเลสวรรค์แห่งอันดามัน",
-  },
-  {
-    src: "/hero-temple.jpg",
-    label: "วัดอรุณ กรุงเทพฯ",
-    sublabel: "สัมผัสความงามแห่งสยาม",
-  },
-  {
-    src: "/hero-mountain.jpg",
-    label: "ดอยอินทนนท์ เชียงใหม่",
-    sublabel: "หมอกเช้า ป่าเขียว อากาศบริสุทธิ์",
-  },
-];
-
-/* ─────────────────────────────────────────────────────── */
-/* Client component — handles slideshow + all sections    */
-/* ─────────────────────────────────────────────────────── */
 export default function HomePage() {
+  const lang = useTripStore((s) => s.lang);
+  const t = TRANSLATIONS[lang];
+
+  const dynamicQuickActions = [
+    {
+      href: "/plan",
+      icon: "auto_awesome",
+      label: t.quickActionPlan,
+      desc: t.quickActionPlanDesc,
+      color: "text-blue-500",
+      bg: "rgba(24,119,242,0.12)",
+    },
+    {
+      href: "/explore/hotels",
+      icon: "hotel",
+      label: t.quickActionHotels,
+      desc: t.quickActionHotelsDesc,
+      color: "text-emerald-500",
+      bg: "rgba(16,185,129,0.12)",
+    },
+    {
+      href: "/bookings",
+      icon: "event_available",
+      label: t.quickActionBookings,
+      desc: t.quickActionBookingsDesc,
+      color: "text-violet-500",
+      bg: "rgba(139,92,246,0.12)",
+    },
+  ];
+
+  const dynamicTips = [
+    {
+      icon: "tips_and_updates",
+      title: t.tip1Title,
+      desc: t.tip1Desc,
+      color: "text-amber-500",
+    },
+    {
+      icon: "explore",
+      title: t.tip2Title,
+      desc: t.tip2Desc,
+      color: "text-sky-500",
+    },
+    {
+      icon: "auto_awesome",
+      title: t.tip3Title,
+      desc: t.tip3Desc,
+      color: "text-primary",
+    },
+  ];
+
+  const dynamicHeroSlides = [
+    {
+      src: "/hero-ocean.jpg",
+      label: lang === 'th' ? "หมู่เกาะกระบี่" : "Krabi Islands",
+      sublabel: lang === 'th' ? "ทะเลสวรรค์แห่งอันดามัน" : "Andaman Paradise Sea",
+    },
+    {
+      src: "/hero-temple.jpg",
+      label: lang === 'th' ? "วัดอรุณ กรุงเทพฯ" : "Wat Arun, Bangkok",
+      sublabel: lang === 'th' ? "สัมผัสความงามแห่งสยาม" : "Experience the Siam Beauty",
+    },
+    {
+      src: "/hero-mountain.jpg",
+      label: lang === 'th' ? "ดอยอินทนนท์ เชียงใหม่" : "Doi Inthanon, Chiang Mai",
+      sublabel: lang === 'th' ? "หมอกเช้า ป่าเขียว อากาศบริสุทธิ์" : "Morning Mist, Green Forests, Fresh Air",
+    },
+  ];
+
   const [slide, setSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [hotels, setHotels] = useState<Hotel[]>([]);
@@ -86,7 +86,7 @@ export default function HomePage() {
   useEffect(() => {
     setLoaded(true);
     const id = setInterval(
-      () => setSlide((s) => (s + 1) % HERO_SLIDES.length),
+      () => setSlide((s) => (s + 1) % dynamicHeroSlides.length),
       5000
     );
 
@@ -104,11 +104,11 @@ export default function HomePage() {
       .finally(() => setLoadingHotels(false));
 
     return () => clearInterval(id);
-  }, []);
+  }, [dynamicHeroSlides.length]);
 
   const hour = new Date().getHours();
   const greeting =
-    hour < 12 ? "อรุณสวัสดิ์ 🌅" : hour < 17 ? "สวัสดีตอนบ่าย ☀️" : "สวัสดีตอนเย็น 🌆";
+    hour < 12 ? t.greetingMorning : hour < 17 ? t.greetingAfternoon : t.greetingEvening;
 
   return (
     <div className="flex flex-col w-full relative">
@@ -190,7 +190,7 @@ export default function HomePage() {
         style={{ height: "min(85vh, 560px)", minHeight: 340 }}>
 
         {/* Background slides */}
-        {HERO_SLIDES.map((s, i) => (
+        {dynamicHeroSlides.map((s, i) => (
           <div
             key={i}
             className="absolute inset-0 transition-opacity duration-1000"
@@ -217,12 +217,12 @@ export default function HomePage() {
           <div>
             <p className="text-white/80 text-xs font-label mb-0.5">{greeting}</p>
             <h1 className="font-display text-xl font-black text-white drop-shadow">
-              ยินดีต้อนรับสู่ TicketHub
+              {t.welcomeTitle}
             </h1>
           </div>
           {/* Slide dots */}
           <div className="flex gap-1.5 mt-2">
-            {HERO_SLIDES.map((_, i) => (
+            {dynamicHeroSlides.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setSlide(i)}
@@ -244,9 +244,9 @@ export default function HomePage() {
             <span className="material-symbols-outlined text-white/80 text-[16px]">location_on</span>
             <div>
               <p className="text-white font-display text-lg font-bold leading-tight drop-shadow">
-                {HERO_SLIDES[slide].label}
+                {dynamicHeroSlides[slide]?.label}
               </p>
-              <p className="text-white/70 text-xs">{HERO_SLIDES[slide].sublabel}</p>
+              <p className="text-white/70 text-xs">{dynamicHeroSlides[slide]?.sublabel}</p>
             </div>
           </div>
 
@@ -259,7 +259,7 @@ export default function HomePage() {
               >
               <span className="material-symbols-outlined text-[16px]"
                 style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-              วางแผนทริป AI
+              {t.quickActionPlan}
             </Link>
             <Link
               href="/explore/hotels"
@@ -268,14 +268,14 @@ export default function HomePage() {
             >
               <span className="material-symbols-outlined text-[16px]"
                 style={{ fontVariationSettings: "'FILL' 1" }}>hotel</span>
-              โรงแรม
+              {t.exploreHotels}
             </Link>
           </div>
         </div>
 
         {/* Scroll hint */}
         <div className="absolute bottom-28 right-5 z-10 flex flex-col items-center gap-1 opacity-60">
-          <span className="text-white text-[10px] font-label">เลื่อนลง</span>
+          <span className="text-white text-[10px] font-label">{t.scrollDown}</span>
           <span className="material-symbols-outlined text-white text-[18px]"
             style={{ animation: "float 1.8s ease-in-out infinite" }}>
             keyboard_arrow_down
@@ -300,13 +300,13 @@ export default function HomePage() {
                 <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                   auto_awesome
                 </span>
-                <span className="font-label text-[10px] uppercase tracking-widest font-black">ฟีเจอร์แนะนำ</span>
+                <span className="font-label text-[10px] uppercase tracking-widest font-black">{t.featureRecommended}</span>
               </div>
               <h3 className="font-display text-lg font-black text-on-surface leading-tight mt-1">
-                วางแผนทริปด้วย AI ในไม่กี่วินาที
+                {t.aiPlanSeconds}
               </h3>
               <p className="text-xs text-on-surface-variant max-w-xl leading-relaxed">
-                แค่อธิบายสไตล์การท่องเที่ยวและจำนวนวัน AI จะออกแบบตารางเวลา การเดินทาง และที่พักที่เหมาะสมที่สุดสำหรับคุณทันที!
+                {t.aiPlanSecondsDesc}
               </p>
             </div>
             
@@ -318,7 +318,7 @@ export default function HomePage() {
               <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                 auto_awesome
               </span>
-              เริ่มต้นวางแผน
+              {t.startPlanning}
             </Link>
           </div>
         </section>
@@ -326,7 +326,7 @@ export default function HomePage() {
         {/* ── Booking Services ── */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-display text-lg font-bold text-on-surface">จองกับเรา</h2>
+            <h2 className="font-display text-lg font-bold text-on-surface">{t.bookWithUs}</h2>
           </div>
           <div className="flex flex-col gap-3">
 
@@ -348,12 +348,12 @@ export default function HomePage() {
                   <div className="flex items-center gap-2 mb-1">
                     <span className="material-symbols-outlined text-white text-[20px]"
                       style={{ fontVariationSettings: "'FILL' 1" }}>hotel</span>
-                    <span className="font-label text-[11px] uppercase tracking-widest text-blue-200">บริการของเรา</span>
+                    <span className="font-label text-[11px] uppercase tracking-widest text-blue-200">{lang === 'th' ? "บริการของเรา" : "Our Services"}</span>
                   </div>
-                  <p className="font-display text-xl font-black text-white leading-tight">จองโรงแรม</p>
-                  <p className="text-white/70 text-xs mt-1">ค้นหาและจองที่พักคุณภาพทั่วไทย</p>
+                  <p className="font-display text-xl font-black text-white leading-tight">{t.exploreHotels}</p>
+                  <p className="text-white/70 text-xs mt-1">{t.exploreHotelsDesc}</p>
                   <div className="flex gap-2 mt-3 flex-wrap">
-                    {["ราคาดีที่สุด", "ยกเลิกได้ฟรี", "จ่ายที่โรงแรม"].map((tag) => (
+                    {t.tagsHotel.map((tag) => (
                       <span key={tag} className="text-[10px] font-label px-2 py-0.5 rounded-full"
                         style={{ background: "rgba(255,255,255,0.20)", color: "white" }}>{tag}</span>
                     ))}
@@ -384,12 +384,12 @@ export default function HomePage() {
                   <div className="flex items-center gap-2 mb-1">
                     <span className="material-symbols-outlined text-white text-[20px]"
                       style={{ fontVariationSettings: "'FILL' 1" }}>flight</span>
-                    <span className="font-label text-[11px] uppercase tracking-widest text-blue-200">บริการของเรา</span>
+                    <span className="font-label text-[11px] uppercase tracking-widest text-blue-200">{lang === 'th' ? "บริการของเรา" : "Our Services"}</span>
                   </div>
-                  <p className="font-display text-xl font-black text-white leading-tight">จองตั๋วเดินทาง</p>
-                  <p className="text-white/70 text-xs mt-1">เที่ยวบินในประเทศและต่างประเทศ ราคาดีที่สุด</p>
+                  <p className="font-display text-xl font-black text-white leading-tight">{t.bookFlights}</p>
+                  <p className="text-white/70 text-xs mt-1">{t.bookFlightsDesc}</p>
                   <div className="flex gap-2 mt-3 flex-wrap">
-                    {["เที่ยวบินตรง", "Low-cost", "เช็ค e-Ticket"].map((tag) => (
+                    {t.tagsFlight.map((tag) => (
                       <span key={tag} className="text-[10px] font-label px-2 py-0.5 rounded-full"
                         style={{ background: "rgba(255,255,255,0.20)", color: "white" }}>{tag}</span>
                     ))}
@@ -414,18 +414,18 @@ export default function HomePage() {
                   star
                 </span>
                 <h2 className="font-display text-lg font-bold text-on-surface tracking-tight">
-                  ที่พักคัดสรรโดย AI
+                  {t.aiSelectedStays}
                 </h2>
               </div>
               <p className="text-xs text-on-surface-variant">
-                คัดสรรที่พักยอดนิยม เรตติ้งดีที่สุดเพื่อคุณ
+                {t.aiSelectedStaysDesc}
               </p>
             </div>
             <Link 
               href="/explore/hotels" 
               className="text-xs font-bold text-primary flex items-center gap-1 hover:underline shrink-0 hover-lift press-scale"
             >
-              ดูทั้งหมด
+              {t.viewAll}
               <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
             </Link>
           </div>
@@ -457,7 +457,7 @@ export default function HomePage() {
                       
                       <div className="absolute bottom-2 right-2">
                         <span className="bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-md font-label text-[10px] text-white">
-                          ว่าง {hotel.rooms_available} ห้อง
+                          {t.roomsLeft.replace("{count}", String(hotel.rooms_available))}
                         </span>
                       </div>
                     </div>
@@ -489,7 +489,7 @@ export default function HomePage() {
 
                       <div className="mt-auto pt-2 border-t border-white/5 flex items-end justify-between">
                         <div>
-                          <p className="text-[9px] font-label text-on-surface-variant uppercase tracking-wider">เริ่มต้น</p>
+                          <p className="text-[9px] font-label text-on-surface-variant uppercase tracking-wider">{t.startPrice}</p>
                           <p className="font-display text-sm font-bold text-on-surface">
                             ฿{hotel.price_per_night_thb.toLocaleString()}
                           </p>
@@ -509,10 +509,10 @@ export default function HomePage() {
         {/* ── Travel Tips ── */}
         <section>
           <h2 className="font-display text-lg font-bold text-on-surface mb-3">
-            เคล็ดลับการเดินทาง
+            {t.travelTips}
           </h2>
           <div className="flex flex-col gap-3">
-            {tips.map((tip, i) => (
+            {dynamicTips.map((tip, i) => (
               <div key={i}
                 className="glass-panel p-4 rounded-2xl flex flex-col justify-between gap-3 border border-white/5 hover:border-emerald-500/20 transition-all hover-lift press-scale">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"

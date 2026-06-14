@@ -222,6 +222,23 @@ body {
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.75) inset;
   }
 
+  select.glass-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237b8796' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px;
+    padding-right: 38px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .dark select.glass-input {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b0b3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  }
+
   .glass-input:focus,
   .glass-input:focus-within {
     border-color: var(--primary);
@@ -447,6 +464,27 @@ body {
         var(--surface-variant) 75%);
     background-size: 200% 100%;
     animation: shimmer 2s infinite linear;
+  }
+
+  .interactive-bounce {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .interactive-bounce:hover {
+    transform: translateY(-4px) scale(1.02);
+  }
+  .interactive-bounce:active {
+    transform: translateY(-1px) scale(0.97);
+  }
+
+  .interactive-input {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.3s ease;
+  }
+  .interactive-input:hover {
+    box-shadow: 0 10px 25px -5px rgba(22, 102, 219, 0.08), 0 8px 10px -6px rgba(22, 102, 219, 0.08);
+  }
+  .interactive-input:focus-within {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 20px 25px -5px rgba(22, 102, 219, 0.12), 0 8px 10px -6px rgba(22, 102, 219, 0.12);
   }
 }
 

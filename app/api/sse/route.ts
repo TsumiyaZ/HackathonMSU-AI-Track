@@ -73,11 +73,10 @@ export async function GET(req: Request) {
       const push = () => {
         const event = generateEvent();
         send(event);
-        const nextDelay = Math.random() * 10_000 + 5_000;
-        timer = setTimeout(push, nextDelay);
+        timer = setTimeout(push, 10_000);
       };
 
-      let timer = setTimeout(push, 3_000);
+      let timer = setTimeout(push, 10_000);
 
       req.signal.addEventListener('abort', () => {
         clearTimeout(timer);

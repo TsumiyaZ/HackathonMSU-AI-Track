@@ -5,16 +5,18 @@ import { useRouter } from "next/navigation";
 import { useTripStore } from "@/lib/store";
 import { Sparkles, Loader2, Settings } from "lucide-react";
 import { requireAuth } from "@/lib/auth-check";
-
-const LOADING_STEPS = [
-  { icon: "search", label: "กำลังวิเคราะห์เป้าหมายและงบประมาณ..." },
-  { icon: "flight_takeoff", label: "กำลังค้นหาเที่ยวบินที่คุ้มค่าที่สุด..." },
-  { icon: "apartment", label: "กำลังคัดเลือกโรงแรมเรตติ้งดีตามงบของคุณ..." },
-  { icon: "restaurant", label: "กำลังจับคู่ร้านอาหารและกิจกรรมยอดนิยม..." },
-  { icon: "auto_awesome", label: "กำลังประกอบตารางการเดินทางที่สมบูรณ์แบบ..." },
-];
+import { TRANSLATIONS } from "@/lib/translations";
 
 export default function PlanPage() {
+  const lang = useTripStore((s) => s.lang);
+  const t = TRANSLATIONS[lang];
+
+  const loadingStepsIcons = ["search", "flight_takeoff", "apartment", "restaurant", "auto_awesome"];
+  const dynamicLoadingSteps = t.loadingSteps.map((label, idx) => ({
+    icon: loadingStepsIcons[idx],
+    label,
+  }));
+
   const [promptInput, setPromptInput] = useState("");
   const [chatMessage, setChatMessage] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -117,20 +119,20 @@ export default function PlanPage() {
       <div className="text-center mb-6 relative">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-wider mb-3 animate-pulse">
-          <Sparkles className="w-3.5 h-3.5" /> AI Trip Planner
+          <Sparkles className="w-3.5 h-3.5" /> {t.aiTripPlanner}
         </span>
         <h1 className="font-display text-3xl md:text-4xl font-black text-on-surface tracking-tight">
-          วางแผนทริปด้วย <span className="text-gradient">AI อัจฉริยะ</span>
+          {t.headline} <span className="text-gradient">{t.headlineSub}</span>
         </h1>
         <p className="text-xs text-on-surface-variant max-w-md mx-auto mt-2 leading-relaxed">
-          สร้างตารางเดินทาง โรงแรม เที่ยวบิน และร้านอาหารที่เหมาะสมกับคุณที่สุดในคลิกเดียว
+          {t.desc}
         </p>
       </div>
 
       {/* Main Form Box */}
       <div className="flex flex-col gap-4">
         {/* Prominent Prompt Input Area */}
-        <div className="relative glass-panel-strong p-1.5 bg-surface rounded-2xl border border-border shadow-md focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+        <div className="relative glass-panel-strong p-1.5 bg-surface rounded-2xl border border-border shadow-md interactive-input">
           <textarea
             value={promptInput}
             onChange={(e) => setPromptInput(e.target.value)}
@@ -140,7 +142,7 @@ export default function PlanPage() {
                 handleSubmit();
               }
             }}
-            placeholder="เช่น 'เที่ยวเชียงใหม่ 3 วัน เน้นคาเฟ่'..."
+            placeholder={t.placeholderSearch}
             rows={3}
             disabled={loading}
             className="w-full bg-transparent border-0 text-on-surface placeholder:text-on-surface-variant/40 p-4 pb-14 focus:outline-none resize-none font-sans leading-relaxed text-sm md:text-base"
@@ -151,31 +153,31 @@ export default function PlanPage() {
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg border transition-all hover-lift press-scale ${
+              className={`group flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg border cursor-pointer interactive-bounce ${
                 showAdvanced
                   ? "bg-primary/10 border-primary/30 text-primary"
                   : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface-variant"
               }`}
             >
-              <Settings className="w-3.5 h-3.5" />
-              {showAdvanced ? "ซ่อนตัวเลือกเพิ่มเติม" : "ระบุตัวเลือกเพิ่มเติม"}
+              <Settings className="w-3.5 h-3.5 transition-transform duration-500 group-hover:rotate-90" />
+              {showAdvanced ? t.hideAdvancedOptions : t.advancedOptions}
             </button>
 
             <button
               type="button"
               onClick={() => handleSubmit()}
               disabled={loading || !promptInput.trim()}
-              className="btn-primary-gradient px-5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow transition-all disabled:opacity-40 disabled:pointer-events-none hover-lift press-scale"
+              className="btn-primary-gradient px-5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow disabled:opacity-40 disabled:pointer-events-none cursor-pointer interactive-bounce"
             >
               {loading ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  กำลังสร้างทริป...
+                  {t.creatingTrip}
                 </>
               ) : (
                 <>
                   <Sparkles className="w-3.5 h-3.5" />
-                  สร้างแผนทริป
+                  {t.createTrip}
                 </>
               )}
             </button>
@@ -191,21 +193,28 @@ export default function PlanPage() {
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-bold text-on-surface flex items-center gap-1">
                   <span className="material-symbols-outlined text-[16px] text-primary">location_on</span>
-                  จุดหมายปลายทาง
+                  {t.destination}
                 </label>
                 <div className="grid grid-cols-3 gap-1.5">
-                  {["เชียงใหม่", "ภูเก็ต", "กรุงเทพฯ", "พัทยา", "สมุย", "โตเกียว"].map((city) => (
+                  {[
+                    { id: "เชียงใหม่", label: lang === 'th' ? "เชียงใหม่" : "Chiang Mai" },
+                    { id: "ภูเก็ต", label: lang === 'th' ? "ภูเก็ต" : "Phuket" },
+                    { id: "กรุงเทพฯ", label: lang === 'th' ? "กรุงเทพฯ" : "Bangkok" },
+                    { id: "พัทยา", label: lang === 'th' ? "พัทยา" : "Pattaya" },
+                    { id: "สมุย", label: lang === 'th' ? "สมุย" : "Samui" },
+                    { id: "โตเกียว", label: lang === 'th' ? "โตเกียว" : "Tokyo" },
+                  ].map((city) => (
                     <button
-                      key={city}
+                      key={city.id}
                       type="button"
-                      onClick={() => setSelectedCity(city)}
-                      className={`py-2 px-1 rounded-lg text-xs font-bold border transition-all hover-lift press-scale ${
-                        selectedCity === city
+                      onClick={() => setSelectedCity(city.id)}
+                      className={`py-2 px-1 rounded-lg text-xs font-bold border transition-all hover-lift press-scale cursor-pointer ${
+                        selectedCity === city.id
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
                       }`}
                     >
-                      {city}
+                      {city.label}
                     </button>
                   ))}
                 </div>
@@ -216,9 +225,9 @@ export default function PlanPage() {
                 <label className="text-xs font-bold text-on-surface flex items-center justify-between">
                   <span className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-[16px] text-primary">calendar_month</span>
-                    ระยะเวลา
+                    {t.duration}
                   </span>
-                  <span className="text-primary font-bold text-xs">{days} วัน {days - 1} คืน</span>
+                  <span className="text-primary font-bold text-xs">{days} {t.daysUnit} {days - 1} {t.nightsUnit}</span>
                 </label>
                 <div className="grid grid-cols-5 gap-1.5">
                   {[1, 2, 3, 5, 7].map((d) => (
@@ -226,13 +235,13 @@ export default function PlanPage() {
                       key={d}
                       type="button"
                       onClick={() => setDays(d)}
-                      className={`py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale ${
+                      className={`py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale cursor-pointer ${
                         days === d
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
                       }`}
                     >
-                      {d} วัน
+                      {d} {t.daysUnit}
                     </button>
                   ))}
                 </div>
@@ -245,19 +254,19 @@ export default function PlanPage() {
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-bold text-on-surface flex items-center gap-1">
                   <span className="material-symbols-outlined text-[16px] text-primary">payments</span>
-                  งบประมาณ
+                  {t.budget}
                 </label>
                 <div className="grid grid-cols-3 gap-1.5">
                   {[
-                    { id: "low", label: "ประหยัด" },
-                    { id: "medium", label: "ปานกลาง" },
-                    { id: "high", label: "พรีเมียม" },
+                    { id: "low", label: t.budgetLow },
+                    { id: "medium", label: t.budgetMedium },
+                    { id: "high", label: t.budgetHigh },
                   ].map((b) => (
                     <button
                       key={b.id}
                       type="button"
                       onClick={() => setBudget(b.id)}
-                      className={`py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale ${
+                      className={`py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale cursor-pointer ${
                         budget === b.id
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
@@ -273,27 +282,27 @@ export default function PlanPage() {
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-bold text-on-surface flex items-center gap-1">
                   <span className="material-symbols-outlined text-[16px] text-primary">explore</span>
-                  สไตล์ท่องเที่ยว
+                  {t.style}
                 </label>
                 <div className="grid grid-cols-3 gap-1.5">
                   {[
-                    { id: "relaxation", label: "พักผ่อนชิลๆ" },
-                    { id: "food", label: "เน้นกินร้านดัง" },
-                    { id: "cafe", label: "คาเฟ่/ถ่ายรูป" },
-                    { id: "nature", label: "ธรรมชาติป่าเขา" },
-                    { id: "adventure", label: "แอดเวนเจอร์" },
-                  ].map((t) => (
+                    { id: "relaxation", label: t.styleRelax },
+                    { id: "food", label: t.styleFood },
+                    { id: "cafe", label: t.styleCafe },
+                    { id: "nature", label: t.styleNature },
+                    { id: "adventure", label: t.styleAdventure },
+                  ].map((styleOpt) => (
                     <button
-                      key={t.id}
+                      key={styleOpt.id}
                       type="button"
-                      onClick={() => setTheme(t.id)}
-                      className={`py-2 rounded-lg text-[11px] font-bold border transition-all hover-lift press-scale ${
-                        theme === t.id
+                      onClick={() => setTheme(styleOpt.id)}
+                      className={`py-2 rounded-lg text-[11px] font-bold border transition-all hover-lift press-scale cursor-pointer ${
+                        theme === styleOpt.id
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
                       }`}
                     >
-                      {t.label}
+                      {styleOpt.label}
                     </button>
                   ))}
                 </div>
@@ -304,11 +313,11 @@ export default function PlanPage() {
             <div className="flex flex-col gap-2">
               <label className="text-xs font-bold text-on-surface flex items-center gap-1">
                 <span className="material-symbols-outlined text-[16px] text-primary">calendar_today</span>
-                วันที่เข้า - ออก
+                {t.checkInCheckOut}
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-on-surface-variant/70 font-bold shrink-0">เข้า:</span>
+                  <span className="text-[10px] text-on-surface-variant/70 font-bold shrink-0">{t.checkIn}</span>
                   <input
                     type="date"
                     value={checkInDate}
@@ -317,7 +326,7 @@ export default function PlanPage() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-on-surface-variant/70 font-bold shrink-0">ออก:</span>
+                  <span className="text-[10px] text-on-surface-variant/70 font-bold shrink-0">{t.checkOut}</span>
                   <input
                     type="date"
                     value={checkOutDate}
@@ -333,8 +342,8 @@ export default function PlanPage() {
               <div className="text-[10px] text-on-surface-variant bg-primary/10 border border-primary/20 px-3 py-2 rounded-xl flex items-center gap-2 mt-1">
                 <Settings className="w-3.5 h-3.5 text-primary shrink-0" />
                 <span>
-                  กำลังใช้ค่าโปรไฟล์: <strong>{userPreferences.budgetLevel === "low" ? "ประหยัด" : userPreferences.budgetLevel === "medium" ? "ปานกลาง" : "พรีเมียม"}</strong>
-                  {userPreferences.foodRestrictions.length > 0 && ` • แพ้อาหาร: ${userPreferences.foodRestrictions.join(", ")}`}
+                  {t.profilePreferencesActive} <strong>{userPreferences.budgetLevel === "low" ? t.budgetLow : userPreferences.budgetLevel === "medium" ? t.budgetMedium : t.budgetHigh}</strong>
+                  {userPreferences.foodRestrictions.length > 0 && ` • ${t.foodAllergy}: ${userPreferences.foodRestrictions.join(", ")}`}
                 </span>
               </div>
             )}
@@ -366,28 +375,34 @@ export default function PlanPage() {
 
       {/* Suggested Templates list */}
       <div className="flex flex-col gap-2.5 mt-2">
-        <p className="text-xs font-bold text-on-surface-variant">ทริปตัวอย่างแนะนำ:</p>
+        <p className="text-xs font-bold text-on-surface-variant">{t.sampleTrips}</p>
         <div className="flex flex-wrap gap-2">
           {[
             {
-              title: "ภูเก็ตพักร้อน 3 วัน",
-              prompt: "วางแผนทริปภูเก็ต 3 วัน 2 คืน พักโรงแรมติดทะเล บรรยากาศเงียบสงบ เดินทางสะดวก",
+              title: t.phuketTrip,
+              prompt: lang === 'th'
+                ? "วางแผนทริปภูเก็ต 3 วัน 2 คืน พักโรงแรมติดทะเล บรรยากาศเงียบสงบ เดินทางสะดวก"
+                : "Plan a 3-day 2-night Phuket trip, beachfront hotel, quiet atmosphere, convenient travel",
               city: "ภูเก็ต",
               days: 3,
               budget: "high",
               theme: "relaxation",
             },
             {
-              title: "ชิลคาเฟ่เชียงใหม่ 3 วัน",
-              prompt: "วางแผนทริปเชียงใหม่ 3 วัน เน้นไปร้านกาแฟ คาเฟ่สวยๆ บรรยากาศดี ถ่ายรูปสวย",
+              title: t.chiangmaiTrip,
+              prompt: lang === 'th'
+                ? "วางแผนทริปเชียงใหม่ 3 วัน เน้นไปร้านกาแฟ คาเฟ่สวยๆ บรรยากาศดี ถ่ายรูปสวย"
+                : "Plan a 3-day Chiang Mai trip, focusing on beautiful cafes, great vibes, photo spots",
               city: "เชียงใหม่",
               days: 3,
               budget: "medium",
               theme: "cafe",
             },
             {
-              title: "ตะลุยชิมร้านดังโตเกียว 5 วัน",
-              prompt: "วางแผนทริปโตเกียว 5 วัน เน้นชิมซูชิ ราเมน เนื้อย่าง และร้านอาหารยอดนิยมที่มีดาวมิชลิน",
+              title: t.tokyoTrip,
+              prompt: lang === 'th'
+                ? "วางแผนทริปโตเกียว 5 วัน เน้นชิมซูชิ ราเมน เนื้อย่าง และร้านอาหารยอดนิยมที่มีดาวมิชลิน"
+                : "Plan a 5-day Tokyo trip, focusing on sushi, ramen, wagyu, and popular Michelin-starred restaurants",
               city: "โตเกียว",
               days: 5,
               budget: "high",
@@ -404,7 +419,7 @@ export default function PlanPage() {
                 setBudget(item.budget);
                 setTheme(item.theme);
               }}
-              className="glass-panel text-xs px-3.5 py-1.5 rounded-full hover:bg-surface-hover hover:border-primary/45 transition-colors text-on-surface"
+              className="glass-panel text-xs px-3.5 py-1.5 rounded-full hover:bg-surface-hover hover:border-primary/35 text-on-surface cursor-pointer interactive-bounce"
             >
               {item.title}
             </button>
@@ -429,16 +444,16 @@ export default function PlanPage() {
 
             <div>
               <h3 className="font-display text-lg font-black text-on-surface">
-                กำลังสร้างแผนการเดินทางของคุณ...
+                {t.loadingTitle}
               </h3>
               <p className="text-xs text-on-surface-variant mt-1 max-w-xs mx-auto">
-                AI กำลังรวบรวมและวิเคราะห์ข้อมูลเพื่อสร้างทริปที่ตอบโจทย์คุณที่สุด
+                {t.loadingDesc}
               </p>
             </div>
 
             {/* Step-by-Step progress list */}
             <div className="w-full flex flex-col gap-3 bg-surface-container/60 border border-border/40 p-4.5 rounded-2xl text-left font-sans text-xs">
-              {LOADING_STEPS.map((step, idx) => {
+              {dynamicLoadingSteps.map((step, idx) => {
                 const isCompleted = loadingStep > idx;
                 const isCurrent = loadingStep === idx;
                 return (
