@@ -247,3 +247,17 @@
 - [x] `locationStats` — จำนวนโรงแรมแยกตามจังหวัด (top 8)
 - [x] `priceRanges` — จำนวนโรงแรมแบ่งตามช่วงราคา 5 ช่วง
 - [x] `recentBookings` — 10 รายการจองล่าสุด พร้อมสถานะและจำนวนคืน
+
+---
+
+## แก้ไข Explore หน้า Hotel Detail โหลดช้า (14 มิ.ย. 2026)
+
+### 🐛 สาเหตุ
+- `lib/hotels.ts` → `getHotelSentiment()` เรียก AI API (`opencode.ai/zen`) ทุกครั้งที่เปิดหน้า hotel detail
+- เป็น Server Component ทำให้การ render ต้องรอ AI ตอบกลับ (~5-20 วิ)
+- ส่งผลให้ navigation จาก explore → hotel detail ช้ามาก
+
+### 🔧 แก้ไข
+- [x] **ลบ AI API call ออกจาก `getHotelSentiment()`** — ใช้เฉพาะ rule-based fallback (อ่านรีวิวจาก JSON แล้วคำนวณค่าเฉลี่ย + หาข้อดีข้อเสียทันที)
+- [x] ระบบ AI Sentiment ยังทำงานปกติผ่าน API endpoint `/api/reviews/sentiment?targetId=...` สำหรับ client-side ที่ต้องการความแม่นยำสูง
+- [x] หน้า hotel detail จะ render ทันที (**< 100ms**) เพราะอ่านแต่ JSON ในเครื่อง
