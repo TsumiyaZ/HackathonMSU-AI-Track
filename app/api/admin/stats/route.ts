@@ -1,14 +1,6 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'node:fs';
-import path from 'node:path';
 import { getSessionUser } from '@/lib/session';
-
-const DATA_ROOT = path.join(process.cwd(), 'data');
-
-async function readJson<T>(relPath: string): Promise<T> {
-  const raw = await fs.readFile(path.join(DATA_ROOT, relPath), 'utf8');
-  return JSON.parse(raw) as T;
-}
+import prisma from '@/lib/prisma';
 
 export async function GET() {
   const user = await getSessionUser();
@@ -17,12 +9,12 @@ export async function GET() {
   }
 
   const [hotels, flights, restaurants, users, bookings, tickets] = await Promise.all([
-    readJson<any[]>('hotel/hotels.json'),
-    readJson<any[]>('travel/flights.json'),
-    readJson<any[]>('food/restaurants.json'),
-    readJson<any[]>('user/users.json'),
-    readJson<any[]>('hotel/hotel_bookings.json'),
-    readJson<any[]>('travel/flight_tickets.json'),
+    prisma.hotel.findMany(),
+    prisma.flight.findMany(),
+    prisma.restaurant.findMany(),
+    prisma.user.findMany(),
+    prisma.hotelBooking.findMany(),
+    prisma.flightTicket.findMany(),
   ]);
 
   const activeBookings = bookings.filter((b: any) => b.status !== 'CANCELLED');
@@ -44,7 +36,9 @@ export async function GET() {
     }, {})
   ).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count).slice(0, 8);
 
-  const avgHotelPrice = Math.round(hotels.reduce((s: number, h: any) => s + (h.price_per_night || 0), 0) / hotels.length);
+  const avgHotelPrice = hotels.length > 0
+    ? Math.round(hotels.reduce((s: number, h: any) => s + (h.price_per_night || 0), 0) / hotels.length)
+    : 0;
 
   const priceRanges = [
     { range: '≤ 1,000', min: 0, max: 1000 },

@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 const PUBLIC_ROUTES = [
   "/auth/login", "/auth/register",
   "/api/auth/login", "/api/auth/register",
-  "/plan", "/explore",
+  "/plan", "/explore", "/home", "/help",
 ];
 
 const STATIC_ASSETS = /\.(jpg|jpeg|png|gif|svg|css|js|ico|woff2?)$/;

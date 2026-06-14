@@ -23,24 +23,22 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
+    // BUG-05 fixed: remove broken GET fallback to /api/auth/login
     fetch("/api/auth/check-session", { method: "GET" })
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated && data.user) {
           setUser(data.user);
         } else {
-          // Fallback or retry logic
-          fetch("/api/auth/login")
-            .then((res) => res.json())
-            .then((loginData) => {
-              if (loginData.user) setUser(loginData.user);
-            })
-            .catch(() => {});
+          // Not authenticated — redirect to login
+          router.push("/auth/login?redirect=/profile");
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        router.push("/auth/login?redirect=/profile");
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [router]);
 
   const handleSave = () => {
     setUserPreferences({ budgetLevel, foodRestrictions, preferredHotelStyle });
@@ -55,8 +53,9 @@ export default function ProfilePage() {
     router.refresh();
   };
 
+  // BUG-12 fixed: removed leading space from "gluten"
   const foodOptions = [
-    "เนื้อสัตว์", "อาหารทะเล", "นม/ชีส", " gluten (แป้งสาลี)",
+    "เนื้อสัตว์", "อาหารทะเล", "นม/ชีส", "gluten (แป้งสาลี)",
     "ถั่ว", "มังสวิรัติ", "เจ", "ฮาลาล",
   ];
   const toggleFood = (item: string) => {

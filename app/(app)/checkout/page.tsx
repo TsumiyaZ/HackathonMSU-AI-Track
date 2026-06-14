@@ -14,6 +14,8 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<"card" | "qr">("card");
   const [loading, setLoading] = useState(false);
   const [finalTrip, setFinalTrip] = useState<any>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [bookingId, setBookingId] = useState<string>("");
 
   if (!currentTrip && step !== "success") {
     return (
@@ -38,6 +40,7 @@ export default function CheckoutPage() {
     if (!authed) return;
 
     setLoading(true);
+    setErrorMsg(null);
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -47,15 +50,16 @@ export default function CheckoutPage() {
 
       if (!res.ok) throw new Error("Payment failed");
 
+      const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
+      setBookingId(`TRP-${Date.now().toString(36).toUpperCase()}-${randomSuffix}`);
       setFinalTrip(currentTrip);
       setStep("success");
-
+      // Clear trip from store after success
       setTimeout(() => {
-        alert("🔔 แจ้งเตือน: จองทริปสำเร็จ! ตั๋วเครื่องบินและที่พักของคุณถูกบันทึกลงระบบแล้ว");
         useTripStore.getState().setTrip(null);
       }, 500);
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการชำระเงิน กรุณาลองใหม่");
+      setErrorMsg("เกิดข้อผิดพลาดในการชำระเงิน กรุณาตรวจสอบข้อมูลและลองใหม่อีกครั้ง");
     } finally {
       setLoading(false);
     }
@@ -64,8 +68,8 @@ export default function CheckoutPage() {
   /* ── Success screen ── */
   if (step === "success" && finalTrip) {
     return (
-      <div className="max-w-lg mx-auto py-8 md:py-20 px-4 text-center">
-        <div className="glass-panel-strong p-6 md:p-12 rounded-2xl md:rounded-3xl relative overflow-hidden">
+      <div className="max-w-xl mx-auto py-12 px-6">
+        <div className="glass-panel p-6 md:p-8 rounded-2xl md:rounded-3xl border border-white/10 text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-emerald-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           <div className="relative">
             <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mx-auto mb-4 md:mb-6">
@@ -78,7 +82,7 @@ export default function CheckoutPage() {
             <div className="glass-panel p-4 rounded-xl mt-4 md:mt-6 text-left">
               <p className="text-sm text-on-surface-variant">
                 รหัสการจอง:{" "}
-                <span className="font-mono text-primary">TRP-{Date.now().toString(36).toUpperCase()}</span>
+                <span className="font-mono text-primary">{bookingId}</span>
               </p>
               <p className="text-sm text-on-surface-variant mt-1">
                 ยอดชำระ: <span className="font-bold text-primary">฿{finalTrip.totalPrice.toLocaleString()}</span>
@@ -108,7 +112,7 @@ export default function CheckoutPage() {
 
   const tax = Math.round(currentTrip.totalPrice * 0.07);
   const fee = Math.round(currentTrip.totalPrice * 0.03);
-  const total = Math.round(currentTrip.totalPrice * 1.1);
+  const total = currentTrip.totalPrice + tax + fee;
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -268,6 +272,14 @@ export default function CheckoutPage() {
                   </div>
                 )}
 
+                {/* Inline error message */}
+                {errorMsg && (
+                  <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                    <span className="material-symbols-outlined text-[18px] shrink-0">error</span>
+                    {errorMsg}
+                  </div>
+                )}
+
                 {/* Confirm button */}
                 <button
                   onClick={handleConfirm}
@@ -283,6 +295,7 @@ export default function CheckoutPage() {
                 </button>
               </div>
             )}
+
           </div>
         </div>
       </div>

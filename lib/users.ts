@@ -1,5 +1,4 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import prisma from "@/lib/prisma";
 
 export type UserRole = "MEMBER" | "VIP" | "ADMIN";
 
@@ -12,16 +11,16 @@ export interface User {
   role: UserRole;
 }
 
-const USERS_PATH = path.join(process.cwd(), "data", "user", "users.json");
-
-// อ่านสด ๆ ทุกครั้ง เพราะ register จะเขียนทับไฟล์
 export async function loadUsers(): Promise<User[]> {
-  const raw = await fs.readFile(USERS_PATH, "utf8");
-  return JSON.parse(raw) as User[];
-}
-
-async function saveUsers(users: User[]): Promise<void> {
-  await fs.writeFile(USERS_PATH, JSON.stringify(users, null, 2), "utf8");
+  const dbUsers = await prisma.user.findMany();
+  return dbUsers.map((u) => ({
+    user_id: u.user_id,
+    name: u.name,
+    email: u.email,
+    phone: u.phone,
+    loyalty_points: u.loyalty_points,
+    role: u.role as UserRole,
+  }));
 }
 
 // normalize เบอร์โทรเอาเฉพาะตัวเลข เพื่อ compare แบบยืดหยุ่น
@@ -31,14 +30,38 @@ export function normalizePhone(input: string): string {
 }
 
 export async function findUserByEmail(email: string): Promise<User | null> {
-  const users = await loadUsers();
-  const target = email.trim().toLowerCase();
-  return users.find((u) => u.email.toLowerCase() === target) ?? null;
+  const u = await prisma.user.findFirst({
+    where: {
+      email: {
+        equals: email.trim(),
+        mode: "insensitive",
+      },
+    },
+  });
+  if (!u) return null;
+  return {
+    user_id: u.user_id,
+    name: u.name,
+    email: u.email,
+    phone: u.phone,
+    loyalty_points: u.loyalty_points,
+    role: u.role as UserRole,
+  };
 }
 
 export async function getUserById(userId: string): Promise<User | null> {
-  const users = await loadUsers();
-  return users.find((u) => u.user_id === userId) ?? null;
+  const u = await prisma.user.findUnique({
+    where: { user_id: userId },
+  });
+  if (!u) return null;
+  return {
+    user_id: u.user_id,
+    name: u.name,
+    email: u.email,
+    phone: u.phone,
+    loyalty_points: u.loyalty_points,
+    role: u.role as UserRole,
+  };
 }
 
 // verify ด้วย email + phone (phone ใช้แทน password)
@@ -77,26 +100,38 @@ export async function createUser(
   if (normalizePhone(phone).length < 9)
     return { ok: false, error: "กรุณากรอกเบอร์โทร (ขั้นต่ำ 9 หลัก)" };
 
-  const users = await loadUsers();
-  if (users.some((u) => u.email.toLowerCase() === email))
+  const existing = await findUserByEmail(email);
+  if (existing)
     return { ok: false, error: "อีเมลนี้ถูกใช้งานแล้ว" };
 
   // gen user_id ถัดจากเลขสูงสุดในรายการเดิม
+  const users = await prisma.user.findMany();
   const maxNum = users.reduce((m, u) => {
     const n = parseInt(u.user_id.replace(/^u/, ""), 10);
     return Number.isFinite(n) && n > m ? n : m;
   }, 0);
   const userId = `u${String(maxNum + 1).padStart(3, "0")}`;
 
-  const user: User = {
-    user_id: userId,
-    name,
-    email,
-    phone,
-    loyalty_points: 0,
-    role: "MEMBER",
-  };
+  const u = await prisma.user.create({
+    data: {
+      user_id: userId,
+      name,
+      email,
+      phone,
+      loyalty_points: 0,
+      role: "MEMBER",
+    },
+  });
 
-  await saveUsers([...users, user]);
-  return { ok: true, user };
+  return {
+    ok: true,
+    user: {
+      user_id: u.user_id,
+      name: u.name,
+      email: u.email,
+      phone: u.phone,
+      loyalty_points: u.loyalty_points,
+      role: u.role as UserRole,
+    },
+  };
 }

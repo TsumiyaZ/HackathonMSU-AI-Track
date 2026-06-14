@@ -11,7 +11,7 @@ export async function setSession(userId: string): Promise<void> {
     sameSite: "lax",
     path: "/",
     maxAge: SESSION_MAX_AGE,
-    // ไม่ตั้ง secure เพื่อให้ใช้ได้ใน localhost http
+    secure: process.env.NODE_ENV === "production",
   });
 }
 

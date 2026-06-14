@@ -75,7 +75,7 @@ const HERO_SLIDES = [
 /* ─────────────────────────────────────────────────────── */
 /* Client component — handles slideshow + all sections    */
 /* ─────────────────────────────────────────────────────── */
-export default function HomePageClient() {
+export default function HomePage() {
   const [slide, setSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [hotels, setHotels] = useState<Hotel[]>([]);

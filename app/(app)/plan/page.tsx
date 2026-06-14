@@ -17,6 +17,7 @@ const LOADING_STEPS = [
 export default function PlanPage() {
   const [promptInput, setPromptInput] = useState("");
   const [chatMessage, setChatMessage] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState("เชียงใหม่");
   const [days, setDays] = useState(3);
   const [budget, setBudget] = useState("medium");
@@ -78,6 +79,7 @@ export default function PlanPage() {
     setPromptInput("");
     setLoading(true);
     setChatMessage(null);
+    setErrorMsg(null);
     try {
       const res = await fetch("/api/ai/plan", {
         method: "POST",
@@ -95,7 +97,7 @@ export default function PlanPage() {
           router.push(`/trip/${data.itinerary.id}`);
         }
       } else {
-        alert("Error: " + data.error);
+        setErrorMsg("ไม่สามารถจัดทริปได้: " + data.error);
         if (data.fallback) {
           setTrip(data.fallback);
           router.push(`/trip/${data.fallback.id}`);
@@ -104,7 +106,7 @@ export default function PlanPage() {
       }
     } catch (err) {
       console.error(err);
-      alert("Something went wrong");
+      setErrorMsg("เกิดข้อผิดพลาดในการเชื่อมต่อระบบจัดทริป กรุณาลองใหม่อีกครั้ง");
       setLoading(false);
     }
   };
@@ -339,6 +341,14 @@ export default function PlanPage() {
           </div>
         )}
       </div>
+
+      {/* Error display */}
+      {errorMsg && (
+        <div className="flex items-center gap-2.5 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm animate-fade-in">
+          <span className="material-symbols-outlined text-[20px] shrink-0">error</span>
+          <span>{errorMsg}</span>
+        </div>
+      )}
 
       {/* AI Response Message */}
       {chatMessage && (

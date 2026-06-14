@@ -1,15 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'node:fs';
-import path from 'node:path';
 import { getSessionUser } from '@/lib/session';
-
-const DATA_ROOT = path.join(process.cwd(), 'data');
-const HOTELS_PATH = path.join(DATA_ROOT, 'hotel', 'hotels.json');
-
-async function readHotels() {
-  const raw = await fs.readFile(HOTELS_PATH, 'utf8');
-  return JSON.parse(raw);
-}
+import prisma from '@/lib/prisma';
 
 async function requireAdmin() {
   const user = await getSessionUser();
@@ -20,7 +11,8 @@ async function requireAdmin() {
 export async function GET() {
   const admin = await requireAdmin();
   if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-  const hotels = await readHotels();
+
+  const hotels = await prisma.hotel.findMany();
   return NextResponse.json(hotels);
 }
 
@@ -29,13 +21,23 @@ export async function PUT(req: NextRequest) {
   if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
 
   const body = await req.json();
-  const hotels = await readHotels();
-  const idx = hotels.findIndex((h: any) => h.hotel_id === body.hotel_id);
-  if (idx === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  const { hotel_id, name, location, rating, price_per_night, amenities } = body;
 
-  hotels[idx] = { ...hotels[idx], ...body };
-  await fs.writeFile(HOTELS_PATH, JSON.stringify(hotels, null, 2), 'utf8');
-  return NextResponse.json({ success: true });
+  try {
+    const updated = await prisma.hotel.update({
+      where: { hotel_id },
+      data: {
+        name,
+        location,
+        rating: rating !== undefined ? parseFloat(rating) : undefined,
+        price_per_night: price_per_night !== undefined ? parseFloat(price_per_night) : undefined,
+        amenities,
+      },
+    });
+    return NextResponse.json({ success: true, hotel: updated });
+  } catch (err) {
+    return NextResponse.json({ error: 'Hotel not found or validation error' }, { status: 404 });
+  }
 }
 
 export async function DELETE(req: NextRequest) {
@@ -45,10 +47,12 @@ export async function DELETE(req: NextRequest) {
   const id = req.nextUrl.searchParams.get('id');
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
 
-  const hotels = await readHotels();
-  const filtered = hotels.filter((h: any) => h.hotel_id !== id);
-  if (filtered.length === hotels.length) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-
-  await fs.writeFile(HOTELS_PATH, JSON.stringify(filtered, null, 2), 'utf8');
-  return NextResponse.json({ success: true });
+  try {
+    await prisma.hotel.delete({
+      where: { hotel_id: id },
+    });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: 'Hotel not found' }, { status: 404 });
+  }
 }
