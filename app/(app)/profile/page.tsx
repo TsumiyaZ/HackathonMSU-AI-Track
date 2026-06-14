@@ -1,9 +1,70 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTripStore } from "@/lib/store";
-import { User, Save, LogOut, Sparkles, Home, Edit3, X } from "lucide-react";
+import { Check, Edit3, Home, LogOut, Save, Sparkles, User, X } from "lucide-react";
+
+type SessionUser = {
+  name?: string;
+  email?: string;
+  phone?: string;
+  role?: "ADMIN" | "VIP" | "MEMBER" | string;
+};
+
+const FOOD_OPTIONS = [
+  "เนื้อสัตว์",
+  "อาหารทะเล",
+  "นม/ชีส",
+  "gluten (แป้งสาลี)",
+  "ถั่ว",
+  "มังสวิรัติ",
+  "เจ",
+  "ฮาลาล",
+];
+
+const BUDGET_OPTIONS = [
+  { value: "low", label: "ประหยัด", desc: "ไม่เกิน 10,000 บาท/ทริป", icon: "savings" },
+  { value: "medium", label: "ปานกลาง", desc: "10,000 - 30,000 บาท/ทริป", icon: "balance" },
+  { value: "high", label: "พรีเมียม", desc: "30,000+ บาท/ทริป", icon: "workspace_premium" },
+] as const;
+
+const HOTEL_STYLE_OPTIONS = [
+  { value: "modern", label: "โมเดิร์น", icon: "apartment" },
+  { value: "boutique", label: "บูติก", icon: "villa" },
+  { value: "resort", label: "รีสอร์ท", icon: "beach_access" },
+  { value: "budget", label: "ประหยัด", icon: "bed" },
+] as const;
+
+function getBudgetLabel(val: string) {
+  if (val === "low") return "ประหยัด (≤ 10,000 บาท)";
+  if (val === "medium") return "ปานกลาง (10,000 - 30,000 บาท)";
+  if (val === "high") return "พรีเมียม (≥ 30,000 บาท)";
+  return val;
+}
+
+function getHotelStyleLabel(val: string) {
+  if (val === "modern") return "โมเดิร์น";
+  if (val === "boutique") return "บูติก";
+  if (val === "resort") return "รีสอร์ท";
+  if (val === "budget") return "ประหยัด";
+  return val;
+}
+
+function getRoleBadgeClass(role?: string) {
+  if (role === "ADMIN") {
+    return "border border-amber-500/30 bg-amber-500/15 text-amber-500 dark:text-amber-400";
+  }
+  if (role === "VIP") {
+    return "border border-violet-500/30 bg-violet-500/15 text-violet-600 dark:text-violet-400";
+  }
+  return "border border-primary/20 bg-primary/10 text-primary";
+}
+
+function getRoleLabel(role?: string) {
+  if (role === "ADMIN" || role === "VIP") return role;
+  return "MEMBER";
+}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -19,18 +80,16 @@ export default function ProfilePage() {
   );
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // BUG-05 fixed: remove broken GET fallback to /api/auth/login
     fetch("/api/auth/check-session", { method: "GET" })
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated && data.user) {
           setUser(data.user);
         } else {
-          // Not authenticated — redirect to login
           router.push("/auth/login?redirect=/profile");
         }
       })
@@ -44,7 +103,7 @@ export default function ProfilePage() {
     setUserPreferences({ budgetLevel, foodRestrictions, preferredHotelStyle });
     setSaved(true);
     setIsEditing(false);
-    setTimeout(() => setSaved(false), 2000);
+    setTimeout(() => setSaved(false), 2200);
   };
 
   const handleLogout = async () => {
@@ -53,11 +112,6 @@ export default function ProfilePage() {
     router.refresh();
   };
 
-  // BUG-12 fixed: removed leading space from "gluten"
-  const foodOptions = [
-    "เนื้อสัตว์", "อาหารทะเล", "นม/ชีส", "gluten (แป้งสาลี)",
-    "ถั่ว", "มังสวิรัติ", "เจ", "ฮาลาล",
-  ];
   const toggleFood = (item: string) => {
     setFoodRestrictions((prev) =>
       prev.includes(item) ? prev.filter((f) => f !== item) : [...prev, item]
@@ -66,272 +120,291 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="max-w-2xl mx-auto py-8 md:py-12 px-4 text-center animate-pulse">
-        <div className="w-20 h-20 md:w-24 md:h-24 skeleton-shimmer rounded-full mx-auto mb-6" />
-        <div className="h-7 skeleton-shimmer rounded-xl w-40 mx-auto mb-4" />
-        <div className="h-4 skeleton-shimmer rounded-full w-56 mx-auto" />
+      <div className="mx-auto max-w-2xl px-4 py-8 text-center md:py-12 animate-pulse">
+        <div className="mx-auto mb-6 h-24 w-24 rounded-full skeleton-shimmer" />
+        <div className="mx-auto mb-4 h-7 w-40 rounded-xl skeleton-shimmer" />
+        <div className="mx-auto h-4 w-56 rounded-full skeleton-shimmer" />
       </div>
     );
   }
 
-  // Formatting helpers for summary view
-  const getBudgetLabel = (val: string) => {
-    if (val === "low") return "ประหยัด (≤ 10,000 บาท)";
-    if (val === "medium") return "ปานกลาง (10,000 - 30,000 บาท)";
-    if (val === "high") return "พรีเมียม (≥ 30,000 บาท)";
-    return val;
-  };
-  
-  const getHotelStyleLabel = (val: string) => {
-    if (val === "modern") return "โมเดิร์น";
-    if (val === "boutique") return "บูติก";
-    if (val === "resort") return "รีสอร์ท";
-    if (val === "budget") return "ประหยัด";
-    return val;
-  };
-
   return (
-    <div className="max-w-2xl mx-auto py-6 md:py-12">
-      <div className="glass-panel-strong p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl relative overflow-hidden">
-        {/* Decorative blob */}
-        <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+    <div className="mx-auto max-w-3xl py-6 md:py-12">
+      <section className="relative overflow-hidden rounded-[28px] glass-panel-strong animate-[fade-up_0.42s_ease_both]">
+        <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary/55 to-transparent" />
+        <div className="pointer-events-none absolute -right-16 top-0 h-48 w-48 rounded-full bg-primary/12 blur-3xl" />
+        <div className="pointer-events-none absolute -left-10 bottom-0 h-32 w-32 rounded-full bg-secondary/10 blur-3xl" />
 
-        <div className="relative z-10">
-          {/* ── Header ── */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8 border-b border-border/40 pb-6">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 flex-shrink-0 text-2xl font-bold text-white">
-                {user?.name ? user.name.charAt(0).toUpperCase() : <User className="w-8 h-8 md:w-10 md:h-10 text-background" />}
+        <div className="relative z-10 p-5 sm:p-6 md:p-8">
+          <div className="flex flex-col gap-5 border-b border-border/50 pb-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="relative">
+                <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-gradient-to-tr from-primary to-secondary text-2xl font-bold text-white shadow-[0_16px_30px_rgba(22,102,219,0.20)] ring-4 ring-primary/10 transition-transform duration-300 hover:scale-[1.02] md:h-20 md:w-20">
+                  {user?.name ? (
+                    user.name.charAt(0).toUpperCase()
+                  ) : (
+                    <User className="h-9 w-9 text-white" />
+                  )}
+                </div>
+                <span className="absolute bottom-1 right-1 h-3.5 w-3.5 rounded-full border-2 border-surface bg-emerald-500 shadow-[0_0_0_4px_rgba(34,197,94,0.12)]" />
               </div>
-              <div>
-                <h1 className="font-display text-2xl md:text-3xl font-bold">{user?.name || "โปรไฟล์ของฉัน"}</h1>
-                <p className="text-on-surface-variant text-sm md:text-base mt-0.5">
+
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="font-display text-2xl font-bold text-on-surface md:text-3xl">
+                    {user?.name || "โปรไฟล์ของฉัน"}
+                  </h1>
+                  <span
+                    className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold tracking-[0.08em] ${getRoleBadgeClass(
+                      user?.role
+                    )}`}
+                  >
+                    {getRoleLabel(user?.role)}
+                  </span>
+                </div>
+                <p className="text-sm text-on-surface-variant md:text-base">
                   {user?.email || "กำลังตั้งค่าความชอบสำหรับการจัดทริป"}
                 </p>
                 {user?.phone && (
-                  <p className="text-on-surface-variant text-xs mt-0.5">
-                    {user.phone}
-                  </p>
-                )}
-                {user?.role && (
-                  <span className={`inline-block mt-2 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider ${
-                    user.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
-                    user.role === 'VIP' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
-                    'bg-primary/10 text-primary border border-primary/20'
-                  }`}>
-                    {user.role === 'ADMIN' ? 'ADMIN' : user.role === 'VIP' ? 'VIP' : 'MEMBER'}
-                  </span>
+                  <p className="text-xs text-on-surface-variant">{user.phone}</p>
                 )}
               </div>
             </div>
-            
+
             {!isEditing && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="shrink-0 px-4 py-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center gap-2 font-bold text-sm self-start sm:self-center"
+                className="group inline-flex items-center gap-2 self-start rounded-2xl border border-primary/15 bg-primary/10 px-4 py-2.5 text-sm font-bold text-primary transition-all duration-200 hover:border-primary/30 hover:bg-primary/14 hover:shadow-[0_10px_24px_rgba(22,102,219,0.12)]"
               >
-                <Edit3 className="w-4 h-4" />
+                <Edit3 className="h-4 w-4 transition-transform duration-200 group-hover:rotate-[-8deg]" />
                 แก้ไขข้อมูล
               </button>
             )}
           </div>
 
-          {/* Save success toast */}
           {saved && (
-            <div className="mb-4 md:mb-6 p-3 md:p-4 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center gap-2 md:gap-3 text-sm md:text-base">
-              <Sparkles className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
-              บันทึกการตั้งค่าเรียบร้อย! AI จะนำข้อมูลนี้ไปใช้ในการวางแผนทริปครั้งต่อไป
+            <div className="mt-4 animate-[slide-down_0.26s_ease] rounded-2xl border border-emerald-500/25 bg-emerald-500/12 px-4 py-3 text-emerald-600 dark:text-emerald-400">
+              <div className="flex items-center gap-3 text-sm md:text-base">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/14">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <p>บันทึกการตั้งค่าเรียบร้อยแล้ว AI จะใช้ข้อมูลนี้กับทริปครั้งถัดไป</p>
+              </div>
             </div>
           )}
 
           {!isEditing ? (
-            /* ── VIEW MODE ── */
-            <div className="flex flex-col gap-4 md:gap-6">
-              <div className="glass-panel p-5 md:p-6 rounded-xl md:rounded-2xl border border-white/5 flex flex-col gap-4">
-                <h2 className="font-display text-lg font-bold flex items-center gap-2 border-b border-border/40 pb-3">
-                  <span className="material-symbols-outlined text-primary text-[20px]">manage_accounts</span>
-                  การตั้งค่าความชอบปัจจุบัน
-                </h2>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs text-on-surface-variant uppercase tracking-wider mb-1">ระดับงบประมาณ</p>
-                    <p className="font-bold text-sm md:text-base flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-[18px]">account_balance_wallet</span>
-                      {getBudgetLabel(budgetLevel)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-on-surface-variant uppercase tracking-wider mb-1">สไตล์ที่พัก</p>
-                    <p className="font-bold text-sm md:text-base flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-[18px]">hotel</span>
-                      {getHotelStyleLabel(preferredHotelStyle)}
-                    </p>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <p className="text-xs text-on-surface-variant uppercase tracking-wider mb-1">ข้อจำกัดด้านอาหาร</p>
-                    {foodRestrictions.length > 0 ? (
-                      <div className="flex flex-wrap gap-2 mt-1">
-                        {foodRestrictions.map((item) => (
-                          <span key={item} className="px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm font-medium text-on-surface flex items-center gap-2">
-                         <span className="material-symbols-outlined text-on-surface-variant text-[18px]">restaurant</span>
-                        ไม่มีข้อจำกัดเป็นพิเศษ
-                      </p>
-                    )}
-                  </div>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              <div className="rounded-2xl border border-border/70 bg-surface/70 p-5 transition-colors duration-200 hover:border-primary/30 hover:bg-surface-hover/85">
+                <div className="mb-3 flex items-center gap-2 text-primary">
+                  <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                  <span className="font-label text-[11px] uppercase tracking-[0.12em] text-on-surface-variant">
+                    Budget
+                  </span>
                 </div>
+                <p className="text-base font-semibold text-on-surface">{getBudgetLabel(budgetLevel)}</p>
               </div>
 
-              {/* Action Buttons for View Mode */}
-              <div className="flex flex-col sm:flex-row justify-end gap-2 md:gap-3 pt-2 md:pt-4">
+              <div className="rounded-2xl border border-border/70 bg-surface/70 p-5 transition-colors duration-200 hover:border-primary/30 hover:bg-surface-hover/85">
+                <div className="mb-3 flex items-center gap-2 text-primary">
+                  <span className="material-symbols-outlined text-[20px]">hotel</span>
+                  <span className="font-label text-[11px] uppercase tracking-[0.12em] text-on-surface-variant">
+                    Hotel Style
+                  </span>
+                </div>
+                <p className="text-base font-semibold text-on-surface">
+                  {getHotelStyleLabel(preferredHotelStyle)}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-border/70 bg-surface/70 p-5 transition-colors duration-200 hover:border-primary/30 hover:bg-surface-hover/85 md:col-span-1">
+                <div className="mb-3 flex items-center gap-2 text-primary">
+                  <span className="material-symbols-outlined text-[20px]">restaurant</span>
+                  <span className="font-label text-[11px] uppercase tracking-[0.12em] text-on-surface-variant">
+                    Food
+                  </span>
+                </div>
+                {foodRestrictions.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {foodRestrictions.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition-colors duration-200 hover:bg-primary/14"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm font-medium text-on-surface">ไม่มีข้อจำกัดเป็นพิเศษ</p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-3 md:col-span-3 md:flex-row md:justify-end md:pt-2">
                 <button
                   onClick={() => router.push("/home")}
-                  className="py-3 md:py-4 px-4 md:px-6 rounded-xl glass-panel font-label text-sm font-bold flex items-center justify-center gap-2 hover:text-primary transition-all border border-white/10"
+                  className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-5 py-3 text-sm font-bold text-on-surface transition-all duration-200 hover:border-primary/30 hover:text-primary"
                 >
-                  <Home className="w-4 h-4 md:w-5 md:h-5" />
+                  <Home className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
                   กลับหน้าหลัก
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="py-3 md:py-4 px-4 md:px-6 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 font-label text-sm font-bold flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all"
+                  className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-red-500/25 bg-red-500/10 px-5 py-3 text-sm font-bold text-red-500 transition-all duration-200 hover:bg-red-500/14 hover:shadow-[0_10px_24px_rgba(239,68,68,0.10)] dark:text-red-400"
                 >
-                  <LogOut className="w-4 h-4 md:w-5 md:h-5" />
+                  <LogOut className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
                   ออกจากระบบ
                 </button>
               </div>
             </div>
           ) : (
-            /* ── EDIT MODE ── */
-            <div className="flex flex-col gap-4 md:gap-6 animate-in fade-in duration-300">
+            <div className="mt-6 flex flex-col gap-5 animate-[fade-up_0.28s_ease]">
               <div className="flex items-center justify-between">
-                <h2 className="font-display text-xl font-bold flex items-center gap-2">
-                  <Edit3 className="w-5 h-5 text-primary" />
-                  แก้ไขความชอบของคุณ
-                </h2>
+                <div>
+                  <h2 className="font-display text-xl font-bold text-on-surface">แก้ไขความชอบของคุณ</h2>
+                  <p className="mt-1 text-sm text-on-surface-variant">
+                    ปรับค่าพื้นฐานให้ AI แนะนำทริปได้ใกล้เคียงรสนิยมของคุณมากขึ้น
+                  </p>
+                </div>
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border/70 bg-surface text-on-surface-variant transition-all duration-200 hover:border-primary/25 hover:text-primary"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="h-4 w-4" />
                 </button>
               </div>
 
-              {/* ── Budget Level ── */}
-              <div className="glass-panel p-4 md:p-6 rounded-xl md:rounded-2xl border border-white/5">
-                <h3 className="font-display text-lg font-bold mb-3 md:mb-4 flex items-center gap-2">
+              <div className="rounded-2xl border border-border/70 bg-surface/70 p-5">
+                <div className="mb-4 flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">
                     account_balance_wallet
                   </span>
-                  ระดับงบประมาณ
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3">
-                  {[
-                    { value: "low", label: "ประหยัด", desc: "≤ 10,000 บาท/ทริป", icon: "savings" },
-                    { value: "medium", label: "ปานกลาง", desc: "10,000 – 30,000 บาท/ทริป", icon: "balance" },
-                    { value: "high", label: "พรีเมียม", desc: "≥ 30,000 บาท/ทริป", icon: "workspace_premium" },
-                  ].map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setBudgetLevel(opt.value)}
-                      className={`flex sm:flex-col items-center sm:text-center gap-3 sm:gap-0 p-3 md:p-4 rounded-xl border transition-all text-left sm:text-center ${
-                        budgetLevel === opt.value
-                          ? "bg-primary/15 border-primary text-primary"
-                          : "bg-white/5 border-white/10 text-on-surface-variant hover:border-primary/30"
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-[24px] sm:text-[28px] sm:block sm:mb-2 flex-shrink-0">
-                        {opt.icon}
-                      </span>
-                      <div>
-                        <div className="font-semibold text-sm">{opt.label}</div>
-                        <div className="text-[11px] md:text-xs mt-0.5 opacity-70">{opt.desc}</div>
-                      </div>
-                    </button>
-                  ))}
+                  <h3 className="font-display text-lg font-bold text-on-surface">ระดับงบประมาณ</h3>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {BUDGET_OPTIONS.map((opt) => {
+                    const active = budgetLevel === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => setBudgetLevel(opt.value)}
+                        className={`group relative overflow-hidden rounded-2xl border p-4 text-left transition-all duration-200 ${
+                          active
+                            ? "border-primary/45 bg-primary/10 shadow-[0_14px_30px_rgba(22,102,219,0.12)]"
+                            : "border-border/70 bg-surface hover:border-primary/25 hover:bg-surface-hover"
+                        }`}
+                      >
+                        <span
+                          className={`absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border transition-all duration-200 ${
+                            active
+                              ? "border-primary bg-primary text-white"
+                              : "border-border/80 text-transparent group-hover:border-primary/30"
+                          }`}
+                        >
+                          <Check className="h-3.5 w-3.5" />
+                        </span>
+                        <span
+                          className={`material-symbols-outlined mb-3 block text-[24px] transition-colors duration-200 ${
+                            active ? "text-primary" : "text-on-surface-variant group-hover:text-primary"
+                          }`}
+                        >
+                          {opt.icon}
+                        </span>
+                        <div className="text-sm font-semibold text-on-surface">{opt.label}</div>
+                        <div className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+                          {opt.desc}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* ── Hotel Style ── */}
-              <div className="glass-panel p-4 md:p-6 rounded-xl md:rounded-2xl border border-white/5">
-                <h3 className="font-display text-lg font-bold mb-3 md:mb-4 flex items-center gap-2">
+              <div className="rounded-2xl border border-border/70 bg-surface/70 p-5">
+                <div className="mb-4 flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">hotel</span>
-                  สไตล์ที่พักที่ชอบ
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-3">
-                  {[
-                    { value: "modern", label: "โมเดิร์น", icon: "apartment" },
-                    { value: "boutique", label: "บูติก", icon: "villa" },
-                    { value: "resort", label: "รีสอร์ท", icon: "beach_access" },
-                    { value: "budget", label: "ประหยัด", icon: "bed" },
-                  ].map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setPreferredHotelStyle(opt.value)}
-                      className={`p-3 md:p-4 rounded-xl border text-center transition-all ${
-                        preferredHotelStyle === opt.value
-                          ? "bg-primary/15 border-primary text-primary"
-                          : "bg-white/5 border-white/10 text-on-surface-variant hover:border-primary/30"
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-[22px] md:text-[24px] block mb-1">
-                        {opt.icon}
-                      </span>
-                      <div className="font-semibold text-xs md:text-sm">{opt.label}</div>
-                    </button>
-                  ))}
+                  <h3 className="font-display text-lg font-bold text-on-surface">สไตล์ที่พัก</h3>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-4">
+                  {HOTEL_STYLE_OPTIONS.map((opt) => {
+                    const active = preferredHotelStyle === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => setPreferredHotelStyle(opt.value)}
+                        className={`group relative overflow-hidden rounded-2xl border px-3 py-4 text-center transition-all duration-200 ${
+                          active
+                            ? "border-primary/45 bg-primary/10 shadow-[0_14px_30px_rgba(22,102,219,0.12)]"
+                            : "border-border/70 bg-surface hover:border-primary/25 hover:bg-surface-hover"
+                        }`}
+                      >
+                        <span
+                          className={`material-symbols-outlined mb-2 block text-[24px] transition-colors duration-200 ${
+                            active ? "text-primary" : "text-on-surface-variant group-hover:text-primary"
+                          }`}
+                        >
+                          {opt.icon}
+                        </span>
+                        <div className="text-sm font-semibold text-on-surface">{opt.label}</div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* ── Food Restrictions ── */}
-              <div className="glass-panel p-4 md:p-6 rounded-xl md:rounded-2xl border border-white/5">
-                <h3 className="font-display text-lg font-bold mb-3 md:mb-4 flex items-center gap-2">
+              <div className="rounded-2xl border border-border/70 bg-surface/70 p-5">
+                <div className="mb-4 flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">restaurant</span>
-                  ข้อจำกัดด้านอาหาร
-                </h3>
+                  <h3 className="font-display text-lg font-bold text-on-surface">ข้อจำกัดด้านอาหาร</h3>
+                </div>
                 <div className="flex flex-wrap gap-2">
-                  {foodOptions.map((item) => (
-                    <button
-                      key={item}
-                      onClick={() => toggleFood(item)}
-                      className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium border transition-all ${
-                        foodRestrictions.includes(item)
-                          ? "bg-primary/15 border-primary text-primary"
-                          : "bg-white/5 border-white/10 text-on-surface-variant hover:border-primary/30"
-                      }`}
-                    >
-                      {foodRestrictions.includes(item) ? "✓ " : ""}{item}
-                    </button>
-                  ))}
+                  {FOOD_OPTIONS.map((item) => {
+                    const active = foodRestrictions.includes(item);
+                    return (
+                      <button
+                        key={item}
+                        onClick={() => toggleFood(item)}
+                        className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-all duration-200 ${
+                          active
+                            ? "border-primary/30 bg-primary/10 text-primary shadow-[0_8px_18px_rgba(22,102,219,0.10)]"
+                            : "border-border/70 bg-surface text-on-surface-variant hover:border-primary/25 hover:text-on-surface"
+                        }`}
+                      >
+                        <span
+                          className={`flex h-4 w-4 items-center justify-center rounded-full transition-all duration-200 ${
+                            active ? "bg-primary text-white" : "bg-surface-container text-transparent"
+                          }`}
+                        >
+                          <Check className="h-3 w-3" />
+                        </span>
+                        {item}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* ── Action Buttons for Edit Mode ── */}
-              <div className="flex flex-col sm:flex-row gap-2 md:gap-3 pt-2 md:pt-4">
+              <div className="flex flex-col gap-3 pt-1 sm:flex-row">
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="order-2 sm:order-1 flex-1 py-3 md:py-4 px-4 md:px-6 rounded-xl glass-panel font-label text-sm font-bold flex items-center justify-center gap-2 hover:text-primary transition-all border border-white/10"
+                  className="flex-1 rounded-2xl border border-border bg-surface px-5 py-3 text-sm font-bold text-on-surface transition-all duration-200 hover:border-primary/25 hover:text-primary"
                 >
-                  <X className="w-4 h-4 md:w-5 md:h-5" />
                   ยกเลิก
                 </button>
                 <button
                   onClick={handleSave}
-                  className="order-1 sm:order-2 flex-[2] py-3 md:py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform"
+                  className="group flex-[1.35] rounded-2xl btn-primary-gradient px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:shadow-[0_14px_30px_rgba(22,102,219,0.18)]"
                 >
-                  <Save className="w-4 h-4 md:w-5 md:h-5" />
-                  บันทึกการตั้งค่า
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <Save className="h-4 w-4 transition-transform duration-200 group-hover:scale-105" />
+                    บันทึกการตั้งค่า
+                  </span>
                 </button>
               </div>
             </div>
           )}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

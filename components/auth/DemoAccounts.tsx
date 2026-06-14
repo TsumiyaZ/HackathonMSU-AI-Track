@@ -48,7 +48,7 @@ export function DemoAccounts({ users, redirectTo }: { users: DemoUser[]; redirec
             key={user.user_id}
             onClick={() => loginAs(user)}
             disabled={loading === user.user_id}
-            className="glass-panel px-3 py-2 rounded-xl hover:bg-white/10 hover:border-primary/30 border border-white/10 transition-all disabled:opacity-50 text-xs group flex items-center gap-2 shrink-0"
+            className="glass-panel px-3 py-2 rounded-xl hover:bg-white/10 hover:border-primary/30 hover:-translate-y-0.5 border border-white/10 transition-all duration-200 disabled:opacity-50 text-xs group flex items-center gap-2 shrink-0"
           >
             <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-primary/30 to-secondary/30 flex items-center justify-center text-[10px] font-bold text-primary shrink-0">
               {user.name.charAt(0)}
