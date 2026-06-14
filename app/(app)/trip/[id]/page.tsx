@@ -7,7 +7,7 @@ import { PlaneTakeoff, Hotel, Utensils, MapPin, Sparkles, AlertCircle, Share2, D
 import Link from "next/link";
 import React from "react";
 
-export default function TripResultPage({ params }: { params: { id: string } }) {
+export default function TripResultPage() {
   const trip = useTripStore(state => state.currentTrip);
   const swapActivity = useTripStore(state => state.swapActivity);
   const router = useRouter();
