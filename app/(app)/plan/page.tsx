@@ -20,8 +20,12 @@ export default function PlanPage() {
   const [days, setDays] = useState(3);
   const [budget, setBudget] = useState("medium");
   const [theme, setTheme] = useState("relaxation");
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  
+  // Date states for Check-in & Check-out
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
 
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
 
@@ -60,7 +64,11 @@ export default function PlanPage() {
           : theme === "relaxation"
           ? "พักผ่อนสบายๆ"
           : "ผจญภัยแอดเวนเจอร์"
-      })`;
+      }`;
+
+      if (checkInDate) finalPrompt += `, วันที่เข้า: ${checkInDate}`;
+      if (checkOutDate) finalPrompt += `, วันที่ออก: ${checkOutDate}`;
+      finalPrompt += `)`;
     }
 
     const authed = await requireAuth("/plan");
@@ -116,7 +124,7 @@ export default function PlanPage() {
           <textarea
             value={promptInput}
             onChange={(e) => setPromptInput(e.target.value)}
-            placeholder="บอกจุดหมายปลายทางหรือพิมพ์ความต้องการของคุณ เช่น 'ไปเที่ยวเชียงใหม่ 3 วัน เน้นไปร้านกาแฟ คาเฟ่สวยๆ บรรยากาศดี ถ่ายรูปสวย'..."
+            placeholder="เช่น 'เที่ยวเชียงใหม่ 3 วัน เน้นคาเฟ่'..."
             rows={3}
             disabled={loading}
             className="w-full bg-transparent border-0 text-on-surface placeholder:text-on-surface-variant/40 p-4 pb-14 focus:outline-none resize-none font-sans leading-relaxed text-sm md:text-base"
@@ -272,6 +280,34 @@ export default function PlanPage() {
                       {t.label}
                     </button>
                   ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Row 3: Check-in / Check-out Dates */}
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold text-on-surface flex items-center gap-1">
+                <span className="material-symbols-outlined text-[16px] text-primary">calendar_today</span>
+                วันที่เข้า - ออก
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-on-surface-variant/70 font-bold shrink-0">เข้า:</span>
+                  <input
+                    type="date"
+                    value={checkInDate}
+                    onChange={(e) => setCheckInDate(e.target.value)}
+                    className="w-full py-1.5 px-3 rounded-lg text-xs font-bold border border-border/50 bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-on-surface-variant/70 font-bold shrink-0">ออก:</span>
+                  <input
+                    type="date"
+                    value={checkOutDate}
+                    onChange={(e) => setCheckOutDate(e.target.value)}
+                    className="w-full py-1.5 px-3 rounded-lg text-xs font-bold border border-border/50 bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
+                  />
                 </div>
               </div>
             </div>
