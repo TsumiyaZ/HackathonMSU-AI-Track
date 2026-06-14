@@ -7,7 +7,7 @@ type NavItem = { href: string; label: string; icon: string };
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/home", label: "หน้าหลัก", icon: "home" },
-  { href: "/explore/hotels", label: "สำรวจ", icon: "explore" },
+  { href: "/explore", label: "สำรวจ", icon: "explore" },
   { href: "/plan", label: "วางแผน", icon: "auto_awesome" },
   { href: "/bookings", label: "การจอง", icon: "event_available" },
   { href: "/profile", label: "โปรไฟล์", icon: "account_circle" },
