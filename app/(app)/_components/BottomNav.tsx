@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 type NavItem = { href: string; label: string; icon: string };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/dashboard", label: "หน้าหลัก", icon: "home" },
+  { href: "/home", label: "หน้าหลัก", icon: "home" },
   { href: "/explore/hotels", label: "สำรวจ", icon: "explore" },
   { href: "/plan", label: "วางแผน", icon: "auto_awesome" },
   { href: "/bookings", label: "การจอง", icon: "event_available" },
@@ -20,8 +20,8 @@ export function BottomNav() {
     <nav className="bottom-nav md:hidden">
       {NAV_ITEMS.map((item) => {
         const isActive =
-          item.href === "/dashboard"
-            ? pathname === "/dashboard" || pathname === "/"
+          item.href === "/home"
+            ? pathname === "/home"
             : pathname.startsWith(item.href);
         const isPlan = item.href === "/plan";
 

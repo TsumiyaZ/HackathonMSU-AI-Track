@@ -48,16 +48,60 @@ function normalizeHotel(raw: RawHotel): Hotel {
   if (lower.some((a) => a.includes("river") || a.includes("view"))) tagPool.push("view");
   if (tagPool.length === 0) tagPool.push("essential");
 
-  // stable pseudo-random rooms_available จาก hash ของ hotel_id (ไม่ใช้ Math.random เพื่อ stable ระหว่าง SSR/CSR)
+  // thumbnail placeholder - using premium, realistic Unsplash hotel photos based on city and ID seed
   const seed = Array.from(raw.hotel_id).reduce((s, c) => s + c.charCodeAt(0), 0);
   const roomsAvailable = (seed % 18) + 3; // 3..20
-
-  // stars จาก rating: 4.5+ = 5★, 4.0+ = 4★, ที่เหลือ 3★
   const stars = raw.rating >= 4.5 ? 5 : raw.rating >= 4 ? 4 : 3;
-
-  // thumbnail placeholder ใช้ชื่อโรงแรมเป็น query string
-  const slug = encodeURIComponent(raw.name.slice(0, 20));
-  const thumbnail = `https://placehold.co/640x400/0b0f10/adc6ff?text=${slug}`;
+  const lowerCity = city.toLowerCase();
+  let thumbnail = "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=640&q=80"; // default premium hotel
+  
+  if (lowerCity.includes("bangkok") || lowerCity.includes("sathorn") || lowerCity.includes("sukhumvit")) {
+    const urls = [
+      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=640&q=80"
+    ];
+    thumbnail = urls[seed % urls.length];
+  } else if (
+    lowerCity.includes("phuket") || 
+    lowerCity.includes("samui") || 
+    lowerCity.includes("krabi") || 
+    lowerCity.includes("tao") || 
+    lowerCity.includes("lipe") || 
+    lowerCity.includes("samet") || 
+    lowerCity.includes("pattaya") || 
+    lowerCity.includes("beach") ||
+    lowerCity.includes("island") ||
+    lowerCity.includes("phang nga")
+  ) {
+    const urls = [
+      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=640&q=80"
+    ];
+    thumbnail = urls[seed % urls.length];
+  } else if (
+    lowerCity.includes("chiang") || 
+    lowerCity.includes("pai") || 
+    lowerCity.includes("mae hong") || 
+    lowerCity.includes("nan") ||
+    lowerCity.includes("historical") ||
+    lowerCity.includes("ayutthaya")
+  ) {
+    const urls = [
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=640&q=80"
+    ];
+    thumbnail = urls[seed % urls.length];
+  } else {
+    const urls = [
+      "https://images.unsplash.com/photo-1529290130-4ca3753253ae?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1495365200479-c4ed1d35e1aa?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=640&q=80"
+    ];
+    thumbnail = urls[seed % urls.length];
+  }
 
   return {
     id: raw.hotel_id,
