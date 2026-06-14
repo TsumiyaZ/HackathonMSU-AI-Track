@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, MapPin, Loader2, Sparkles, Navigation } from "lucide-react";
+import { Bot, User, Sparkles, Navigation } from "lucide-react";
 
 interface ChatMessage {
   id: string;
@@ -12,8 +12,8 @@ interface ChatMessage {
 
 const SUGGESTIONS = [
   "🏖️ หาโรงแรมหรูติดทะเลภูเก็ต",
-  "☕ คาเฟ่เชียงใหม่ มินิมอล",
-  "🍣 ตะลุยชิมอาหารญี่ปุ่นโตเกียว",
+  "✈️ เที่ยวบินไปเชียงใหม่ราคาถูก",
+  "🏨 ที่พักใกล้ทะเลสมุย",
   "📍 สถานที่ท่องเที่ยวยอดฮิตกรุงเทพ",
 ];
 
@@ -22,7 +22,7 @@ export default function ChatPage() {
     {
       id: "welcome",
       role: "bot",
-      text: "สวัสดีครับ! ฉันคือ **Travel Buddy** 🧳 ผู้ช่วยส่วนตัวของคุณระหว่างเดินทาง ฉันสามารถช่วยคุณค้นหาพิกัดสถานที่ โรงแรม ร้านอาหาร และตอบคำถามเกี่ยวกับการเดินทางได้ทุกที่บนโลก!\n\nมีแพลนไปเที่ยวไหนหรือกำลังมองหาอะไรอยู่ พิมพ์ถามมาได้เลยครับ ✨",
+      text: "สวัสดีครับ! ฉันคือ Travel Buddy 🧳 ผู้ช่วยส่วนตัวของคุณระหว่างเดินทาง ฉันช่วยค้นหาโรงแรม เที่ยวบิน สถานที่เที่ยว และตอบคำถามเกี่ยวกับการเดินทางได้ครับ\n\nมีแพลนไปเที่ยวไหนหรือกำลังมองหาอะไรอยู่ พิมพ์ถามมาได้เลยครับ ✨",
       timestamp: new Date(),
     },
   ]);
@@ -165,7 +165,7 @@ export default function ChatPage() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="ถามเส้นทาง, หาร้านอาหาร, หรือขอให้ AI ช่วยจัดทริป..."
+            placeholder="ถามเส้นทาง หาโรงแรม เที่ยวบิน หรือขอให้ AI ช่วยจัดทริป..."
             disabled={loading}
             className="w-full glass-panel-strong rounded-full pl-6 pr-16 py-4 text-base outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-lg text-on-surface placeholder:text-on-surface-variant"
           />

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { getSessionUserId } from '@/lib/session';
 
 export async function POST(req: Request) {
   try {
@@ -9,9 +10,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid trip data' }, { status: 400 });
     }
 
-    const userId = 'u001'; // Mock user
+    const userId = await getSessionUserId();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    // Create dummy bookings for flights and hotels found in the trip
+    // Create bookings for flights and hotels found in the trip.
     const flightItems = trip.items.filter((i: any) => i.type === 'flight');
     const hotelItems = trip.items.filter((i: any) => i.type === 'hotel');
 
@@ -19,8 +23,8 @@ export async function POST(req: Request) {
     for (const item of flightItems) {
       const flightData = item.data || {};
       let flightId = flightData.flight_id || flightData.id;
-      
-      // Fallback if AI didn't provide a valid ID
+
+      // AI-created plans can miss an id; direct booking pages always send one.
       if (!flightId) {
         const anyFlight = await prisma.flight.findFirst();
         if (anyFlight) flightId = anyFlight.flight_id;
@@ -45,7 +49,7 @@ export async function POST(req: Request) {
       const hotelData = item.data || {};
       let hotelId = hotelData.hotel_id || hotelData.id;
 
-      // Fallback if AI didn't provide a valid ID
+      // AI-created plans can miss an id; direct booking pages always send one.
       if (!hotelId) {
         const anyHotel = await prisma.hotel.findFirst();
         if (anyHotel) hotelId = anyHotel.hotel_id;

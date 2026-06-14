@@ -11,10 +11,17 @@ type NavTile = {
 
 const TILES: NavTile[] = [
   {
-    href: "/explore/hotels",
-    title: "สำรวจโรงแรม",
-    description: "ค้นหาที่พักทั่วไทย พร้อมตัวกรองและบทสรุปจาก AI",
-    icon: "hotel",
+    href: "/explore",
+    title: "สำรวจทั้งหมด",
+    description: "เลือกดูเที่ยวบิน โรงแรม และร้านอาหารจากหน้า Explore",
+    icon: "explore",
+    ready: true,
+  },
+  {
+    href: "/explore/flights",
+    title: "ดูเที่ยวบินทั้งหมด",
+    description: "เปรียบเทียบตั๋วเครื่องบินตามเส้นทาง ราคา และสายการบิน",
+    icon: "flight_takeoff",
     ready: true,
   },
   {
@@ -159,7 +166,7 @@ export default function Home() {
           {/* ── Ripple CTA Button ── */}
           <div className="splash-fade-4 flex flex-col items-center gap-4 mt-2">
             <Link
-              href="/explore/hotels"
+              href="/explore"
               id="splash-cta"
               className="ripple-btn relative w-16 h-16 rounded-full flex items-center justify-center"
               style={{

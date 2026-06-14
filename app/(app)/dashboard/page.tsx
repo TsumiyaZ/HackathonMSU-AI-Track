@@ -178,6 +178,10 @@ export default async function DashboardPage() {
               <span className="material-symbols-outlined text-[20px]">add</span>
               สร้างทริปใหม่ด้วย AI
             </Link>
+            <Link href="/explore/flights" className="w-full py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 font-label text-sm flex items-center gap-3 transition-colors border border-white/5">
+              <span className="material-symbols-outlined text-[20px]">flight_takeoff</span>
+              ดูเที่ยวบินทั้งหมด
+            </Link>
             <Link href="/explore/hotels" className="w-full py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 font-label text-sm flex items-center gap-3 transition-colors border border-white/5">
               <span className="material-symbols-outlined text-[20px]">explore</span>
               สำรวจโรงแรมใหม่ๆ

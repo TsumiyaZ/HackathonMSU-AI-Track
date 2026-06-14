@@ -1,15 +1,24 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { getSessionUserId } from '@/lib/session';
 
 export async function GET() {
   try {
+    const userId = await getSessionUserId();
+    if (!userId) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const hotelBookings = await prisma.hotelBooking.findMany({
+      where: { user_id: userId },
       include: { hotel: true },
       orderBy: { check_in: 'desc' }
     });
 
     const flightTickets = await prisma.flightTicket.findMany({
-      include: { flight: true }
+      where: { user_id: userId },
+      include: { flight: true },
+      orderBy: { flight: { departure_time: 'desc' } }
     });
 
     return NextResponse.json({
