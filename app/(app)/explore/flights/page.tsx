@@ -1,63 +1,130 @@
-import prisma from "@/lib/prisma";
-import { Plane, Search } from "lucide-react";
+import { FlightCard } from "@/components/flights/FlightCard";
+import { FlightFilters } from "@/components/flights/FlightFilters";
+import {
+  listFlights,
+  getFlightOrigins,
+  getFlightDestinations,
+  getFlightAirlines,
+} from "@/lib/flights";
+import type { FlightListFilters } from "@/lib/flights";
 import Link from "next/link";
 
-export default async function ExploreFlightsPage() {
-  const flights = await prisma.flight.findMany({
-    take: 50,
-    orderBy: { price: 'asc' }
-  });
+type SearchParams = Promise<{
+  search?: string;
+  origin?: string;
+  destination?: string;
+  airline?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  sort?: string;
+}>;
+
+function parseFilters(sp: Awaited<SearchParams>): FlightListFilters {
+  return {
+    search: sp.search?.trim() || undefined,
+    origin: sp.origin || undefined,
+    destination: sp.destination || undefined,
+    airline: sp.airline || undefined,
+    minPrice: sp.minPrice ? Number(sp.minPrice) : undefined,
+    maxPrice: sp.maxPrice ? Number(sp.maxPrice) : undefined,
+    sort: (sp.sort as FlightListFilters["sort"]) || undefined,
+  };
+}
+
+export default async function FlightsListPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const sp = await searchParams;
+  const filters = parseFilters(sp);
+  const [flights, origins, destinations, airlines] = await Promise.all([
+    listFlights(filters),
+    getFlightOrigins(),
+    getFlightDestinations(),
+    getFlightAirlines(),
+  ]);
+
+  // Stats
+  const cheapest = flights.length > 0 ? Math.min(...flights.map((f) => f.price)) : 0;
+  const uniqueRoutes = new Set(flights.map((f) => `${f.origin}-${f.destination}`)).size;
 
   return (
-    <div className="max-w-6xl mx-auto w-full">
-      <div className="mb-8">
-        <Link href="/explore" className="text-sm text-primary hover:underline mb-4 inline-block">&larr; กลับหน้า Explore</Link>
-        <h1 className="font-display text-3xl font-black mb-2 flex items-center gap-3">
-          <Plane className="w-8 h-8 text-secondary" />
-          ค้นหาเที่ยวบิน
-        </h1>
-        <p className="text-on-surface-variant">จองตั๋วเครื่องบินราคาประหยัด บินตรงสู่ทุกจุดหมาย</p>
-      </div>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {flights.map((flight) => (
-          <div key={flight.flight_id} className="glass-panel p-6 rounded-3xl border border-white/5 hover:border-secondary/30 transition-all hover:-translate-y-1">
-            <div className="flex justify-between items-start mb-4">
-              <div className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold border border-secondary/20">
-                {flight.airline}
-              </div>
-              <div className="text-xs text-on-surface-variant bg-surface-variant px-2 py-1 rounded-md">
-                {flight.flight_id}
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between mb-6">
-              <div className="text-center">
-                <div className="font-display text-2xl font-black">{flight.origin}</div>
-                <div className="text-xs text-on-surface-variant">{new Date(flight.departure_time).toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})}</div>
-              </div>
-              <div className="flex-1 flex flex-col items-center px-4 relative">
-                <div className="w-full border-t border-dashed border-white/20 absolute top-1/2 -translate-y-1/2" />
-                <Plane className="w-5 h-5 text-on-surface-variant rotate-90 relative z-10 bg-background px-1" />
-              </div>
-              <div className="text-center">
-                <div className="font-display text-2xl font-black text-primary">{flight.destination}</div>
-                <div className="text-xs text-on-surface-variant">ปลายทาง</div>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-white/10 flex justify-between items-end">
-              <div>
-                <div className="text-xs text-on-surface-variant mb-1">ราคาเริ่มต้น</div>
-                <div className="font-display text-xl font-bold text-emerald-400">{flight.price.toLocaleString()} ฿</div>
-              </div>
-              <button className="px-4 py-2 rounded-xl bg-secondary text-white text-sm font-bold shadow-lg shadow-secondary/20 hover:scale-105 transition-transform">
-                เลือกเที่ยวบิน
-              </button>
-            </div>
+    <div className="flex flex-col gap-6">
+      {/* Hero header */}
+      <section className="glass-panel-strong rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-72 h-72 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative">
+          <Link
+            href="/explore"
+            className="font-label text-xs text-primary hover:underline mb-3 inline-flex items-center gap-1"
+          >
+            <span className="material-symbols-outlined text-[14px]">arrow_back</span>
+            กลับหน้า Explore
+          </Link>
+          <p className="font-label text-xs text-secondary uppercase tracking-widest mb-2 flex items-center gap-2">
+            <span className="material-symbols-outlined text-[16px]">flight</span>
+            ค้นหาเที่ยวบิน
+          </p>
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-on-surface">
+            จองตั๋ว<span className="text-gradient"> เที่ยวบินราคาดี </span>ที่สุด
+          </h1>
+          <p className="mt-2 text-on-surface-variant max-w-xl">
+            เปรียบเทียบเที่ยวบินจากหลายสายการบิน พร้อมกรองตามเส้นทาง ราคา และสายการบินที่คุณต้องการ
+          </p>
+        </div>
+        <div className="relative flex items-center gap-3">
+          <div className="glass-panel rounded-xl px-4 py-3 text-center min-w-[100px]">
+            <p className="font-display text-2xl font-bold text-primary">
+              {flights.length}
+            </p>
+            <p className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
+              เที่ยวบิน
+            </p>
           </div>
-        ))}
-      </div>
+          <div className="glass-panel rounded-xl px-4 py-3 text-center min-w-[100px]">
+            <p className="font-display text-2xl font-bold text-secondary">
+              {uniqueRoutes}
+            </p>
+            <p className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
+              เส้นทาง
+            </p>
+          </div>
+          {cheapest > 0 && (
+            <div className="glass-panel rounded-xl px-4 py-3 text-center min-w-[100px]">
+              <p className="font-display text-lg font-bold text-emerald-500">
+                ฿{cheapest.toLocaleString()}
+              </p>
+              <p className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
+                ราคาเริ่มต้น
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Filters */}
+      <FlightFilters origins={origins} destinations={destinations} airlines={airlines} />
+
+      {/* Results */}
+      {flights.length === 0 ? (
+        <div className="glass-panel rounded-2xl p-12 text-center">
+          <span className="material-symbols-outlined text-[48px] text-on-surface-variant">
+            flight_land
+          </span>
+          <h3 className="font-display text-xl mt-3">ไม่พบเที่ยวบินตามเงื่อนไข</h3>
+          <p className="text-on-surface-variant mt-1">
+            ลองปรับตัวกรองหรือเปลี่ยนเส้นทาง
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {flights.map((f) => (
+            <FlightCard key={f.flight_id} flight={f} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
