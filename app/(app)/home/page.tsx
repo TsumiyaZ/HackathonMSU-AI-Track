@@ -455,15 +455,7 @@ export default function HomePageClient() {
                       className="relative h-32 w-full bg-cover bg-center"
                       style={{ backgroundImage: `url(${hotel.thumbnail_url})` }}
                     >
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
-                      <div className="absolute top-2 left-2 flex gap-1.5">
-                        <span className="bg-primary/95 text-[9px] font-label font-bold text-white px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
-                          <span className="material-symbols-outlined text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                            auto_awesome
-                          </span>
-                          AI แนะนำ
-                        </span>
-                      </div>
+                      
                       <div className="absolute bottom-2 right-2">
                         <span className="bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-md font-label text-[10px] text-white">
                           ว่าง {hotel.rooms_available} ห้อง

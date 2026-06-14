@@ -59,6 +59,7 @@ export default async function ExplorePage() {
       color: "text-blue-500",
       bg: "rgba(24, 119, 242, 0.08)",
       hoverBorder: "hover:border-blue-500/30",
+      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80",
     },
     {
       href: "/explore/flights",
@@ -68,6 +69,7 @@ export default async function ExplorePage() {
       color: "text-secondary",
       bg: "rgba(139, 92, 246, 0.08)",
       hoverBorder: "hover:border-secondary/30",
+      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80",
     },
     {
       href: "/explore/restaurants",
@@ -77,6 +79,7 @@ export default async function ExplorePage() {
       color: "text-emerald-500",
       bg: "rgba(16, 185, 129, 0.08)",
       hoverBorder: "hover:border-emerald-500/30",
+      image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
     },
   ];
 
@@ -141,9 +144,16 @@ export default async function ExplorePage() {
             <Link
               key={i}
               href={c.href}
-              className={`group glass-panel p-6 rounded-2xl border border-white/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${c.hoverBorder} flex flex-col justify-between`}
+              className={`group relative p-6 rounded-3xl border border-white/10 overflow-hidden min-h-[220px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5`}
             >
-              <div>
+              {/* Background Image with Dark Overlay */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105 z-0"
+                style={{ backgroundImage: `url(${c.image})` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/50 z-10" />
+
+              <div className="relative z-20">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 shrink-0`} style={{ backgroundColor: c.bg }}>
                   <span className={`material-symbols-outlined text-[24px] ${c.color}`} style={{ fontVariationSettings: "'FILL' 1" }}>
                     {c.icon}
@@ -152,11 +162,12 @@ export default async function ExplorePage() {
                 <h3 className="font-display text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
                   {c.title}
                 </h3>
-                <p className="text-xs text-on-surface-variant leading-relaxed mb-6">
+                <p className="text-xs text-on-surface-variant leading-relaxed">
                   {c.desc}
                 </p>
               </div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-primary group-hover:translate-x-1 transition-transform">
+
+              <div className="relative z-20 flex items-center gap-1.5 text-xs font-bold text-primary group-hover:translate-x-1 transition-transform mt-6">
                 <span>เริ่มค้นหา</span>
                 <span className="material-symbols-outlined text-[16px]">arrow_right_alt</span>
               </div>

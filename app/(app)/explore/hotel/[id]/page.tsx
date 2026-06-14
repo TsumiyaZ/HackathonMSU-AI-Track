@@ -94,10 +94,6 @@ export default async function HotelDetailPage({
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap gap-2">
-          <Chip variant="secondary">
-            <span className="material-symbols-outlined text-[14px]">auto_awesome</span>
-            AI แนะนำ
-          </Chip>
           {hotel.tags.map((t) => (
             <Chip key={t} variant="glass">{t}</Chip>
           ))}

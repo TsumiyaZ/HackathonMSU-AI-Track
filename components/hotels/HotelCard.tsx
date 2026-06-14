@@ -22,14 +22,7 @@ export function HotelCard({ hotel }: { hotel: Hotel }) {
           style={{ backgroundImage: `url(${hotel.thumbnail_url})` }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/10 to-transparent" />
-          <div className="absolute top-3 left-3 flex gap-2">
-            <Chip variant="secondary">
-              <span className="material-symbols-outlined text-[14px]">
-                auto_awesome
-              </span>
-              AI แนะนำ
-            </Chip>
-          </div>
+          
           <div className="absolute bottom-3 right-3">
             <span className="glass-panel px-3 py-1 rounded-full font-label text-xs text-on-surface">
               {hotel.rooms_available} ห้องว่าง
