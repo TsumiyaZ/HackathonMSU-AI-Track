@@ -9,7 +9,7 @@ const PUBLIC_ROUTES = [
 
 const STATIC_ASSETS = /\.(jpg|jpeg|png|gif|svg|css|js|ico|woff2?)$/;
 const PROTECTED_ROUTES = [
-  "/dashboard", "/bookings", "/chat", "/checkout", "/profile",
+  "/bookings", "/chat", "/checkout", "/profile",
 ];
 
 export function middleware(request: NextRequest) {

@@ -7,7 +7,6 @@ type Item = { href: string; label: string; icon: string };
 
 const PRIMARY: Item[] = [
   { href: "/home", label: "หน้าหลัก", icon: "home" },
-  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/plan", label: "วางแผน", icon: "auto_awesome" },
   { href: "/explore", label: "Explore", icon: "explore" },
   { href: "/bookings", label: "การจอง", icon: "event_available" },

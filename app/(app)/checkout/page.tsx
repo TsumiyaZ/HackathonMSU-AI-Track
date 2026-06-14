@@ -75,7 +75,7 @@ export default function CheckoutPage() {
               <Link href="/bookings" className="px-6 py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold">
                 ดูการจองของฉัน
               </Link>
-              <Link href="/dashboard" className="px-6 py-3 rounded-xl glass-panel font-label text-sm hover:text-primary transition-colors">
+              <Link href="/home" className="px-6 py-3 rounded-xl glass-panel font-label text-sm hover:text-primary transition-colors">
                 กลับหน้าแรก
               </Link>
             </div>
