@@ -14,6 +14,9 @@ export function HotelFilters({ cities, amenities }: Props) {
   const params = useSearchParams();
   const [, startTransition] = useTransition();
 
+  // Collapsible toggle state (hidden by default)
+  const [showFilters, setShowFilters] = useState(false);
+
   // Local state mirrors current query string so the inputs are controlled.
   const initial = useMemo(
     () => ({
@@ -106,9 +109,9 @@ export function HotelFilters({ cities, amenities }: Props) {
   const hasMoreAmenities = amenities.length > AMENITIES_LIMIT;
 
   return (
-    <div className="glass-panel-strong rounded-2xl p-5 flex flex-col gap-5">
-      {/* Search row */}
-      <div className="flex flex-col md:flex-row gap-3">
+    <div className="glass-panel-strong rounded-2xl p-5 flex flex-col gap-4">
+      {/* Search row with main search, sort, and toggle button */}
+      <div className="flex flex-col sm:flex-row gap-3">
         <label className="glass-input rounded-xl flex items-center gap-2 px-4 py-2.5 flex-1">
           <span className="material-symbols-outlined text-primary text-[20px]">
             search
@@ -121,121 +124,141 @@ export function HotelFilters({ cities, amenities }: Props) {
           />
         </label>
 
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          className="glass-input rounded-xl px-4 py-2.5 text-sm min-w-[180px] cursor-pointer"
-        >
-          <option value="">เรียงลำดับ</option>
-          <option value="price_asc">ราคา ต่ำ → สูง</option>
-          <option value="price_desc">ราคา สูง → ต่ำ</option>
-          <option value="rating_desc">คะแนนสูงสุด</option>
-          <option value="stars_desc">ดาวมากสุด</option>
-        </select>
-      </div>
-
-      {/* Filters grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="flex flex-col gap-1.5">
-          <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
-            เมือง
-          </span>
+        <div className="flex gap-2">
           <select
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            className="glass-input rounded-xl px-3 py-2 text-sm"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="glass-input rounded-xl px-4 py-2.5 text-sm min-w-[150px] cursor-pointer flex-1 sm:flex-initial"
           >
-            <option value="">ทั้งหมด</option>
-            {cities.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
+            <option value="">เรียงลำดับ</option>
+            <option value="price_asc">ราคา ต่ำ → สูง</option>
+            <option value="price_desc">ราคา สูง → ต่ำ</option>
+            <option value="rating_desc">คะแนนสูงสุด</option>
+            <option value="stars_desc">ดาวมากสุด</option>
           </select>
-        </div>
 
-        <div className="flex flex-col gap-1.5">
-          <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
-            ดาวขั้นต่ำ
-          </span>
-          <select
-            value={minStars}
-            onChange={(e) => setMinStars(e.target.value)}
-            className="glass-input rounded-xl px-3 py-2 text-sm"
+          <button
+            type="button"
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ${
+              showFilters
+                ? "bg-primary/10 border-primary/30 text-primary"
+                : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface-variant"
+            }`}
           >
-            <option value="">ไม่จำกัด</option>
-            {[3, 4, 5].map((s) => (
-              <option key={s} value={s}>
-                {s}★ ขึ้นไป
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-1.5 col-span-2">
-          <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
-            ราคาสูงสุด/คืน (THB)
-          </span>
-          <input
-            type="number"
-            inputMode="numeric"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            placeholder="เช่น 3000"
-            className="glass-input rounded-xl px-3 py-2 text-sm"
-          />
+            <span className="material-symbols-outlined text-[18px]">tune</span>
+            {showFilters ? "ซ่อนตัวกรอง" : "ตัวกรอง"}
+          </button>
         </div>
       </div>
 
-      {/* Amenities */}
-      {amenities.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-center">
-            <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
-              สิ่งอำนวยความสะดวก
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-2 items-center">
-            {displayedAmenities.map((a) => {
-              const active = selectedAmenities.includes(a);
-              return (
-                <button
-                  key={a}
-                  type="button"
-                  onClick={() => toggleAmenity(a)}
-                  className="focus:outline-none transition-transform hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <Chip variant={active ? "primary" : "outline"}>{a}</Chip>
-                </button>
-              );
-            })}
-            
-            {hasMoreAmenities && (
-              <button
-                type="button"
-                onClick={() => setShowAllAmenities(!showAllAmenities)}
-                className="text-[11px] font-label uppercase tracking-wider text-primary hover:text-primary/80 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors flex items-center gap-1"
+      {/* Collapsible filters block */}
+      {showFilters && (
+        <div className="flex flex-col gap-5 pt-4 border-t border-border/40 animate-fade-in">
+          {/* Filters grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
+                เมือง
+              </span>
+              <select
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="glass-input rounded-xl px-3 py-2 text-sm cursor-pointer"
               >
-                {showAllAmenities ? (
-                  <>แสดงน้อยลง <span className="material-symbols-outlined text-[14px]">expand_less</span></>
-                ) : (
-                  <>+ ดูเพิ่มอีก {amenities.length - AMENITIES_LIMIT} รายการ</>
+                <option value="">ทั้งหมด</option>
+                {cities.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
+                ดาวขั้นต่ำ
+              </span>
+              <select
+                value={minStars}
+                onChange={(e) => setMinStars(e.target.value)}
+                className="glass-input rounded-xl px-3 py-2 text-sm cursor-pointer"
+              >
+                <option value="">ไม่จำกัด</option>
+                {[3, 4, 5].map((s) => (
+                  <option key={s} value={s}>
+                    {s}★ ขึ้นไป
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-1.5 col-span-2">
+              <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
+                ราคาสูงสุด/คืน (THB)
+              </span>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                placeholder="เช่น 3000"
+                className="glass-input rounded-xl px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Amenities */}
+          {amenities.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <span className="font-label text-[11px] text-on-surface-variant uppercase tracking-wider">
+                  สิ่งอำนวยความสะดวก
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2 items-center">
+                {displayedAmenities.map((a) => {
+                  const active = selectedAmenities.includes(a);
+                  return (
+                    <button
+                      key={a}
+                      type="button"
+                      onClick={() => toggleAmenity(a)}
+                      className="focus:outline-none transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      <Chip variant={active ? "primary" : "outline"}>{a}</Chip>
+                    </button>
+                  );
+                })}
+                
+                {hasMoreAmenities && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllAmenities(!showAllAmenities)}
+                    className="text-[11px] font-label uppercase tracking-wider text-primary hover:text-primary/80 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors flex items-center gap-1"
+                  >
+                    {showAllAmenities ? (
+                      <>แสดงน้อยลง <span className="material-symbols-outlined text-[14px]">expand_less</span></>
+                    ) : (
+                      <>+ ดูเพิ่มอีก {amenities.length - AMENITIES_LIMIT} รายการ</>
+                    )}
+                  </button>
                 )}
-              </button>
-            )}
+              </div>
+            </div>
+          )}
+
+          {/* Action Row */}
+          <div className="flex flex-wrap gap-3 justify-end pt-2 border-t border-border">
+            <button
+              onClick={reset}
+              className="px-5 py-2 rounded-xl bg-surface border border-border text-on-surface font-label text-sm hover:bg-surface-hover hover:border-primary/50 transition-all shadow-sm"
+            >
+              รีเซ็ต
+            </button>
           </div>
         </div>
       )}
-
-      {/* Actions */}
-      <div className="flex flex-wrap gap-3 justify-end pt-2 border-t border-border">
-        <button
-          onClick={reset}
-          className="px-5 py-2 rounded-xl bg-surface border border-border text-on-surface font-label text-sm hover:bg-surface-hover hover:border-primary/50 transition-all shadow-sm"
-        >
-          รีเซ็ต
-        </button>
-      </div>
     </div>
   );
 }
