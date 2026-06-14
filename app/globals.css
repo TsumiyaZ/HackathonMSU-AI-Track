@@ -5,29 +5,29 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-on-background: var(--foreground);
-  
+
   --color-surface: var(--surface);
   --color-surface-dim: var(--surface-dim);
   --color-surface-bright: var(--surface-bright);
   --color-surface-hover: var(--surface-hover);
   --color-surface-variant: var(--surface-variant);
-  
+
   --color-surface-container-lowest: var(--surface-container-lowest);
   --color-surface-container-low: var(--surface-container-low);
   --color-surface-container: var(--surface-container);
   --color-surface-container-high: var(--surface-container-high);
   --color-surface-container-highest: var(--surface-container-highest);
-  
+
   --color-on-surface: var(--on-surface);
   --color-on-surface-variant: var(--on-surface-variant);
   --color-inverse-surface: var(--inverse-surface);
   --color-inverse-on-surface: var(--inverse-on-surface);
-  
+
   --color-primary: var(--primary);
   --color-on-primary: var(--on-primary);
   --color-primary-container: var(--primary-container);
   --color-on-primary-container: var(--on-primary-container);
-  
+
   --color-secondary: var(--secondary);
   --color-on-secondary: var(--on-secondary);
   --color-secondary-container: var(--secondary-container);
@@ -163,27 +163,32 @@ body {
 }
 
 @layer utilities {
+
   /* Facebook-style: solid card, no blur */
   .glass {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     box-shadow: 0 2px 4px var(--glass-shadow), 0 0 0 1px var(--glass-border);
   }
+
   .glass-panel {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     box-shadow: 0 2px 8px var(--glass-shadow);
   }
+
   .glass-panel-strong {
     background: var(--glass-bg-strong);
     border: 1px solid var(--glass-border-strong);
     box-shadow: 0 4px 12px var(--glass-shadow);
   }
+
   .glass-input {
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--foreground);
   }
+
   .glass-input:focus,
   .glass-input:focus-within {
     border-color: var(--primary);
@@ -191,6 +196,7 @@ body {
     box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.20);
     outline: none;
   }
+
   /* Facebook-style solid button — no gradient */
   .btn-primary-gradient {
     background: var(--primary);
@@ -200,37 +206,46 @@ body {
     font-weight: 600;
     letter-spacing: 0.01em;
   }
+
   .btn-primary-gradient:hover {
     background: #166fe5;
     box-shadow: none;
     transform: none;
     filter: brightness(0.95);
   }
+
   .dark .btn-primary-gradient:hover {
     background: #1a6ed8;
   }
+
   /* text-gradient replaced with solid primary for clarity */
   .text-gradient {
     color: var(--primary);
     -webkit-text-fill-color: var(--primary);
     background: none;
   }
+
   /* Facebook flat background — no dot grid */
   .grid-bg {
     background: var(--background);
   }
+
   .dark .grid-bg {
     background: var(--background);
   }
+
   .ai-glow {
     box-shadow: 0 0 30px rgba(59, 130, 246, 0.22);
   }
+
   .ai-glow-strong {
     box-shadow: 0 0 60px rgba(59, 130, 246, 0.35);
   }
+
   .scrollbar-hidden::-webkit-scrollbar {
     display: none;
   }
+
   .scrollbar-hidden {
     scrollbar-width: none;
   }
@@ -338,22 +353,22 @@ body {
     padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
 
-  
+
   @keyframes shimmer {
     0% {
       background-position: -200% 0;
     }
+
     100% {
       background-position: 200% 0;
     }
   }
+
   .skeleton-shimmer {
-    background: linear-gradient(
-      90deg,
-      var(--surface-variant) 25%,
-      var(--surface-hover) 50%,
-      var(--surface-variant) 75%
-    );
+    background: linear-gradient(90deg,
+        var(--surface-variant) 25%,
+        var(--surface-hover) 50%,
+        var(--surface-variant) 75%);
     background-size: 200% 100%;
     animation: shimmer 2s infinite linear;
   }
@@ -364,38 +379,90 @@ body {
 }
 
 @keyframes slide-down {
-  from { opacity: 0; transform: translateY(-20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ===================== */
 /* Splash Screen Styles  */
 /* ===================== */
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(-8deg); }
-  50%       { transform: translateY(-18px) rotate(-6deg); }
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(-8deg);
+  }
+
+  50% {
+    transform: translateY(-18px) rotate(-6deg);
+  }
 }
+
 @keyframes ripple {
-  0%   { transform: scale(1);   opacity: 0.6; }
-  100% { transform: scale(2.4); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }
+
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .splash-airplane {
   animation: float 4s ease-in-out infinite;
-  filter: drop-shadow(0 24px 40px rgba(0,0,0,0.30));
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.30));
 }
-.splash-fade-1 { animation: fade-up 0.7s ease both; animation-delay: 0.1s; }
-.splash-fade-2 { animation: fade-up 0.7s ease both; animation-delay: 0.3s; }
-.splash-fade-3 { animation: fade-up 0.7s ease both; animation-delay: 0.5s; }
-.splash-fade-4 { animation: fade-up 0.7s ease both; animation-delay: 0.7s; }
+
+.splash-fade-1 {
+  animation: fade-up 0.7s ease both;
+  animation-delay: 0.1s;
+}
+
+.splash-fade-2 {
+  animation: fade-up 0.7s ease both;
+  animation-delay: 0.3s;
+}
+
+.splash-fade-3 {
+  animation: fade-up 0.7s ease both;
+  animation-delay: 0.5s;
+}
+
+.splash-fade-4 {
+  animation: fade-up 0.7s ease both;
+  animation-delay: 0.7s;
+}
 
 .ripple-btn::before,
 .ripple-btn::after {
@@ -403,17 +470,18 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  border: 2px solid rgba(255,255,255,0.5);
+  border: 2px solid rgba(255, 255, 255, 0.5);
   animation: ripple 2s ease-out infinite;
 }
+
 .ripple-btn::after {
   animation-delay: 1s;
 }
 
 .world-map-bg {
   background-image:
-    radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+    radial-gradient(circle, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
   background-size: 30px 30px, 15px 15px;
   background-position: 0 0, 15px 15px;
 }
