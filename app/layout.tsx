@@ -37,20 +37,18 @@ export default function RootLayout({
   return (
     <html lang="th" className={`${inter.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
         />
       </head>
       <body className="min-h-full bg-background text-on-surface">
-         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="tickethub-theme">
-            {children}
-         </ThemeProvider>
-         <script
-           dangerouslySetInnerHTML={{
-             __html: `
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="tickethub-theme">
+          {children}
+        </ThemeProvider>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
                if ('serviceWorker' in navigator) {
                  window.addEventListener('load', function() {
                    navigator.serviceWorker.register('/sw.js').then(function(registration) {
@@ -61,8 +59,8 @@ export default function RootLayout({
                  });
                }
              `,
-           }}
-         />
+          }}
+        />
       </body>
     </html>
   );
