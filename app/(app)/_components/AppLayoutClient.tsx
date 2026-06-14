@@ -1,15 +1,12 @@
 "use client";
 
 import { useState, ReactNode } from "react";
-import { usePathname } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { BottomNav } from "./BottomNav";
 
 export function AppLayoutClient({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-  const pathname = usePathname();
 
   return (
     <div className="min-h-screen bg-background text-on-surface grid-bg">

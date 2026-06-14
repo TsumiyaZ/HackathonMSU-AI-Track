@@ -4,6 +4,7 @@ import "./globals.css";
 import "./overrides.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
+import { TravelBuddyMount } from "@/components/travel-buddy/TravelBuddyMount";
 
 const anuphan = Anuphan({
   variable: "--font-anuphan",
@@ -41,6 +42,7 @@ export default function RootLayout({
       <body className="min-h-full bg-background text-on-surface">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="tickethub-theme">
           {children}
+          <TravelBuddyMount />
           <ServiceWorkerRegistration />
         </ThemeProvider>
       </body>
