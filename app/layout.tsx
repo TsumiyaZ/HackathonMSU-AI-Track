@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -15,8 +15,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Trip Architect",
+  title: "TicketHub",
   description: "Navigating the Nebula — Smart Itinerary & Booking Synergy Platform.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "TicketHub",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1877f2",
 };
 
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -36,6 +46,21 @@ export default function RootLayout({
          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="tickethub-theme">
             {children}
          </ThemeProvider>
+         <script
+           dangerouslySetInnerHTML={{
+             __html: `
+               if ('serviceWorker' in navigator) {
+                 window.addEventListener('load', function() {
+                   navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                   }, function(err) {
+                     console.log('ServiceWorker registration failed: ', err);
+                   });
+                 });
+               }
+             `,
+           }}
+         />
       </body>
     </html>
   );

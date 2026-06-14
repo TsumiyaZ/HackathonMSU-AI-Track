@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { Hotel } from "@/lib/types";
 
@@ -194,12 +195,17 @@ export default function HomePage() {
             key={i}
             className="absolute inset-0 transition-opacity duration-1000"
             style={{
-              backgroundImage: `url(${s.src})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
               opacity: loaded && slide === i ? 1 : 0,
             }}
-          />
+          >
+            <Image
+              src={s.src}
+              alt={s.label}
+              fill
+              className="object-cover"
+              priority={i === 0}
+            />
+          </div>
         ))}
 
         {/* Gradient overlays — top-to-bottom + bottom strong */}
@@ -220,7 +226,7 @@ export default function HomePage() {
               <button
                 key={i}
                 onClick={() => setSlide(i)}
-                className="rounded-full transition-all duration-300"
+                className={`py-2 px-1 rounded-lg text-xs font-bold border transition-all press-scale duration-300`}
                 style={{
                   width: slide === i ? 20 : 6,
                   height: 6,
@@ -247,17 +253,17 @@ export default function HomePage() {
           {/* CTAs */}
           <div className="flex gap-2">
             <Link
-              href="/plan"
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-label text-sm font-bold text-white transition-all"
-              style={{ background: "#1877f2" }}
-            >
+                href="/plan"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-label text-sm font-bold text-white transition-all hover-lift press-scale"
+                style={{ background: "#1877f2" }}
+              >
               <span className="material-symbols-outlined text-[16px]"
                 style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
               วางแผนทริป AI
             </Link>
             <Link
               href="/explore/hotels"
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-label text-sm font-bold text-white transition-all"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-label text-sm font-bold text-white transition-all hover-lift press-scale"
               style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.30)" }}
             >
               <span className="material-symbols-outlined text-[16px]"
@@ -306,7 +312,7 @@ export default function HomePage() {
             
             <Link
               href="/plan"
-              className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-label text-xs font-bold text-white transition-all shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:scale-[1.02] shrink-0"
+              className="btn-primary-gradient px-5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow transition-all disabled:opacity-40 disabled:pointer-events-none hover-lift press-scale"
               style={{ background: "#1877f2" }}
             >
               <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -327,7 +333,7 @@ export default function HomePage() {
             {/* Hotel Booking Card */}
             <Link
               href="/explore/hotels"
-              className="relative rounded-2xl overflow-hidden flex items-end group transition-transform hover:scale-[1.01]"
+              className="relative rounded-2xl overflow-hidden flex items-end group transition-transform hover:scale-[1.01] hover-lift press-scale"
               style={{ minHeight: 140 }}
             >
               {/* BG image */}
@@ -363,7 +369,7 @@ export default function HomePage() {
             {/* Flight Ticket Card */}
             <Link
               href="/explore/flights"
-              className="relative rounded-2xl overflow-hidden flex items-end group transition-transform hover:scale-[1.01]"
+              className="relative rounded-2xl overflow-hidden flex items-end group transition-transform hover:scale-[1.01] hover-lift press-scale"
               style={{ minHeight: 140 }}
             >
               {/* BG image */}
@@ -404,20 +410,20 @@ export default function HomePage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-secondary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  star
+                <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  auto_awesome
                 </span>
-                <h2 className="font-display text-lg font-bold text-on-surface tracking-tight">
-                  โรงแรมแนะนำสำหรับคุณ
+                <h2 className="font-display text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary tracking-tight">
+                  AI แนะนำที่พักสำหรับคุณ
                 </h2>
               </div>
               <p className="text-xs text-on-surface-variant">
-                คัดสรรที่พักยอดนิยม เรตติ้งดีที่สุดเพื่อคุณ
+                วิเคราะห์และคัดสรรที่พักที่ตรงกับสไตล์การเดินทางของคุณโดยระบบ AI
               </p>
             </div>
             <Link 
               href="/explore/hotels" 
-              className="text-xs font-bold text-primary flex items-center gap-1 hover:underline shrink-0"
+              className="text-xs font-bold text-primary flex items-center gap-1 hover:underline shrink-0 hover-lift press-scale"
             >
               ดูทั้งหมด
               <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
@@ -441,9 +447,9 @@ export default function HomePage() {
                 <Link
                   key={hotel.id}
                   href={`/explore/hotel/${hotel.id}`}
-                  className="group flex flex-col focus:outline-none"
+                  className="group hover-lift press-scale"
                 >
-                  <div className="glass-panel overflow-hidden rounded-2xl h-full flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30">
+                  <div className="relative rounded-2xl overflow-hidden flex items-end group transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30">
                     <div
                       className="relative h-32 w-full bg-cover bg-center"
                       style={{ backgroundImage: `url(${hotel.thumbnail_url})` }}
@@ -459,7 +465,7 @@ export default function HomePage() {
                     <div className="p-3 flex flex-col gap-2 flex-1">
                       <div>
                         <div className="flex items-center justify-between gap-1">
-                          <span className="text-[10px] text-primary font-bold flex items-center gap-0.5">
+                          <span className="text-xs text-primary font-bold hover:underline flex items-center gap-1 shrink-0 hover-lift press-scale">
                             <span className="material-symbols-outlined text-[11px]">location_on</span>
                             {hotel.city}
                           </span>
@@ -508,7 +514,7 @@ export default function HomePage() {
           <div className="flex flex-col gap-3">
             {tips.map((tip, i) => (
               <div key={i}
-                className="glass-panel rounded-xl p-4 flex items-start gap-4 border border-border">
+                className="glass-panel p-4 rounded-2xl flex flex-col justify-between gap-3 border border-white/5 hover:border-emerald-500/20 transition-all hover-lift press-scale">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                   style={{ background: "rgba(24,119,242,0.08)" }}>
                   <span className={`material-symbols-outlined text-[20px] ${tip.color}`}

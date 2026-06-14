@@ -16,6 +16,7 @@ export default function CheckoutPage() {
   const [finalTrip, setFinalTrip] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [bookingId, setBookingId] = useState<string>("");
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   if (!currentTrip && step !== "success") {
     return (
@@ -91,13 +92,13 @@ export default function CheckoutPage() {
             <div className="flex flex-col sm:flex-row gap-3 mt-6 md:mt-8 justify-center">
               <Link
                 href="/bookings"
-                className="px-6 py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold text-center"
+                className="px-6 py-3 rounded-xl btn-primary-gradient font-label text-sm font-bold text-center hover-lift press-scale"
               >
                 ดูการจองของฉัน
               </Link>
               <Link
                 href="/home"
-                className="px-6 py-3 rounded-xl glass-panel font-label text-sm hover:text-primary transition-colors text-center"
+                className="px-6 py-3 rounded-xl glass-panel font-label text-sm hover:text-primary transition-colors text-center hover-lift press-scale"
               >
                 กลับหน้าแรก
               </Link>
@@ -116,14 +117,23 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Back link */}
-      <Link
-        href="/plan"
-        className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors w-fit mb-4 md:mb-6 text-sm md:text-base"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        กลับไปแก้ไขทริป
-      </Link>
+      {/* Top Actions */}
+      <div className="flex items-center justify-between mb-4 md:mb-6">
+        <Link
+          href="/plan"
+          className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors text-sm md:text-base hover-lift press-scale"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          กลับไปแก้ไขทริป
+        </Link>
+        <button
+          onClick={() => setShowCancelModal(true)}
+          className="flex items-center gap-2 text-red-500 hover:text-red-400 hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-all duration-200 text-sm md:text-base font-medium hover-lift press-scale"
+        >
+          <span className="material-symbols-outlined text-[18px]">delete</span>
+          ยกเลิกทริปนี้
+        </button>
+      </div>
 
       {/* Main content — single column on mobile, 5-col grid on lg */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-6">
@@ -200,7 +210,7 @@ export default function CheckoutPage() {
             {step === "review" && (
               <button
                 onClick={() => setStep("payment")}
-                className="w-full mt-4 md:mt-6 py-3 md:py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform"
+                className="w-full mt-4 md:mt-6 py-3 md:py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform hover-lift press-scale"
               >
                 <CreditCard className="w-4 h-4 md:w-5 md:h-5" />
                 ดำเนินการชำระเงิน
@@ -214,7 +224,7 @@ export default function CheckoutPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setPaymentMethod("card")}
-                    className={`flex-1 p-2.5 md:p-3 rounded-xl border text-center text-xs md:text-sm transition-all ${paymentMethod === "card"
+                    className={`flex-1 p-2.5 md:p-3 rounded-xl border text-center text-xs md:text-sm transition-all hover-lift press-scale ${paymentMethod === "card"
                       ? "bg-primary/15 border-primary text-primary"
                       : "bg-white/5 border-white/10 text-on-surface-variant"
                       }`}
@@ -224,7 +234,7 @@ export default function CheckoutPage() {
                   </button>
                   <button
                     onClick={() => setPaymentMethod("qr")}
-                    className={`flex-1 p-2.5 md:p-3 rounded-xl border text-center text-xs md:text-sm transition-all ${paymentMethod === "qr"
+                    className={`flex-1 p-2.5 md:p-3 rounded-xl border text-center text-xs md:text-sm transition-all hover-lift press-scale ${paymentMethod === "qr"
                       ? "bg-primary/15 border-primary text-primary"
                       : "bg-white/5 border-white/10 text-on-surface-variant"
                       }`}
@@ -284,7 +294,7 @@ export default function CheckoutPage() {
                 <button
                   onClick={handleConfirm}
                   disabled={loading}
-                  className="w-full py-3 md:py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-60"
+                  className="w-full py-3 md:py-4 rounded-xl btn-primary-gradient font-label text-sm font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-60 hover-lift press-scale"
                 >
                   {loading ? (
                     <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
@@ -299,6 +309,39 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      {/* Custom Cancel Confirmation Modal */}
+      {showCancelModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 animate-[fade-in_0.2s_ease-out]">
+          <div className="bg-surface border border-white/10 p-6 md:p-8 rounded-3xl w-full max-w-sm shadow-[0_20px_60px_rgba(0,0,0,0.5)] text-center animate-[slide-up_0.3s_ease-out]">
+            <div className="w-16 h-16 mx-auto bg-red-500/20 border border-red-500/30 rounded-full flex items-center justify-center mb-5 shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+              <span className="material-symbols-outlined text-red-500 text-[32px]">delete_forever</span>
+            </div>
+            <h3 className="font-display text-xl font-bold text-on-surface mb-2">ยกเลิกทริปนี้?</h3>
+            <p className="text-on-surface-variant text-sm mb-6 leading-relaxed">
+              ข้อมูลแผนการเดินทางของคุณในทริปนี้จะถูกลบทั้งหมดและไม่สามารถกู้คืนได้ คุณแน่ใจหรือไม่?
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCancelModal(false)}
+                className="flex-1 py-3 rounded-xl border border-white/10 font-bold text-on-surface hover:bg-white/5 transition-colors"
+              >
+                ย้อนกลับ
+              </button>
+              <button
+                onClick={() => {
+                  setShowCancelModal(false);
+                  useTripStore.getState().setTrip(null);
+                  router.push("/checkout");
+                }}
+                className="flex-1 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold shadow-[0_8px_20px_rgba(239,68,68,0.25)] transition-all active:scale-95"
+              >
+                ยืนยันการยกเลิก
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -13,19 +13,66 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
   const [editingHotel, setEditingHotel] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<any>({});
   const [searchHotel, setSearchHotel] = useState('');
+  const [notification, setNotification] = useState<{ message: string, amount: number, id: number } | null>(null);
+
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => setNotification(null), 4500);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   useEffect(() => {
     Promise.all([
       fetch('/api/admin/stats').then(r => r.json()),
       fetch('/api/admin/hotels').then(r => r.json()),
       fetch('/api/admin/users').then(r => r.json()),
-    ]).then(([s, h, u]) => { 
-      setStats(s); 
-      setAllHotels(h); 
-      setAllUsers(u); 
+    ]).then(([s, h, u]) => {
+      setStats(s);
+      setAllHotels(h);
+      setAllUsers(u);
     }).catch(err => {
       console.error("Failed to load admin data:", err);
     }).finally(() => setLoading(false));
+  }, []);
+
+  // Real-time booking simulation (Hackathon Bonus)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const generatedRevenue = Math.floor(Math.random() * 12000) + 3000;
+      const hotels = ["H-BKK-01", "H-CNX-02", "H-HKT-03", "H-KBV-04", "H-SMU-05"];
+      const hotelId = hotels[Math.floor(Math.random() * hotels.length)];
+
+      setNotification({
+        message: `มีรายการจองที่พัก ${hotelId}`,
+        amount: generatedRevenue,
+        id: Date.now()
+      });
+
+      setStats((prev: any) => {
+        if (!prev) return prev;
+
+        const newTotalRevenue = prev.totalRevenue + generatedRevenue;
+        const newBookings = prev.bookings + 1;
+
+        const newBooking = {
+          id: `SIM-${Math.floor(Math.random() * 100000)}`,
+          hotel_id: hotelId,
+          nights: Math.floor(Math.random() * 4) + 1,
+          total: generatedRevenue,
+          status: 'CONFIRMED'
+        };
+
+        return {
+          ...prev,
+          totalRevenue: newTotalRevenue,
+          revenue: newTotalRevenue, // Update both if needed
+          bookings: newBookings,
+          recentBookings: [newBooking, ...(prev.recentBookings || [])].slice(0, 10)
+        };
+      });
+    }, 5000); // Every 12 seconds
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -93,9 +140,8 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
           { key: 'users' as const, label: 'จัดการผู้ใช้', icon: 'group' },
         ].map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-1.5 ${
-              tab === t.key ? 'bg-amber-500/20 text-amber-400 shadow-sm' : 'text-on-surface-variant hover:text-on-surface'
-            }`}>
+            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-1.5 ${tab === t.key ? 'bg-amber-500/20 text-amber-400 shadow-sm' : 'text-on-surface-variant hover:text-on-surface'
+              }`}>
             <span className="material-symbols-outlined text-[18px]">{t.icon}</span>
             {t.label}
           </button>
@@ -184,7 +230,7 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
                       <span className="text-[11px] text-on-surface-variant w-20 shrink-0">{r.range}</span>
                       <div className="flex-1 h-5 rounded-full bg-white/5 overflow-hidden">
                         <div className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500"
-                           style={{ width: `${Math.max(pct, 3)}%` }} />
+                          style={{ width: `${Math.max(pct, 3)}%` }} />
                       </div>
                       <span className="text-xs font-bold w-8 text-right">{r.count}</span>
                     </div>
@@ -211,7 +257,7 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
                       <span className="text-xs text-on-surface-variant flex-1 truncate">{loc.name}</span>
                       <div className="w-32 h-4 rounded-full bg-white/5 overflow-hidden">
                         <div className="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-500"
-                           style={{ width: `${Math.max(pct, 3)}%` }} />
+                          style={{ width: `${Math.max(pct, 3)}%` }} />
                       </div>
                       <span className="text-xs font-bold w-6 text-right">{loc.count}</span>
                     </div>
@@ -230,23 +276,21 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
                 {stats.recentBookings?.slice(0, 6).map((b: any) => (
                   <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                        b.status === 'CONFIRMED' ? 'bg-emerald-400' :
+                      <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${b.status === 'CONFIRMED' ? 'bg-emerald-400' :
                         b.status === 'CHECKED_IN' ? 'bg-blue-400' :
-                        b.status === 'CHECKED_OUT' ? 'bg-violet-400' :
-                        b.status === 'CANCELLED' ? 'bg-red-400' : 'bg-amber-400'
-                      }`} />
+                          b.status === 'CHECKED_OUT' ? 'bg-violet-400' :
+                            b.status === 'CANCELLED' ? 'bg-red-400' : 'bg-amber-400'
+                        }`} />
                       <div className="min-w-0">
                         <p className="text-xs font-medium truncate">{b.hotel_id}</p>
                         <p className="text-[10px] text-on-surface-variant">{b.nights} คืน · ฿{(b.total || 0).toLocaleString()}</p>
                       </div>
                     </div>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
-                      b.status === 'CONFIRMED' ? 'bg-emerald-500/10 text-emerald-400' :
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${b.status === 'CONFIRMED' ? 'bg-emerald-500/10 text-emerald-400' :
                       b.status === 'CHECKED_IN' ? 'bg-blue-500/10 text-blue-400' :
-                      b.status === 'CHECKED_OUT' ? 'bg-violet-500/10 text-violet-400' :
-                      b.status === 'CANCELLED' ? 'bg-red-500/10 text-red-400' : 'bg-amber-500/10 text-amber-400'
-                    }`}>{b.status === 'CHECKED_IN' ? 'กำลังพัก' : b.status === 'CHECKED_OUT' ? 'เช็คเอาท์แล้ว' : b.status === 'CANCELLED' ? 'ยกเลิก' : b.status === 'CONFIRMED' ? 'ยืนยันแล้ว' : 'รอดำเนินการ'}</span>
+                        b.status === 'CHECKED_OUT' ? 'bg-violet-500/10 text-violet-400' :
+                          b.status === 'CANCELLED' ? 'bg-red-500/10 text-red-400' : 'bg-amber-500/10 text-amber-400'
+                      }`}>{b.status === 'CHECKED_IN' ? 'กำลังพัก' : b.status === 'CHECKED_OUT' ? 'เช็คเอาท์แล้ว' : b.status === 'CANCELLED' ? 'ยกเลิก' : b.status === 'CONFIRMED' ? 'ยืนยันแล้ว' : 'รอดำเนินการ'}</span>
                   </div>
                 ))}
                 {(!stats.recentBookings || stats.recentBookings.length === 0) && (
@@ -317,9 +361,8 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
                           <td className="p-3 text-on-surface-variant">{h.location}</td>
                           <td className="p-3">฿{h.price_per_night?.toLocaleString()}</td>
                           <td className="p-3">
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                              h.rating >= 4 ? 'bg-emerald-500/20 text-emerald-400' : h.rating >= 3 ? 'bg-amber-500/20 text-amber-400' : 'bg-red-500/20 text-red-400'
-                            }`}>{h.rating}</span>
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${h.rating >= 4 ? 'bg-emerald-500/20 text-emerald-400' : h.rating >= 3 ? 'bg-amber-500/20 text-amber-400' : 'bg-red-500/20 text-red-400'
+                              }`}>{h.rating}</span>
                           </td>
                           <td className="p-3 text-right">
                             <button onClick={() => startEdit(h)} className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-bold hover:bg-amber-500/20 mr-1"><span className="material-symbols-outlined text-[14px]">edit</span></button>
@@ -360,11 +403,10 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
                     <td className="p-3 text-on-surface-variant">{u.email}</td>
                     <td className="p-3">{u.loyalty_points?.toLocaleString()}</td>
                     <td className="p-3">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                        u.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${u.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
                         u.role === 'VIP' ? 'bg-purple-500/20 text-purple-400' :
-                        'bg-blue-500/10 text-blue-400'
-                      }`}>{u.role}</span>
+                          'bg-blue-500/10 text-blue-400'
+                        }`}>{u.role}</span>
                     </td>
                     <td className="p-3 text-right">
                       {u.role !== 'ADMIN' && (
@@ -379,6 +421,26 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {notification && (
+        <div className="fixed bottom-6 right-6 z-50 animate-[slide-up_0.4s_ease-out]">
+          <div className="glass-panel-strong border border-emerald-500/30 rounded-2xl p-4 shadow-[0_10px_40px_rgba(16,185,129,0.25)] flex items-center gap-4 bg-surface/95 backdrop-blur-xl">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+              <span className="material-symbols-outlined text-emerald-500 text-[24px]">payments</span>
+            </div>
+            <div className="pr-2">
+              <p className="text-xs text-on-surface-variant font-medium mb-0.5">{notification.message}</p>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">สำเร็จ</span>
+                <p className="font-display font-black text-emerald-500 text-lg leading-tight">
+                  +฿{notification.amount.toLocaleString()}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}

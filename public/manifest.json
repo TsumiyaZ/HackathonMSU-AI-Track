@@ -1,0 +1,23 @@
+{
+  "name": "TicketHub AI Trip Architect",
+  "short_name": "TicketHub",
+  "description": "Navigating the Nebula — Smart Itinerary & Booking Synergy Platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1877f2",
+  "icons": [
+    {
+      "src": "/globe.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/globe.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -147,7 +147,7 @@ export default async function ExplorePage() {
             <Link
               key={i}
               href={c.href}
-              className="relative rounded-2xl overflow-hidden flex items-end group transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 border border-white/10"
+              className="relative rounded-2xl overflow-hidden flex items-end group transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 border border-white/10 hover-lift press-scale"
               style={{ minHeight: 160 }}
             >
               {/* BG image */}
@@ -193,7 +193,7 @@ export default async function ExplorePage() {
                   <h2 className="font-display text-xl font-bold text-on-surface">โรงแรมแนะนำระดับ 5 ดาว</h2>
                   <p className="text-xs text-on-surface-variant">คัดสรรโรงแรมยอดนิยมที่มีรีวิวสูงสุดจากผู้เข้าพัก</p>
                 </div>
-                <Link href="/explore/hotels" className="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                <Link href="/explore/hotels" className="text-xs text-primary font-bold hover:underline flex items-center gap-1 hover-lift press-scale">
                   ดูทั้งหมด <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                 </Link>
               </div>
@@ -203,7 +203,7 @@ export default async function ExplorePage() {
                   <Link
                     key={hotel.id}
                     href={`/explore/hotel/${hotel.id}`}
-                    className="group flex flex-col focus:outline-none"
+                    className="group flex flex-col focus:outline-none hover-lift press-scale"
                   >
                     <div className="glass-panel overflow-hidden rounded-2xl h-full flex flex-col transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35">
                       <div
@@ -256,7 +256,7 @@ export default async function ExplorePage() {
                   <h2 className="font-display text-xl font-bold text-on-surface">ร้านอาหารแนะนำยอดฮิต</h2>
                   <p className="text-xs text-on-surface-variant font-label text-on-surface-variant/80">ลิ้มลองความอร่อยกับร้านเด็ด คาเฟ่ดังที่มีรีวิวดีเยี่ยม</p>
                 </div>
-                <Link href="/explore/restaurants" className="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                <Link href="/explore/restaurants" className="text-xs text-primary font-bold hover:underline flex items-center gap-1 hover-lift press-scale">
                   ดูทั้งหมด <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                 </Link>
               </div>
@@ -300,7 +300,7 @@ export default async function ExplorePage() {
                   <h2 className="font-display text-xl font-bold text-on-surface">เที่ยวบินราคาสุดคุ้ม</h2>
                   <p className="text-xs text-on-surface-variant">จองเที่ยวบินราคาสบายกระเป๋า</p>
                 </div>
-                <Link href="/explore/flights" className="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                <Link href="/explore/flights" className="text-xs text-primary font-bold hover:underline flex items-center gap-1 hover-lift press-scale">
                   ดูทั้งหมด <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                 </Link>
               </div>
@@ -310,7 +310,7 @@ export default async function ExplorePage() {
                   <Link
                     key={flight.flight_id}
                     href={`/explore/flight/${flight.flight_id}`}
-                    className="group"
+                    className="group hover-lift press-scale"
                   >
                     <div className="glass-panel p-4 rounded-xl border border-white/5 hover:border-secondary/30 transition-all flex flex-col gap-2.5">
                       <div className="flex items-center justify-between text-[10px] text-on-surface-variant">

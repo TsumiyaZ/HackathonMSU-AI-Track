@@ -12,7 +12,7 @@ const PROTECTED_ROUTES = [
   "/bookings", "/chat", "/checkout", "/profile", "/admin",
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (STATIC_ASSETS.test(pathname)) return NextResponse.next();

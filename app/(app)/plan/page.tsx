@@ -151,7 +151,7 @@ export default function PlanPage() {
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg border transition-all ${
+              className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg border transition-all hover-lift press-scale ${
                 showAdvanced
                   ? "bg-primary/10 border-primary/30 text-primary"
                   : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface-variant"
@@ -165,7 +165,7 @@ export default function PlanPage() {
               type="button"
               onClick={() => handleSubmit()}
               disabled={loading || !promptInput.trim()}
-              className="btn-primary-gradient px-5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow transition-all disabled:opacity-40 disabled:pointer-events-none"
+              className="btn-primary-gradient px-5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow transition-all disabled:opacity-40 disabled:pointer-events-none hover-lift press-scale"
             >
               {loading ? (
                 <>
@@ -199,7 +199,7 @@ export default function PlanPage() {
                       key={city}
                       type="button"
                       onClick={() => setSelectedCity(city)}
-                      className={`py-2 px-1 rounded-lg text-xs font-bold border transition-all ${
+                      className={`py-2 px-1 rounded-lg text-xs font-bold border transition-all hover-lift press-scale ${
                         selectedCity === city
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
@@ -226,7 +226,7 @@ export default function PlanPage() {
                       key={d}
                       type="button"
                       onClick={() => setDays(d)}
-                      className={`py-2 rounded-lg text-xs font-bold border transition-all ${
+                      className={`py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale ${
                         days === d
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
@@ -257,7 +257,7 @@ export default function PlanPage() {
                       key={b.id}
                       type="button"
                       onClick={() => setBudget(b.id)}
-                      className={`py-2 rounded-lg text-xs font-bold border transition-all ${
+                      className={`py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale ${
                         budget === b.id
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
@@ -287,7 +287,7 @@ export default function PlanPage() {
                       key={t.id}
                       type="button"
                       onClick={() => setTheme(t.id)}
-                      className={`py-2 rounded-lg text-[11px] font-bold border transition-all ${
+                      className={`py-2 rounded-lg text-[11px] font-bold border transition-all hover-lift press-scale ${
                         theme === t.id
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"

@@ -174,6 +174,23 @@ body {
 }
 
 @layer utilities {
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  .press-scale {
+    transition: transform 0.1s ease;
+  }
+  .press-scale:active {
+    transform: scale(0.97);
+  }
+
+  .card-reveal {
+    animation: fade-up 0.5s ease-out forwards;
+  }
 
   /* Facebook-style: solid card, no blur */
   .glass {

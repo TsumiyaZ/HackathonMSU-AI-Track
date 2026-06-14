@@ -80,7 +80,7 @@ export function AuthForm({ mode, redirectTo = "/" }: { mode: Mode; redirectTo?: 
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="เช่น สมชาย ใจดี"
-              className="glass-input rounded-xl px-4 py-3.5 pl-11 text-sm outline-none transition-all duration-200 focus:-translate-y-px focus:shadow-[0_10px_24px_rgba(22,102,219,0.12)]"
+              className="w-full glass-input rounded-xl px-4 py-3.5 pl-11 text-sm outline-none transition-all duration-200 focus:-translate-y-px focus:shadow-[0_10px_24px_rgba(22,102,219,0.12)]"
             />
           </div>
         </label>
@@ -100,7 +100,7 @@ export function AuthForm({ mode, redirectTo = "/" }: { mode: Mode; redirectTo?: 
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder="name@example.com"
-            className="glass-input rounded-xl px-4 py-3.5 pl-11 text-sm outline-none transition-all duration-200 focus:-translate-y-px focus:shadow-[0_10px_24px_rgba(22,102,219,0.12)]"
+            className="w-full glass-input rounded-xl px-4 py-3.5 pl-11 text-sm outline-none transition-all duration-200 focus:-translate-y-px focus:shadow-[0_10px_24px_rgba(22,102,219,0.12)]"
           />
         </div>
       </label>
@@ -119,7 +119,7 @@ export function AuthForm({ mode, redirectTo = "/" }: { mode: Mode; redirectTo?: 
             onChange={(e) => setPhone(e.target.value)}
             required
             placeholder="081-234-5678"
-            className="glass-input rounded-xl px-4 py-3.5 pl-11 text-sm outline-none transition-all duration-200 focus:-translate-y-px focus:shadow-[0_10px_24px_rgba(22,102,219,0.12)]"
+            className="w-full glass-input rounded-xl px-4 py-3.5 pl-11 text-sm outline-none transition-all duration-200 focus:-translate-y-px focus:shadow-[0_10px_24px_rgba(22,102,219,0.12)]"
           />
         </div>
       </label>
