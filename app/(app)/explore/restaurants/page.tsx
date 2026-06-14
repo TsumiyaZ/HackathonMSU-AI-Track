@@ -1,12 +1,10 @@
-import prisma from "@/lib/prisma";
+import { readJSON, DATA } from "@/lib/json-db";
 import { UtensilsCrossed, Star, Clock } from "lucide-react";
 import Link from "next/link";
 
 export default async function ExploreRestaurantsPage() {
-  const restaurants = await prisma.restaurant.findMany({
-    take: 50,
-    orderBy: { rating: 'desc' }
-  });
+  const all = await readJSON<any[]>(DATA.restaurants);
+  const restaurants = all.sort((a: any, b: any) => b.rating - a.rating).slice(0, 50);
 
   return (
     <div className="max-w-6xl mx-auto w-full">
@@ -43,9 +41,9 @@ export default async function ExploreRestaurantsPage() {
                   <Clock className="w-4 h-4" />
                   รออาหาร ~{res.delivery_time_min} นาที
                 </div>
-                <button className="text-emerald-400 font-bold hover:underline">
+                <Link href={`/explore/restaurant/${res.res_id}`} className="text-emerald-400 font-bold hover:underline">
                   ดูรายละเอียด
-                </button>
+                </Link>
               </div>
             </div>
           </div>

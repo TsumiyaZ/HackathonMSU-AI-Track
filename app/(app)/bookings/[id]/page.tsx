@@ -1,7 +1,7 @@
-import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getHotelById } from "@/lib/hotels";
+import { getHotelBookingById, getFlightTicketById } from "@/lib/bookings";
 
 export default async function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -9,42 +9,37 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
   let booking: any = null;
   let type: "hotel" | "flight" = "hotel";
 
-  try {
-    // 1. Check if it's a hotel booking
-    booking = await prisma.hotelBooking.findUnique({
-      where: { booking_id: id },
-      include: { hotel: true, user: true },
-    });
-
-    if (booking) {
-      type = "hotel";
-      // Fetch normalized hotel to get the beautiful Unsplash thumbnail
+  // 1. Check if it's a hotel booking
+  const hotelBooking = await getHotelBookingById(id);
+  if (hotelBooking) {
+    booking = hotelBooking;
+    type = "hotel";
+    if (booking.hotel?.hotel_id) {
       const normalized = await getHotelById(booking.hotel.hotel_id);
       if (normalized) {
         booking.hotel.thumbnail_url = normalized.thumbnail_url;
       }
-    } else {
-      // 2. Check if it's a flight ticket
-      booking = await prisma.flightTicket.findUnique({
-        where: { ticket_id: id },
-        include: { flight: true, user: true },
-      });
-      if (booking) {
-        type = "flight";
-      }
     }
-  } catch (err) {
-    console.warn("⚠️ Database query failed. Falling back to mock details.");
+  } else {
+    // 2. Check if it's a flight ticket
+    const flightTicket = await getFlightTicketById(id);
+    if (flightTicket) {
+      booking = flightTicket;
+      type = "flight";
+    }
+  }
+
+  if (!booking) {
+    console.warn("⚠️ Booking not found. Falling back to mock details.");
     
-    // Fallback logic for offline / mock dev
     if (id.startsWith("hb-")) {
       type = "hotel";
       booking = {
         booking_id: id,
         status: "CONFIRMED",
         total_price: 28300,
-        check_in: new Date("2026-08-15"),
-        check_out: new Date("2026-08-18"),
+        check_in: "2026-08-15",
+        check_out: "2026-08-18",
         guests: 2,
         hotel: {
           hotel_id: "H-1234",
@@ -243,7 +238,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
 
                 <div className="pt-2 border-t border-border/20">
                   <span className="text-[10px] text-on-surface-variant block uppercase tracking-wider">เช็คอิน - เช็คเอาท์</span>
-                  <span className="font-bold text-on-surface mt-0.5 block">{booking.guests} ท่าน</span>
+                  <span className="font-bold text-on-surface mt-0.5 block">{checkInStr} → {checkOutStr}</span>
                 </div>
 
                 <div className="pt-2 border-t border-border/20">

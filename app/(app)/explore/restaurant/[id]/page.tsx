@@ -21,7 +21,7 @@ export default async function RestaurantDetailPage({ params }: { params: Promise
 
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto">
-      <Link href="/explore/hotels" className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors w-fit">
+      <Link href="/explore/restaurants" className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors w-fit">
         <span className="material-symbols-outlined text-[20px]">arrow_back</span>
         กลับสู่หน้าการค้นหา
       </Link>

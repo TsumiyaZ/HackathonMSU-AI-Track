@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/session';
-import prisma from '@/lib/prisma';
+import { readJSON, DATA } from '@/lib/json-db';
 
 export async function GET() {
   const user = await getSessionUser();
@@ -9,12 +9,12 @@ export async function GET() {
   }
 
   const [hotels, flights, restaurants, users, bookings, tickets] = await Promise.all([
-    prisma.hotel.findMany(),
-    prisma.flight.findMany(),
-    prisma.restaurant.findMany(),
-    prisma.user.findMany(),
-    prisma.hotelBooking.findMany(),
-    prisma.flightTicket.findMany(),
+    readJSON<any[]>(DATA.hotels),
+    readJSON<any[]>(DATA.flights),
+    readJSON<any[]>(DATA.restaurants),
+    readJSON<any[]>(DATA.users),
+    readJSON<any[]>(DATA.hotelBookings),
+    readJSON<any[]>(DATA.flightTickets),
   ]);
 
   const activeBookings = bookings.filter((b: any) => b.status !== 'CANCELLED');

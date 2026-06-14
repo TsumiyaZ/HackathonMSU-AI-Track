@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useEventSource } from "@/hooks/useEventSource";
+import { Hotel, PlaneTakeoff, User, Radio, Wifi, WifiOff } from 'lucide-react';
 
 export default function AdminDashboard({ initialUser }: { initialUser: any }) {
   const [user] = useState(initialUser);
@@ -8,6 +10,7 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
   const [stats, setStats] = useState<any>(null);
   const [tab, setTab] = useState<'dashboard' | 'hotels' | 'users'>('dashboard');
 
+  const { events: liveEvents, connected } = useEventSource('/api/sse');
   const [allHotels, setAllHotels] = useState<any[]>([]);
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [editingHotel, setEditingHotel] = useState<string | null>(null);
@@ -237,6 +240,58 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
                   );
                 })}
               </div>
+            </div>
+          </div>
+
+          {/* Live Activity Feed */}
+          <div className="glass-panel rounded-2xl p-5 md:p-6">
+            <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+              <Radio className="w-4 h-4 text-emerald-400" />
+              กิจกรรมเรียลไทม์
+              {connected ? (
+                <span className="ml-auto flex items-center gap-1 text-[10px] text-emerald-400">
+                  <Wifi className="w-3 h-3" /> เชื่อมต่ออยู่
+                </span>
+              ) : (
+                <span className="ml-auto flex items-center gap-1 text-[10px] text-red-400">
+                  <WifiOff className="w-3 h-3" /> ขาดการเชื่อมต่อ
+                </span>
+              )}
+            </h3>
+            <div className="flex flex-col gap-1.5 max-h-48 overflow-y-auto">
+              {liveEvents.length === 0 && (
+                <p className="text-xs text-on-surface-variant text-center py-4">รอข้อมูลเรียลไทม์...</p>
+              )}
+              {liveEvents.map((evt, i) => {
+                const d = evt.data;
+                let icon = <Radio className="w-3.5 h-3.5" />;
+                let label = '';
+                let color = 'text-on-surface-variant';
+                switch (evt.type) {
+                  case 'NEW_HOTEL_BOOKING':
+                    icon = <Hotel className="w-3.5 h-3.5 text-amber-400" />;
+                    label = `${d.user} จอง ${d.hotel} ฿${d.amount.toLocaleString()}`;
+                    color = 'text-amber-400';
+                    break;
+                  case 'NEW_FLIGHT_BOOKING':
+                    icon = <PlaneTakeoff className="w-3.5 h-3.5 text-secondary" />;
+                    label = `${d.user} จอง ${d.airline} ${d.from}→${d.to}`;
+                    color = 'text-secondary';
+                    break;
+                  case 'NEW_USER':
+                    icon = <User className="w-3.5 h-3.5 text-emerald-400" />;
+                    label = `${d.name} สมัครสมาชิกใหม่`;
+                    color = 'text-emerald-400';
+                    break;
+                }
+                return (
+                  <div key={d.id || i} className="flex items-center gap-2.5 py-1.5 px-2 rounded-lg hover:bg-white/5 transition-colors">
+                    {icon}
+                    <span className="text-[11px] text-on-surface-variant flex-1 truncate">{label}</span>
+                    <span className={`text-[10px] font-mono ${color}`}>{d.time}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

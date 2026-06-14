@@ -49,7 +49,10 @@ export default function CheckoutPage() {
         body: JSON.stringify({ trip: currentTrip }),
       });
 
-      if (!res.ok) throw new Error("Payment failed");
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || `HTTP ${res.status}`);
+      }
 
       const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
       setBookingId(`TRP-${Date.now().toString(36).toUpperCase()}-${randomSuffix}`);
@@ -59,8 +62,8 @@ export default function CheckoutPage() {
       setTimeout(() => {
         useTripStore.getState().setTrip(null);
       }, 500);
-    } catch (err) {
-      setErrorMsg("เกิดข้อผิดพลาดในการชำระเงิน กรุณาตรวจสอบข้อมูลและลองใหม่อีกครั้ง");
+    } catch (err: any) {
+      setErrorMsg(err.message || "เกิดข้อผิดพลาดในการชำระเงิน กรุณาตรวจสอบข้อมูลและลองใหม่อีกครั้ง");
     } finally {
       setLoading(false);
     }

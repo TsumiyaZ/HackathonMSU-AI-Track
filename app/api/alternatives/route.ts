@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { readJSON, DATA } from '@/lib/json-db';
 
 export async function GET(req: Request) {
   try {
@@ -13,34 +13,36 @@ export async function GET(req: Request) {
     let alternatives = [];
 
     if (type === 'hotel') {
-      const hotels = await prisma.hotel.findMany({ take: 5, orderBy: { rating: 'desc' } });
-      alternatives = hotels.map(h => ({
+      const hotels = await readJSON<any[]>(DATA.hotels);
+      const sorted = hotels.sort((a: any, b: any) => b.rating - a.rating).slice(0, 5);
+      alternatives = sorted.map((h: any) => ({
         id: `alt-${h.hotel_id}`,
         type: 'hotel',
         title: h.name,
         description: `พักหรูที่ ${h.location} • เรตติ้ง ${h.rating} ดาว`,
         price: h.price_per_night,
-        data: h
+        data: h,
       }));
     } else if (type === 'flight') {
-      const flights = await prisma.flight.findMany({ take: 5 });
-      alternatives = flights.map(f => ({
+      const flights = await readJSON<any[]>(DATA.flights);
+      alternatives = flights.slice(0, 5).map((f: any) => ({
         id: `alt-${f.flight_id}`,
         type: 'flight',
         title: `บินสู่ ${f.destination} (${f.airline})`,
         description: `เที่ยวบินจาก ${f.origin}`,
         price: f.price,
-        data: f
+        data: f,
       }));
     } else if (type === 'food') {
-      const food = await prisma.restaurant.findMany({ take: 5, orderBy: { rating: 'desc' } });
-      alternatives = food.map(r => ({
+      const food = await readJSON<any[]>(DATA.restaurants);
+      const sorted = food.sort((a: any, b: any) => b.rating - a.rating).slice(0, 5);
+      alternatives = sorted.map((r: any) => ({
         id: `alt-${r.res_id}`,
         type: 'food',
         title: `มื้ออร่อยที่ ${r.name}`,
         description: `อาหารแนว ${r.cuisine} • เรตติ้ง ${r.rating} ดาว`,
-        price: Math.floor(Math.random() * 500) + 200, // Estimate for food since no price in DB
-        data: r
+        price: Math.floor(Math.random() * 500) + 200,
+        data: r,
       }));
     } else {
        // Activity mockup

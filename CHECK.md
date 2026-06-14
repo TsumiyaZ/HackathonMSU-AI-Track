@@ -1,6 +1,7 @@
 # บันทึก Bug CHECK.md
 
 > สร้าง: 14 มิ.ย. 2026  
+> แก้ไขล่าสุด: 15 มิ.ย. 2026  
 > ตรวจสอบโดย: code review + `npx tsc --noEmit` + `npm run build`  
 > Build result: **PASS** (0 error)
 
@@ -8,32 +9,21 @@
 
 ## 🔴 High (ควรแก้ทันที)
 
-### 1. booking detail — แสดง guest count แทน check-in/out date
-**File:** `app/(app)/bookings/[id]/page.tsx:244-246`  
-**Bug:** copy-paste error — ข้อความ "เช็คอิน - เช็คเอาท์" แต่แสดง `{booking.guests}`  
-```tsx
-<span className="text-[10px] ...">เช็คอิน - เช็คเอาท์</span>
-<span className="font-bold ...">{booking.guests} ท่าน</span> {/* ← ผิด */}
-```
-**Fix:** เปลี่ยนเป็น `{checkInStr} → {checkOutStr}`
+### 1. ~~booking detail — แสดง guest count แทน check-in/out date~~ ✅ FIXED
+**File:** `app/(app)/bookings/[id]/page.tsx:239-241`  
+**Fix:** เปลี่ยนจาก `{booking.guests}` → `{checkInStr} → {checkOutStr}` ✅
 
-### 2. restaurant list — "ดูรายละเอียด" button ไม่มี action
-**File:** `app/(app)/explore/restaurants/page.tsx:46`  
-**Bug:** button ไม่มี `onClick` หรือ `<Link>` ห่อ → คลิกแล้วไม่เกิดอะไร  
-**Fix:** ใช้ `<Link href={/explore/restaurant/${res.res_id}}>` หรือเพิ่ม `onClick`
+### 2. ~~restaurant list — "ดูรายละเอียด" button ไม่มี action~~ ✅ FIXED
+**File:** `app/(app)/explore/restaurants/page.tsx:44-46`  
+**Fix:** เปลี่ยน `<button>` → `<Link href={/explore/restaurant/${res.res_id}}>` ✅
 
-### 3. restaurant detail — back link ผิด path
+### 3. ~~restaurant detail — back link ผิด path~~ ✅ FIXED
 **File:** `app/(app)/explore/restaurant/[id]/page.tsx:24`  
-**Bug:** `<Link href="/explore/hotels">` → ควรเป็น `/explore/restaurants`  
-**Fix:** เปลี่ยน href เป็น `/explore/restaurants`
+**Fix:** เปลี่ยน `/explore/hotels` → `/explore/restaurants` ✅
 
-### 4. profile page — fallback login fetch ใช้ผิด endpoint
-**File:** `app/(app)/profile/page.tsx:33`  
-**Bug:** ถ้า session check ล้มเหลว จะ fetch `GET /api/auth/login` ซึ่งเป็น login POST endpoint → error  
-```tsx
-fetch("/api/auth/login")  // ← ผิด
-```
-**Fix:** fallback ไป session check อีกครั้ง หรือใช้ endpoint ที่ถูกต้อง
+### 4. ~~profile page — fallback login fetch ใช้ผิด endpoint~~ ✅ FIXED
+**File:** `app/(app)/profile/page.tsx:87-98`  
+**Note:** แก้แล้วระหว่าง migration — ใช้ `/api/auth/check-session` ถูกต้องแล้ว ✅
 
 ---
 

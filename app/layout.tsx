@@ -30,6 +30,7 @@ export const viewport: Viewport = {
 };
 
 import { ThemeProvider } from "@/components/ThemeProvider";
+import RealtimeToast from "@/components/realtime/RealtimeToast";
 
 export default function RootLayout({
   children,
@@ -46,6 +47,7 @@ export default function RootLayout({
          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="tickethub-theme">
             {children}
          </ThemeProvider>
+         <RealtimeToast />
          <script
            dangerouslySetInnerHTML={{
              __html: `

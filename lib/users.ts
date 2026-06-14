@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import { readJSON, writeJSON, DATA } from "./json-db";
 
 export type UserRole = "MEMBER" | "VIP" | "ADMIN";
 
@@ -11,60 +11,26 @@ export interface User {
   role: UserRole;
 }
 
-export async function loadUsers(): Promise<User[]> {
-  const dbUsers = await prisma.user.findMany();
-  return dbUsers.map((u) => ({
-    user_id: u.user_id,
-    name: u.name,
-    email: u.email,
-    phone: u.phone,
-    loyalty_points: u.loyalty_points,
-    role: u.role as UserRole,
-  }));
-}
-
 // normalize เบอร์โทรเอาเฉพาะตัวเลข เพื่อ compare แบบยืดหยุ่น
-// "081-111-1111" === "0811111111" === "081 111 1111"
 export function normalizePhone(input: string): string {
   return input.replace(/\D/g, "");
 }
 
+export async function loadUsers(): Promise<User[]> {
+  return readJSON<User[]>(DATA.users);
+}
+
 export async function findUserByEmail(email: string): Promise<User | null> {
-  const u = await prisma.user.findFirst({
-    where: {
-      email: {
-        equals: email.trim(),
-        mode: "insensitive",
-      },
-    },
-  });
-  if (!u) return null;
-  return {
-    user_id: u.user_id,
-    name: u.name,
-    email: u.email,
-    phone: u.phone,
-    loyalty_points: u.loyalty_points,
-    role: u.role as UserRole,
-  };
+  const users = await loadUsers();
+  const target = email.trim().toLowerCase();
+  return users.find((u) => u.email.toLowerCase() === target) ?? null;
 }
 
 export async function getUserById(userId: string): Promise<User | null> {
-  const u = await prisma.user.findUnique({
-    where: { user_id: userId },
-  });
-  if (!u) return null;
-  return {
-    user_id: u.user_id,
-    name: u.name,
-    email: u.email,
-    phone: u.phone,
-    loyalty_points: u.loyalty_points,
-    role: u.role as UserRole,
-  };
+  const users = await loadUsers();
+  return users.find((u) => u.user_id === userId) ?? null;
 }
 
-// verify ด้วย email + phone (phone ใช้แทน password)
 export async function verifyCredentials(
   email: string,
   phone: string,
@@ -87,6 +53,27 @@ export interface CreateUserResult {
   error?: string;
 }
 
+export async function updateUserRole(
+  userId: string,
+  role: UserRole,
+): Promise<User | null> {
+  const users = await loadUsers();
+  const idx = users.findIndex((u) => u.user_id === userId);
+  if (idx === -1) return null;
+  users[idx].role = role;
+  await writeJSON(DATA.users, users);
+  return users[idx];
+}
+
+export async function deleteUser(userId: string): Promise<boolean> {
+  const users = await loadUsers();
+  const idx = users.findIndex((u) => u.user_id === userId);
+  if (idx === -1) return false;
+  users.splice(idx, 1);
+  await writeJSON(DATA.users, users);
+  return true;
+}
+
 export async function createUser(
   input: CreateUserInput,
 ): Promise<CreateUserResult> {
@@ -100,38 +87,27 @@ export async function createUser(
   if (normalizePhone(phone).length < 9)
     return { ok: false, error: "กรุณากรอกเบอร์โทร (ขั้นต่ำ 9 หลัก)" };
 
-  const existing = await findUserByEmail(email);
-  if (existing)
-    return { ok: false, error: "อีเมลนี้ถูกใช้งานแล้ว" };
+  const users = await loadUsers();
+  const existing = users.find((u) => u.email.toLowerCase() === email);
+  if (existing) return { ok: false, error: "อีเมลนี้ถูกใช้งานแล้ว" };
 
-  // gen user_id ถัดจากเลขสูงสุดในรายการเดิม
-  const users = await prisma.user.findMany();
   const maxNum = users.reduce((m, u) => {
     const n = parseInt(u.user_id.replace(/^u/, ""), 10);
     return Number.isFinite(n) && n > m ? n : m;
   }, 0);
   const userId = `u${String(maxNum + 1).padStart(3, "0")}`;
 
-  const u = await prisma.user.create({
-    data: {
-      user_id: userId,
-      name,
-      email,
-      phone,
-      loyalty_points: 0,
-      role: "MEMBER",
-    },
-  });
-
-  return {
-    ok: true,
-    user: {
-      user_id: u.user_id,
-      name: u.name,
-      email: u.email,
-      phone: u.phone,
-      loyalty_points: u.loyalty_points,
-      role: u.role as UserRole,
-    },
+  const newUser: User = {
+    user_id: userId,
+    name,
+    email,
+    phone,
+    loyalty_points: 0,
+    role: "MEMBER",
   };
+
+  users.push(newUser);
+  await writeJSON(DATA.users, users);
+
+  return { ok: true, user: newUser };
 }

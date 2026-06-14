@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { readJSON, DATA } from '@/lib/json-db';
 import { getSessionUserId } from '@/lib/session';
 
 export async function GET() {
@@ -9,44 +9,48 @@ export async function GET() {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const hotelBookings = await prisma.hotelBooking.findMany({
-      where: { user_id: userId },
-      include: { hotel: true },
-      orderBy: { check_in: 'desc' }
-    });
+    const [allBookings, allTickets, hotels, flights] = await Promise.all([
+      readJSON<any[]>(DATA.hotelBookings),
+      readJSON<any[]>(DATA.flightTickets),
+      readJSON<any[]>(DATA.hotels),
+      readJSON<any[]>(DATA.flights),
+    ]);
 
-    const flightTickets = await prisma.flightTicket.findMany({
-      where: { user_id: userId },
-      include: { flight: true },
-      orderBy: { flight: { departure_time: 'desc' } }
-    });
+    const userBookings = allBookings.filter((b: any) => b.user_id === userId);
+    const userTickets = allTickets.filter((t: any) => t.user_id === userId);
 
     return NextResponse.json({
       success: true,
       data: {
-        hotelBookings: hotelBookings.map(b => ({
-          id: b.booking_id,
-          type: 'hotel',
-          hotelName: b.hotel.name,
-          location: b.hotel.location,
-          checkIn: b.check_in,
-          checkOut: b.check_out,
-          guests: b.guests,
-          totalPrice: b.total_price,
-          status: b.status
-        })),
-        flightTickets: flightTickets.map(t => ({
-          id: t.ticket_id,
-          type: 'flight',
-          airline: t.flight.airline,
-          origin: t.flight.origin,
-          destination: t.flight.destination,
-          departure: t.flight.departure_time,
-          seat: t.seat,
-          status: t.status,
-          price: t.flight.price
-        }))
-      }
+        hotelBookings: userBookings.map((b: any) => {
+          const hotel = hotels.find((h: any) => h.hotel_id === b.hotel_id) ?? {};
+          return {
+            id: b.booking_id,
+            type: 'hotel',
+            hotelName: hotel.name || '',
+            location: hotel.location || '',
+            checkIn: b.check_in,
+            checkOut: b.check_out,
+            guests: b.guests,
+            totalPrice: b.total_price,
+            status: b.status,
+          };
+        }),
+        flightTickets: userTickets.map((t: any) => {
+          const flight = flights.find((f: any) => f.flight_id === t.flight_id) ?? {};
+          return {
+            id: t.ticket_id,
+            type: 'flight',
+            airline: flight.airline || '',
+            origin: flight.origin || '',
+            destination: flight.destination || '',
+            departure: flight.departure_time || '',
+            seat: t.seat,
+            status: t.status,
+            price: flight.price || 0,
+          };
+        }),
+      },
     });
   } catch (error: any) {
     console.error('Bookings API Error:', error);
