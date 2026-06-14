@@ -122,43 +122,90 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
         กลับหน้ารายการจอง
       </Link>
 
-      {/* Main Details Banner */}
-      <div className="relative w-full h-60 md:h-72 rounded-3xl overflow-hidden shadow-md">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imageUrl} alt={isHotel ? booking.hotel.name : booking.flight.airline} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/30 to-transparent"></div>
-        
-        <div className="absolute bottom-5 left-5 right-5 z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <div className="text-primary font-mono text-[10px] font-bold mb-1.5 px-3 py-1 bg-primary/20 rounded-full inline-block backdrop-blur-md border border-primary/20">
-                {isHotel ? "หมายเลขการจอง:" : "หมายเลขตั๋วบิน:"} {isHotel ? booking.booking_id : booking.ticket_id}
-              </div>
-              <h1 className="font-display text-2xl md:text-3xl font-black text-white drop-shadow-sm">
-                {isHotel ? `ทริป ${booking.hotel.name}` : `เที่ยวบิน ${booking.flight.airline}`}
-              </h1>
-              
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-white/80 text-xs mt-2">
-                <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px] text-primary">location_on</span> 
-                  {isHotel ? booking.hotel.location : `${booking.flight.origin} ➔ ${booking.flight.destination}`}
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px] text-primary">calendar_month</span> 
-                  {isHotel ? `${checkInStr} - ${checkOutStr}` : `${flightTimeStr}`}
-                </span>
-              </div>
+      {/* Main Details Banner — styled like home page cards */}
+      <div
+        className="relative w-full rounded-2xl overflow-hidden group transition-transform"
+        style={{ minHeight: 180 }}
+      >
+        {/* BG image */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${imageUrl})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        {/* Gradient overlay — same style as home */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: isHotel
+              ? "linear-gradient(135deg, rgba(10,78,172,0.82) 0%, rgba(0,0,0,0.48) 100%)"
+              : "linear-gradient(135deg, rgba(2,30,90,0.88) 0%, rgba(0,0,0,0.42) 100%)",
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-10 p-5 md:p-6 flex flex-col md:flex-row md:items-end justify-between gap-4 min-h-[180px]">
+          <div className="flex flex-col gap-2 justify-end flex-1">
+            {/* Type badge */}
+            <div className="flex items-center gap-2 mb-1">
+              <span
+                className="material-symbols-outlined text-white text-[20px]"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              >
+                {isHotel ? "hotel" : "flight"}
+              </span>
+              <span className="font-label text-[11px] uppercase tracking-widest text-blue-200">
+                {isHotel ? "โรงแรม" : "เที่ยวบิน"}
+              </span>
             </div>
-            
-            <div className="text-left md:text-right shrink-0">
-              <div className="text-[10px] text-white/60 uppercase tracking-wider">ยอดชำระสุทธิ</div>
-              <div className="font-display text-2xl md:text-3xl font-black text-primary">
-                ฿{priceFormatted.toLocaleString()}
-              </div>
+
+            {/* Booking ID pill */}
+            <div className="inline-flex items-center gap-1.5 text-primary font-mono text-[10px] font-bold px-3 py-1 bg-primary/20 rounded-full border border-primary/20 backdrop-blur-md w-fit">
+              {isHotel ? "หมายเลขการจอง:" : "หมายเลขตั๋วบิน:"}{" "}
+              {isHotel ? booking.booking_id : booking.ticket_id}
             </div>
+
+            {/* Title */}
+            <h1 className="font-display text-2xl md:text-3xl font-black text-white drop-shadow leading-tight">
+              {isHotel ? booking.hotel.name : `เที่ยวบิน ${booking.flight.airline}`}
+            </h1>
+
+            {/* Meta tags */}
+            <div className="flex flex-wrap gap-2 mt-1">
+              {[
+                isHotel
+                  ? booking.hotel.location
+                  : `${booking.flight.origin} ➔ ${booking.flight.destination}`,
+                isHotel
+                  ? `${checkInStr} – ${checkOutStr}`
+                  : `${flightTimeStr} · ${flightHourStr} น.`,
+              ].map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[10px] font-label px-2.5 py-1 rounded-full"
+                  style={{ background: "rgba(255,255,255,0.20)", color: "white" }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Price */}
+          <div
+            className="shrink-0 flex flex-col items-start md:items-end"
+          >
+            <p className="text-[10px] text-white/60 uppercase tracking-wider">ยอดชำระสุทธิ</p>
+            <p className="font-display text-2xl md:text-3xl font-black text-primary drop-shadow">
+              ฿{priceFormatted.toLocaleString()}
+            </p>
           </div>
         </div>
       </div>
+
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Main content panel */}

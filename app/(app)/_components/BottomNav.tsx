@@ -13,7 +13,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/profile", label: "โปรไฟล์", icon: "account_circle" },
 ];
 
-export function BottomNav() {
+export function BottomNav({ onOpenChat }: { onOpenChat: () => void }) {
   const pathname = usePathname();
 
   return (
@@ -59,6 +59,21 @@ export function BottomNav() {
           </Link>
         );
       })}
+
+      {/* Chat FAB — fixed bottom-right, outside the nav flow */}
+      <button
+        onClick={onOpenChat}
+        aria-label="เปิดแชท Travel Buddy"
+        className="fixed bottom-[72px] right-4 z-50 w-12 h-12 rounded-full btn-primary-gradient shadow-xl flex items-center justify-center active:scale-90 transition-transform"
+        style={{ boxShadow: "0 4px 20px rgba(22,102,219,0.35)" }}
+      >
+        <span
+          className="material-symbols-outlined text-white"
+          style={{ fontSize: "22px", fontVariationSettings: "'FILL' 1" }}
+        >
+          forum
+        </span>
+      </button>
     </nav>
   );
 }

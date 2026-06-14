@@ -10,7 +10,6 @@ const PRIMARY: Item[] = [
   { href: "/plan", label: "วางแผน", icon: "auto_awesome" },
   { href: "/explore", label: "Explore", icon: "explore" },
   { href: "/bookings", label: "การจอง", icon: "event_available" },
-  { href: "/chat", label: "Travel Buddy", icon: "forum" },
   { href: "/checkout", label: "ชำระเงิน", icon: "credit_card" },
   { href: "/profile", label: "โปรไฟล์", icon: "account_circle" },
 ];

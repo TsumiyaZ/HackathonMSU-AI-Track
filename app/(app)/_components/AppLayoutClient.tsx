@@ -5,9 +5,11 @@ import { usePathname } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { BottomNav } from "./BottomNav";
+import { ChatDrawer } from "./ChatDrawer";
 
 export function AppLayoutClient({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const pathname = usePathname();
   const isChat = pathname === '/chat';
@@ -30,7 +32,9 @@ export function AppLayoutClient({ children }: { children: ReactNode }) {
         </div>
       </main>
       {/* Mobile bottom navigation — hidden on desktop */}
-      <BottomNav />
+      <BottomNav onOpenChat={() => setIsChatOpen(true)} />
+      {/* Floating chat drawer — available on all pages */}
+      <ChatDrawer isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 }

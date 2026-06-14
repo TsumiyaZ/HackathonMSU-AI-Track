@@ -30,14 +30,7 @@ const quickActions = [
     color: "text-violet-500",
     bg: "rgba(139,92,246,0.12)",
   },
-  {
-    href: "/chat",
-    icon: "forum",
-    label: "Travel Buddy",
-    desc: "ถามไอเดียการเที่ยวได้ตลอด 24 ชม.",
-    color: "text-rose-500",
-    bg: "rgba(244,63,94,0.12)",
-  },
+
 ];
 
 const tips = [
@@ -533,25 +526,7 @@ export default function HomePageClient() {
       </div>
       </div>
 
-      {/* Floating Travel Buddy FAB */}
-      <Link
-        href="/chat"
-        className="fixed bottom-24 right-5 md:bottom-8 md:right-8 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-primary text-white shadow-lg shadow-primary/20 hover:scale-110 active:scale-95 transition-all group"
-        aria-label="Travel Buddy Chat"
-      >
-        <span className="material-symbols-outlined text-[26px] group-hover:rotate-12 transition-transform duration-300"
-          style={{ fontVariationSettings: "'FILL' 1" }}>
-          forum
-        </span>
-        {/* Floating Pulse Rings */}
-        <span className="absolute inset-0 rounded-full border border-primary animate-ping opacity-25 pointer-events-none" />
-        
-        {/* Tooltip / Label */}
-        <span className="absolute right-16 scale-90 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 bg-surface-container/95 backdrop-blur border border-border px-3 py-1.5 rounded-xl text-xs font-bold text-on-surface shadow-lg whitespace-nowrap pointer-events-none flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          คุยกับ Travel Buddy 🤖
-        </span>
-      </Link>
+
 
     </div>
   );
