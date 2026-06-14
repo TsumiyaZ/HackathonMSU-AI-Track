@@ -224,7 +224,7 @@ export default function Home() {
       {/* ═════════════════════════════════ */}
       {/* FEATURE GRID — below the fold   */}
       {/* ═════════════════════════════════ */}
-      <section className="px-4 md:px-12 pt-10 pb-24 md:pb-20 max-w-[1280px] mx-auto">
+      <section className="hidden sm:block px-4 md:px-12 pt-10 pb-24 md:pb-20 max-w-[1280px] mx-auto">
         <div className="flex items-end justify-between mb-5">
           <div>
             <h2 className="font-display text-xl md:text-2xl font-bold text-on-surface">
