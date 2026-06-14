@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { useTripStore } from "@/lib/store";
+import { useLanguage } from "@/lib/store";
 
 export default function HelpPage() {
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
 
   const faqs = lang === 'th' ? [
     {

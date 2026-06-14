@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTripStore } from "@/lib/store";
+import { useLanguage } from "@/lib/store";
 import { TRANSLATIONS } from "@/lib/translations";
 
 type NavItem = { href: string; label: string; icon: string };
@@ -17,7 +17,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export function BottomNav() {
   const pathname = usePathname();
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
   const t = TRANSLATIONS[lang];
 
   const labelMap: Record<string, string> = {

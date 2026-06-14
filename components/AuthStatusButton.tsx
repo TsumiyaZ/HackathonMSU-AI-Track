@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useTripStore } from "@/lib/store";
+import { useLanguage } from "@/lib/store";
 import { TRANSLATIONS } from "@/lib/translations";
 
 export function AuthStatusButton() {
   const [authed, setAuthed] = useState<boolean | null>(null);
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
 
   useEffect(() => {
     fetch("/api/auth/check-session")

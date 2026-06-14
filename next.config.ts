@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
     "/api/auth/register": ["./data/**/*"],
     "/api/auth/check-session": ["./data/**/*"],
   },
+  experimental: {
+    optimizePackageImports: ["lucide-react", "recharts", "zustand"],
+  },
 };
 
 export default nextConfig;

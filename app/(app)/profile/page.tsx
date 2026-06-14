@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTripStore } from "@/lib/store";
+import { useTripStore, useLanguage } from "@/lib/store";
 import { Check, Edit3, Home, LogOut, Save, Sparkles, User, X } from "lucide-react";
 import { TRANSLATIONS } from "@/lib/translations";
 
@@ -71,7 +71,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const userPreferences = useTripStore((s) => s.userPreferences);
   const setUserPreferences = useTripStore((s) => s.setUserPreferences);
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
   const t = TRANSLATIONS[lang];
 
   const [budgetLevel, setBudgetLevel] = useState(userPreferences?.budgetLevel || "medium");

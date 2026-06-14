@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -76,3 +77,15 @@ export const useTripStore = create<TripState>()(
     }
   )
 );
+
+export function useLanguage() {
+  const [mounted, setMounted] = useState(false);
+  const lang = useTripStore((s) => s.lang);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return mounted ? lang : 'th';
+}
+

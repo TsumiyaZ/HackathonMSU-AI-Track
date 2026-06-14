@@ -348,5 +348,12 @@
     "flight_id": "fl-033",
     "seat": "18B",
     "status": "CHECKED_IN"
+  },
+  {
+    "ticket_id": "ft-1781472926442-124",
+    "user_id": "admin",
+    "flight_id": "fl-002",
+    "seat": "14A",
+    "status": "CONFIRMED"
   }
 ]

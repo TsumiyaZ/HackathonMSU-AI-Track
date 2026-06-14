@@ -2,8 +2,8 @@
 
 import { UtensilsCrossed, Star, Clock } from "lucide-react";
 import Link from "next/link";
-import { useTripStore } from "@/lib/store";
-import { TRANSLATIONS } from "@/lib/translations";
+import { useLanguage } from "@/lib/store";
+
 
 export interface Restaurant {
   res_id: string;
@@ -19,8 +19,7 @@ interface RestaurantCardProps {
 }
 
 export function RestaurantCard({ restaurant }: RestaurantCardProps) {
-  const lang = useTripStore((s) => s.lang);
-  const t = TRANSLATIONS[lang];
+  const lang = useLanguage();
 
   return (
     <div className="glass-panel p-0 rounded-3xl border border-white/5 hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/5 overflow-hidden flex flex-col group h-full">

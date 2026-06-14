@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useTripStore } from "@/lib/store";
+import { useLanguage } from "@/lib/store";
 import { TRANSLATIONS } from "@/lib/translations";
 
 interface Booking {
@@ -19,7 +19,7 @@ export default function BookingsClient({ initialData }: { initialData: Booking[]
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
   const router = useRouter();
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
   const t = TRANSLATIONS[lang];
 
   const filtered = initialData.filter((b) => {

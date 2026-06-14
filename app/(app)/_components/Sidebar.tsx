@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useTripStore } from "@/lib/store";
+import { useLanguage } from "@/lib/store";
 import { TRANSLATIONS } from "@/lib/translations";
 
 type Item = { href: string; label: string; icon: string };
@@ -19,10 +19,10 @@ const PRIMARY: Item[] = [
 
 const ADMIN_ITEM: Item = { href: "/admin", label: "Admin", icon: "shield" };
 
-export function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: boolean) => void }) {
+export function Sidebar({ isOpen }: { isOpen: boolean; setIsOpen?: (val: boolean) => void }) {
   const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState(false);
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
   const t = TRANSLATIONS[lang];
 
   const labelMap: Record<string, string> = {

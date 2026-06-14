@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTripStore } from "@/lib/store";
+import { useLanguage } from "@/lib/store";
 import { TRANSLATIONS } from "@/lib/translations";
 
 interface ExploreClientProps {
@@ -15,7 +15,7 @@ export default function ExploreClient({
   recommendedFlights,
   recommendedRestaurants,
 }: ExploreClientProps) {
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
   const t = TRANSLATIONS[lang];
 
   const categories = [

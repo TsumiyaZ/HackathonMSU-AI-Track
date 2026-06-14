@@ -2,8 +2,8 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
-import { useTripStore } from "@/lib/store";
-import { TRANSLATIONS } from "@/lib/translations";
+import { useLanguage } from "@/lib/store";
+
 
 type Props = {
   cuisines: string[];
@@ -13,8 +13,7 @@ export function RestaurantFilters({ cuisines }: Props) {
   const router = useRouter();
   const params = useSearchParams();
   const [, startTransition] = useTransition();
-  const lang = useTripStore((s) => s.lang);
-  const t = TRANSLATIONS[lang];
+  const lang = useLanguage();
 
   // Collapsible toggle state (hidden by default)
   const [showFilters, setShowFilters] = useState(false);

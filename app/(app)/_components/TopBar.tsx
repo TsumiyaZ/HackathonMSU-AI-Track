@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useTripStore } from "@/lib/store";
+import { useTripStore, useLanguage } from "@/lib/store";
 import { TRANSLATIONS } from "@/lib/translations";
 
 export function TopBar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: boolean) => void }) {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
   const setLang = useTripStore((s) => s.setLang);
 
   useEffect(() => {

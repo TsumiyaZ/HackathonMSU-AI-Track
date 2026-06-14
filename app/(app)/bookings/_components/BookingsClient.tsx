@@ -21,15 +21,6 @@ export function BookingsClient({ initialBookings }: BookingsClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all"); // all, upcoming, completed, pending, cancelled
 
-  const filteredBookings = initialBookings.filter((booking) => {
-    const matchesSearch = 
-      booking.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      booking.destination.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (activeFilter === "all") return matchesSearch;
-    return matchesSearch && booking.status === activeFilter;
-  });
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'upcoming':

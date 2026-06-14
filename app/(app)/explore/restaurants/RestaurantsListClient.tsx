@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { UtensilsCrossed } from "lucide-react";
-import { useTripStore } from "@/lib/store";
-import { TRANSLATIONS } from "@/lib/translations";
+import { useLanguage } from "@/lib/store";
 import { RestaurantFilters } from "@/components/restaurants/RestaurantFilters";
 import { RestaurantCard, Restaurant } from "@/components/restaurants/RestaurantCard";
 
@@ -16,8 +14,7 @@ export default function RestaurantsListClient({
   restaurants,
   cuisines,
 }: RestaurantsListClientProps) {
-  const lang = useTripStore((s) => s.lang);
-  const t = TRANSLATIONS[lang];
+  const lang = useLanguage();
 
   return (
     <div className="flex flex-col gap-6 max-w-6xl mx-auto w-full">

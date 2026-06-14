@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTripStore } from "@/lib/store";
+import { useTripStore, useLanguage } from "@/lib/store";
 import { Sparkles, CheckCircle, CreditCard, QrCode, ArrowLeft, Loader2 } from "lucide-react";
 import { requireAuth } from "@/lib/auth-check";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import { TRANSLATIONS } from "@/lib/translations";
 export default function CheckoutPage() {
   const router = useRouter();
   const currentTrip = useTripStore((s) => s.currentTrip);
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
   const t = TRANSLATIONS[lang];
 
   const [step, setStep] = useState<"review" | "payment" | "success">("review");

@@ -498,5 +498,15 @@
     "guests": 2,
     "total_price": 1200,
     "status": "CONFIRMED"
+  },
+  {
+    "booking_id": "hb-1781472926445-187",
+    "user_id": "admin",
+    "hotel_id": "h-001",
+    "check_in": "2026-06-14",
+    "check_out": "2026-06-17",
+    "guests": 2,
+    "total_price": 10500,
+    "status": "CONFIRMED"
   }
 ]

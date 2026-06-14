@@ -4,39 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { Hotel } from "@/lib/types";
-import { useTripStore } from "@/lib/store";
+import { useLanguage } from "@/lib/store";
 import { TRANSLATIONS } from "@/lib/translations";
 
 export default function HomePage() {
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
   const t = TRANSLATIONS[lang];
-
-  const dynamicQuickActions = [
-    {
-      href: "/plan",
-      icon: "auto_awesome",
-      label: t.quickActionPlan,
-      desc: t.quickActionPlanDesc,
-      color: "text-blue-500",
-      bg: "rgba(24,119,242,0.12)",
-    },
-    {
-      href: "/explore/hotels",
-      icon: "hotel",
-      label: t.quickActionHotels,
-      desc: t.quickActionHotelsDesc,
-      color: "text-emerald-500",
-      bg: "rgba(16,185,129,0.12)",
-    },
-    {
-      href: "/bookings",
-      icon: "event_available",
-      label: t.quickActionBookings,
-      desc: t.quickActionBookingsDesc,
-      color: "text-violet-500",
-      bg: "rgba(139,92,246,0.12)",
-    },
-  ];
 
   const dynamicTips = [
     {

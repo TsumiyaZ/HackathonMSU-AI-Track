@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useTripStore } from "@/lib/store";
+import { useTripStore, useLanguage } from "@/lib/store";
 import { Sparkles, Loader2, Settings } from "lucide-react";
 import { requireAuth } from "@/lib/auth-check";
 import { TRANSLATIONS } from "@/lib/translations";
 
 export default function PlanPage() {
-  const lang = useTripStore((s) => s.lang);
+  const lang = useLanguage();
   const t = TRANSLATIONS[lang];
 
   const loadingStepsIcons = ["search", "flight_takeoff", "apartment", "restaurant", "auto_awesome"];

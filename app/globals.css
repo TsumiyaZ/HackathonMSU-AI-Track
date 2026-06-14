@@ -38,8 +38,8 @@
   --color-outline-variant: var(--outline-variant);
 
   /* Font mapping */
-  --font-display: var(--font-inter), "Inter", system-ui, sans-serif;
-  --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-display: var(--font-prompt), "Prompt", system-ui, sans-serif;
+  --font-body: var(--font-prompt), "Prompt", system-ui, sans-serif;
   --font-label: var(--font-geist), "Geist", ui-monospace, monospace;
 }
 
@@ -156,21 +156,13 @@ html,
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), "Inter", system-ui, sans-serif;
+  font-family: var(--font-prompt), "Prompt", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
-  background-image:
-    radial-gradient(circle at top left, rgba(15, 111, 242, 0.07), transparent 28%),
-    radial-gradient(circle at 85% 12%, rgba(22, 102, 219, 0.08), transparent 24%),
-    linear-gradient(180deg, #f7faff 0%, var(--background) 22%, var(--background) 100%);
-}
-
-.dark body {
-  background-image: none;
+  background: var(--background);
 }
 
 @layer utilities {
