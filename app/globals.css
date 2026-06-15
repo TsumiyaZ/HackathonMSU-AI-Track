@@ -478,6 +478,183 @@ body {
     transform: translateY(-2px) scale(1.01);
     box-shadow: 0 20px 25px -5px rgba(22, 102, 219, 0.12), 0 8px 10px -6px rgba(22, 102, 219, 0.12);
   }
+
+  .reveal-rise {
+    animation: reveal-rise 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .reveal-fade {
+    animation: reveal-fade 0.55s ease both;
+  }
+
+  .reveal-scale {
+    animation: reveal-scale 0.58s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .micro-card {
+    transition:
+      transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.42s ease,
+      border-color 0.25s ease,
+      background-color 0.25s ease,
+      filter 0.3s ease;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  .micro-card:hover {
+    transform: translateY(-6px) scale(1.012);
+  }
+
+  .micro-card:active {
+    transform: translateY(-2px) scale(0.985);
+  }
+
+  .micro-pill {
+    transition:
+      transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.28s ease,
+      border-color 0.22s ease,
+      background-color 0.22s ease,
+      color 0.22s ease;
+    will-change: transform;
+  }
+
+  .micro-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(22, 102, 219, 0.10);
+  }
+
+  .micro-pill:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  .ambient-float {
+    animation: ambient-float 7.2s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .ambient-float-delayed {
+    animation-delay: 1.4s;
+  }
+
+  .ambient-float-slow {
+    animation-duration: 9.8s;
+  }
+
+  .section-spotlight {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .section-spotlight::before {
+    content: "";
+    position: absolute;
+    inset: -30% auto auto -10%;
+    width: 240px;
+    height: 240px;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(22, 102, 219, 0.14) 0%, rgba(22, 102, 219, 0.04) 48%, transparent 74%);
+    pointer-events: none;
+    opacity: 0.9;
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+    z-index: 0;
+  }
+
+  .section-spotlight:hover::before {
+    transform: translate3d(10px, -8px, 0) scale(1.04);
+    opacity: 1;
+  }
+
+  .sheen-surface {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .sheen-surface::after {
+    content: "";
+    position: absolute;
+    inset: -24%;
+    background: linear-gradient(115deg, transparent 24%, rgba(255, 255, 255, 0.06) 42%, rgba(255, 255, 255, 0.22) 50%, rgba(255, 255, 255, 0.06) 58%, transparent 76%);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(-68%, 0, 0) rotate(14deg);
+    transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+    z-index: 1;
+  }
+
+  .sheen-surface:hover::after,
+  .group:hover .sheen-surface::after {
+    opacity: 0.95;
+    transform: translate3d(68%, 0, 0) rotate(14deg);
+  }
+
+  .cta-breathe {
+    animation: cta-breathe 3.2s ease-in-out infinite;
+  }
+
+  .icon-bob {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .group:hover .icon-bob,
+  .icon-bob:hover {
+    transform: translateY(-2px) scale(1.06);
+  }
+
+  .route-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .route-glow::after {
+    content: "";
+    position: absolute;
+    left: -30%;
+    top: 50%;
+    width: 32%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(60, 120, 216, 0.95), transparent);
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: left 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+  }
+
+  .group:hover .route-glow::after {
+    left: 98%;
+    opacity: 1;
+  }
+
+  .micro-tilt-image {
+    transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
+    will-change: transform;
+  }
+
+  .group:hover .micro-tilt-image {
+    transform: scale(1.06) rotate(-0.8deg);
+    filter: saturate(1.06);
+  }
+
+  .micro-arrow {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+  }
+
+  .group:hover .micro-arrow {
+    transform: translateX(4px);
+  }
+
+  .focus-halo {
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease,
+      border-color 0.25s ease;
+  }
+
+  .focus-halo:focus-within {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 42px rgba(22, 102, 219, 0.12), 0 0 0 1px rgba(22, 102, 219, 0.18);
+  }
 }
 
 .material-symbols-outlined {
@@ -535,6 +712,40 @@ body {
   }
 }
 
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes reveal-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @keyframes spin-slow {
   from {
     transform: rotate(0deg);
@@ -542,6 +753,30 @@ body {
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes ambient-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes cta-breathe {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    box-shadow: 0 8px 24px rgba(22, 102, 219, 0.18);
+  }
+
+  50% {
+    transform: translate3d(0, -1px, 0) scale(1.015);
+    box-shadow: 0 14px 30px rgba(22, 102, 219, 0.24);
   }
 }
 

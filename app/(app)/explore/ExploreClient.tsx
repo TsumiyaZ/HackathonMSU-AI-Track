@@ -60,6 +60,7 @@ export default function ExploreClient({
       {/* ── Decorative Background Layer ── */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
         <div
+          className="ambient-float ambient-float-slow"
           style={{
             position: "absolute",
             top: "-220px",
@@ -72,6 +73,7 @@ export default function ExploreClient({
           }}
         />
         <div
+          className="ambient-float ambient-float-delayed"
           style={{
             position: "absolute",
             top: "120px",
@@ -96,12 +98,12 @@ export default function ExploreClient({
       <div className="relative z-10 flex flex-col w-full max-w-6xl mx-auto">
         
         {/* ── Header ── */}
-        <header className="mb-8 mt-6">
-          <p className="font-label text-xs text-primary uppercase tracking-widest mb-2 flex items-center gap-2">
+        <header className="section-spotlight mb-8 mt-6 rounded-[32px] px-1 py-2">
+          <p className="reveal-scale font-label text-xs text-primary uppercase tracking-widest mb-2 flex items-center gap-2" style={{ animationDelay: "40ms" }}>
             <span className="material-symbols-outlined text-[16px] text-primary">explore</span>
             {t.exploreSubtitle}
           </p>
-          <h1 className="font-display text-4xl md:text-6xl font-black text-on-surface leading-tight">
+          <h1 className="reveal-rise font-display text-4xl md:text-6xl font-black text-on-surface leading-tight" style={{ animationDelay: "110ms" }}>
             {lang === 'th' ? (
               <>
                 สำรวจ <span className="text-gradient">สถานที่และบริการ</span>
@@ -112,7 +114,7 @@ export default function ExploreClient({
               </>
             )}
           </h1>
-          <p className="text-sm md:text-base text-on-surface-variant mt-3 max-w-xl leading-relaxed">
+          <p className="reveal-fade text-sm md:text-base text-on-surface-variant mt-3 max-w-xl leading-relaxed" style={{ animationDelay: "180ms" }}>
             {t.exploreDesc}
           </p>
         </header>
@@ -123,11 +125,11 @@ export default function ExploreClient({
             <Link
               key={i}
               href={c.href}
-              className="relative rounded-3xl overflow-hidden flex items-end group transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10 border border-white/10 hover-lift press-scale"
-              style={{ minHeight: 180 }}
+              className="reveal-rise micro-card sheen-surface relative rounded-3xl overflow-hidden flex items-end group transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 border border-white/10 hover-lift press-scale"
+              style={{ minHeight: 180, animationDelay: `${160 + i * 90}ms` }}
             >
               {/* BG image */}
-              <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-105"
+              <div className="micro-tilt-image absolute inset-0 transition-transform duration-500 group-hover:scale-105"
                 style={{ backgroundImage: `url(${c.bgImage})`, backgroundSize: "cover", backgroundPosition: "center" }} />
               {/* Overlay */}
               <div className="absolute inset-0"
@@ -144,14 +146,14 @@ export default function ExploreClient({
                   <p className="text-white/70 text-xs mt-1">{c.desc}</p>
                   <div className="flex gap-2 mt-3 flex-wrap">
                     {c.tags.map((tag) => (
-                      <span key={tag} className="text-[10px] font-label px-2 py-0.5 rounded-full"
+                      <span key={tag} className="micro-pill text-[10px] font-label px-2 py-0.5 rounded-full"
                         style={{ background: "rgba(255,255,255,0.20)", color: "white" }}>{tag}</span>
                     ))}
                   </div>
                 </div>
-                <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 group-hover:translate-x-1 transition-transform"
+                <div className="micro-arrow w-10 h-10 rounded-full flex items-center justify-center shrink-0 group-hover:translate-x-1 transition-transform"
                   style={{ background: "rgba(255,255,255,0.20)" }}>
-                  <span className="material-symbols-outlined text-white text-[20px]">chevron_right</span>
+                  <span className="material-symbols-outlined icon-bob text-white text-[20px]">chevron_right</span>
                 </div>
               </div>
             </Link>
@@ -163,37 +165,38 @@ export default function ExploreClient({
           <div className="lg:col-span-2 flex flex-col gap-8">
             
             {/* ── Recommended Hotels ── */}
-            <section className="flex flex-col gap-5">
+            <section className="section-spotlight flex flex-col gap-5 rounded-[32px]">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="font-display text-2xl font-black text-on-surface">{t.exploreHotelsTitle}</h2>
                   <p className="text-sm text-on-surface-variant/80 mt-1">{t.exploreHotelsSectionDesc}</p>
                 </div>
-                <Link href="/explore/hotels" className="text-sm text-primary font-bold hover:underline flex items-center gap-1 hover-lift press-scale bg-primary/10 px-4 py-2 rounded-xl transition-all">
+                <Link href="/explore/hotels" className="micro-pill sheen-surface text-sm text-primary font-bold hover:underline flex items-center gap-1 hover-lift press-scale bg-primary/10 px-4 py-2 rounded-xl transition-all">
                   {t.exploreViewAll} <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </Link>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {recommendedHotels.map((hotel) => (
+                {recommendedHotels.map((hotel, index) => (
                   <Link
                     key={hotel.id}
                     href={`/explore/hotel/${hotel.id}`}
-                    className="group block focus:outline-none"
+                    className="reveal-rise group block focus:outline-none"
+                    style={{ animationDelay: `${260 + index * 70}ms` }}
                   >
-                    <div className="glass-panel overflow-hidden rounded-3xl h-full flex flex-col transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 border border-white/5">
+                    <div className="micro-card sheen-surface glass-panel overflow-hidden rounded-3xl h-full flex flex-col transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 border border-white/5">
                       <div
-                        className="relative h-44 w-full bg-cover bg-center"
+                        className="micro-tilt-image relative h-44 w-full bg-cover bg-center"
                         style={{ backgroundImage: `url(${hotel.thumbnail_url})` }}
                       >
                         <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/20 to-transparent" />
                         <div className="absolute top-3 left-3 flex gap-1.5">
-                          <span className="backdrop-blur-md bg-white/15 text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg border border-white/20">
+                          <span className="micro-pill backdrop-blur-md bg-white/15 text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg border border-white/20">
                             <span className="material-symbols-outlined text-[11px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                             {hotel.rating_avg.toFixed(1)}
                           </span>
                           {hotel.stars && (
-                            <span className="backdrop-blur-md bg-amber-500/25 text-amber-300 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg border border-amber-400/20">
+                            <span className="micro-pill backdrop-blur-md bg-amber-500/25 text-amber-300 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg border border-amber-400/20">
                               <span className="material-symbols-outlined text-[11px]" style={{ fontVariationSettings: "'FILL' 1" }}>grade</span>
                               {hotel.stars} {t.exploreStar}
                             </span>
@@ -216,12 +219,12 @@ export default function ExploreClient({
 
                         <div className="flex flex-wrap gap-1.5">
                           {hotel.amenities?.slice(0, 3).map((a: string) => (
-                            <span key={a} className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-on-surface-variant border border-white/5">
+                            <span key={a} className="micro-pill text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-on-surface-variant border border-white/5">
                               {a}
                             </span>
                           ))}
                           {(hotel.amenities?.length || 0) > 3 && (
-                            <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-on-surface-variant">
+                            <span className="micro-pill text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-on-surface-variant">
                               +{hotel.amenities.length - 3}
                             </span>
                           )}
@@ -235,7 +238,7 @@ export default function ExploreClient({
                               <span className="text-[11px] text-on-surface-variant/60 font-normal">{t.explorePerNight}</span>
                             </p>
                           </div>
-                          <span className="w-8 h-8 rounded-xl bg-primary/15 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-all duration-300 group-hover:translate-x-0.5">
+                          <span className="micro-arrow w-8 h-8 rounded-xl bg-primary/15 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-all duration-300 group-hover:translate-x-0.5">
                             <span className="material-symbols-outlined text-[16px]">chevron_right</span>
                           </span>
                         </div>
@@ -247,26 +250,26 @@ export default function ExploreClient({
             </section>
 
             {/* ── Recommended Restaurants ── */}
-            <section className="flex flex-col gap-5">
+            <section className="section-spotlight flex flex-col gap-5 rounded-[32px]">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="font-display text-2xl font-black text-on-surface">{t.exploreRestaurantsTitle}</h2>
                   <p className="text-sm text-on-surface-variant/80 mt-1">{t.exploreRestaurantsDesc}</p>
                 </div>
-                <Link href="/explore/restaurants" className="text-sm text-primary font-bold hover:underline flex items-center gap-1 hover-lift press-scale bg-primary/10 px-4 py-2 rounded-xl transition-all">
+                <Link href="/explore/restaurants" className="micro-pill sheen-surface text-sm text-primary font-bold hover:underline flex items-center gap-1 hover-lift press-scale bg-primary/10 px-4 py-2 rounded-xl transition-all">
                   {t.exploreViewAll} <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </Link>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {recommendedRestaurants.map((res) => (
-                  <Link key={res.res_id} href={`/explore/restaurant/${res.res_id}`} className="group block focus:outline-none">
-                    <div className="glass-panel p-5 rounded-3xl flex flex-col gap-3 border border-white/5 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-500/25 h-full">
+                {recommendedRestaurants.map((res, index) => (
+                  <Link key={res.res_id} href={`/explore/restaurant/${res.res_id}`} className="reveal-rise group block focus:outline-none" style={{ animationDelay: `${360 + index * 70}ms` }}>
+                    <div className="micro-card sheen-surface glass-panel p-5 rounded-3xl flex flex-col gap-3 border border-white/5 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-500/25 h-full">
                       <div className="flex items-start justify-between">
-                        <span className="text-[10px] bg-emerald-500/15 text-emerald-400 font-bold px-3 py-1 rounded-full border border-emerald-500/15">
+                        <span className="micro-pill text-[10px] bg-emerald-500/15 text-emerald-400 font-bold px-3 py-1 rounded-full border border-emerald-500/15">
                           {res.cuisine}
                         </span>
-                        <span className="flex items-center gap-1 text-amber-500 text-[10px] font-bold bg-amber-500/10 px-2 py-1 rounded-full">
+                        <span className="micro-pill flex items-center gap-1 text-amber-500 text-[10px] font-bold bg-amber-500/10 px-2 py-1 rounded-full">
                           <span className="material-symbols-outlined text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                           {res.rating.toFixed(1)}
                         </span>
@@ -278,7 +281,7 @@ export default function ExploreClient({
                           <span className="material-symbols-outlined text-[14px]">schedule</span>
                           ~{res.delivery_time_min} {t.exploreMin}
                         </span>
-                        <span className="text-emerald-400 font-bold group-hover:underline flex items-center gap-0.5">
+                        <span className="text-emerald-400 font-bold group-hover:underline flex items-center gap-0.5 transition-transform duration-300 group-hover:translate-x-0.5">
                           {t.exploreDetails} <span className="material-symbols-outlined text-[14px]">chevron_right</span>
                         </span>
                       </div>
@@ -294,27 +297,28 @@ export default function ExploreClient({
           <div className="lg:col-span-1 flex flex-col gap-6">
             
             {/* ── Budget Flights Panel ── */}
-            <section className="flex flex-col gap-5">
+            <section className="section-spotlight flex flex-col gap-5 rounded-[32px]">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="font-display text-2xl font-black text-on-surface">{t.exploreFlightsTitle}</h2>
                   <p className="text-sm text-on-surface-variant/80 mt-1">{t.exploreFlightsSectionDesc}</p>
                 </div>
-                <Link href="/explore/flights" className="text-sm text-primary font-bold hover:underline flex items-center gap-1 hover-lift press-scale bg-primary/10 px-4 py-2 rounded-xl transition-all">
+                <Link href="/explore/flights" className="micro-pill sheen-surface text-sm text-primary font-bold hover:underline flex items-center gap-1 hover-lift press-scale bg-primary/10 px-4 py-2 rounded-xl transition-all">
                   {t.exploreViewAll} <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </Link>
               </div>
 
               <div className="flex flex-col gap-3">
-                {recommendedFlights.map((flight) => (
+                {recommendedFlights.map((flight, index) => (
                   <Link
                     key={flight.flight_id}
                     href={`/explore/flight/${flight.flight_id}`}
-                    className="group block focus:outline-none"
+                    className="reveal-rise group block focus:outline-none"
+                    style={{ animationDelay: `${300 + index * 80}ms` }}
                   >
-                    <div className="glass-panel p-5 rounded-2xl border border-white/5 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-secondary/5 hover:border-secondary/30">
+                    <div className="micro-card sheen-surface glass-panel p-5 rounded-2xl border border-white/5 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-secondary/5 hover:border-secondary/30">
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] bg-secondary/15 text-secondary font-bold px-3 py-1 rounded-full border border-secondary/10">
+                        <span className="micro-pill text-[10px] bg-secondary/15 text-secondary font-bold px-3 py-1 rounded-full border border-secondary/10">
                           {flight.airline}
                         </span>
                         <span className="text-[9px] font-mono text-on-surface-variant/50">{flight.flight_id}</span>
@@ -326,9 +330,9 @@ export default function ExploreClient({
                           <p className="text-[10px] text-on-surface-variant/60 font-medium">{t.exploreOrigin}</p>
                         </div>
                         
-                        <div className="flex-1 flex flex-col items-center px-4 relative">
+                        <div className="route-glow flex-1 flex flex-col items-center px-4 relative">
                           <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent absolute top-1/2" />
-                          <span className="material-symbols-outlined text-[18px] text-secondary rotate-90 relative z-10 bg-surface px-2">
+                          <span className="micro-arrow icon-bob material-symbols-outlined text-[18px] text-secondary rotate-90 relative z-10 bg-surface px-2">
                             flight
                           </span>
                           <span className="text-[8px] text-on-surface-variant/40 mt-0.5">{t.exploreDirect}</span>
@@ -345,7 +349,7 @@ export default function ExploreClient({
                           <p className="text-[9px] text-on-surface-variant/60 uppercase tracking-wider">{t.exploreStartingFrom}</p>
                           <p className="font-display text-lg font-black text-emerald-400">฿{flight.price.toLocaleString()}</p>
                         </div>
-                        <span className="text-xs text-primary font-bold group-hover:underline flex items-center gap-1 bg-primary/10 px-3 py-2 rounded-xl transition-all group-hover:bg-primary/20">
+                        <span className="micro-pill sheen-surface text-xs text-primary font-bold group-hover:underline flex items-center gap-1 bg-primary/10 px-3 py-2 rounded-xl transition-all group-hover:bg-primary/20">
                           {t.exploreSelectFlight} <span className="material-symbols-outlined text-[14px]">chevron_right</span>
                         </span>
                       </div>

@@ -115,7 +115,25 @@ body {
 
   .splash-airplane,
   .ripple-btn::before,
-  .ripple-btn::after {
+  .ripple-btn::after,
+  .reveal-rise,
+  .reveal-fade,
+  .reveal-scale,
+  .ambient-float,
+  .cta-breathe {
     animation: none !important;
+  }
+
+  .micro-card,
+  .micro-pill,
+  .micro-tilt-image,
+  .micro-arrow,
+  .focus-halo,
+  .icon-bob,
+  .route-glow::after,
+  .section-spotlight::before,
+  .sheen-surface::after {
+    transition-duration: 0.01ms !important;
+    transform: none !important;
   }
 }

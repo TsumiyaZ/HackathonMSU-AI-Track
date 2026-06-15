@@ -116,15 +116,15 @@ export default function PlanPage() {
   return (
     <div className="max-w-3xl mx-auto py-12 px-4 flex flex-col gap-6">
       {/* Header */}
-      <div className="text-center mb-6 relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-wider mb-3 animate-pulse">
+      <div className="section-spotlight text-center mb-6 relative rounded-[32px]">
+        <div className="ambient-float ambient-float-slow absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <span className="reveal-scale micro-pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-wider mb-3" style={{ animationDelay: "50ms" }}>
           <Sparkles className="w-3.5 h-3.5" /> {t.aiTripPlanner}
         </span>
-        <h1 className="font-display text-3xl md:text-4xl font-black text-on-surface tracking-tight">
+        <h1 className="reveal-rise font-display text-3xl md:text-4xl font-black text-on-surface tracking-tight" style={{ animationDelay: "120ms" }}>
           {t.headline} <span className="text-gradient">{t.headlineSub}</span>
         </h1>
-        <p className="text-xs text-on-surface-variant max-w-md mx-auto mt-2 leading-relaxed">
+        <p className="reveal-fade text-xs text-on-surface-variant max-w-md mx-auto mt-2 leading-relaxed" style={{ animationDelay: "200ms" }}>
           {t.desc}
         </p>
       </div>
@@ -132,7 +132,8 @@ export default function PlanPage() {
       {/* Main Form Box */}
       <div className="flex flex-col gap-4">
         {/* Prominent Prompt Input Area */}
-        <div className="relative glass-panel-strong p-1.5 bg-surface rounded-2xl border border-border shadow-md interactive-input">
+        <div className="reveal-rise focus-halo sheen-surface relative glass-panel-strong p-1.5 bg-surface rounded-2xl border border-border shadow-md interactive-input" style={{ animationDelay: "180ms" }}>
+          <div className="ambient-float ambient-float-delayed absolute inset-x-16 -top-8 h-16 rounded-full bg-primary/6 blur-2xl pointer-events-none" />
           <textarea
             value={promptInput}
             onChange={(e) => setPromptInput(e.target.value)}
@@ -153,7 +154,7 @@ export default function PlanPage() {
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={`group flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg border cursor-pointer interactive-bounce ${
+              className={`group micro-pill flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg border cursor-pointer interactive-bounce ${
                 showAdvanced
                   ? "bg-primary/10 border-primary/30 text-primary"
                   : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface-variant"
@@ -167,7 +168,9 @@ export default function PlanPage() {
               type="button"
               onClick={() => handleSubmit()}
               disabled={loading || !promptInput.trim()}
-              className="btn-primary-gradient px-5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow disabled:opacity-40 disabled:pointer-events-none cursor-pointer interactive-bounce"
+              className={`micro-pill btn-primary-gradient px-5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow disabled:opacity-40 disabled:pointer-events-none cursor-pointer interactive-bounce ${
+                loading || !promptInput.trim() ? "" : "cta-breathe"
+              }`}
             >
               {loading ? (
                 <>
@@ -176,7 +179,7 @@ export default function PlanPage() {
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="icon-bob w-3.5 h-3.5" />
                   {t.createTrip}
                 </>
               )}
@@ -186,7 +189,7 @@ export default function PlanPage() {
 
         {/* Collapsible Advanced Selections */}
         {showAdvanced && (
-          <div className="glass-panel rounded-2xl p-5 border border-border/80 flex flex-col gap-5 animate-fade-in">
+          <div className="reveal-rise sheen-surface glass-panel rounded-2xl p-5 border border-border/80 flex flex-col gap-5 animate-fade-in">
             {/* Row 1: Destination & Duration */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Destination */}
@@ -208,7 +211,7 @@ export default function PlanPage() {
                       key={city.id}
                       type="button"
                       onClick={() => setSelectedCity(city.id)}
-                      className={`py-2 px-1 rounded-lg text-xs font-bold border transition-all hover-lift press-scale cursor-pointer ${
+                      className={`micro-pill py-2 px-1 rounded-lg text-xs font-bold border transition-all hover-lift press-scale cursor-pointer ${
                         selectedCity === city.id
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
@@ -235,7 +238,7 @@ export default function PlanPage() {
                       key={d}
                       type="button"
                       onClick={() => setDays(d)}
-                      className={`py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale cursor-pointer ${
+                      className={`micro-pill py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale cursor-pointer ${
                         days === d
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
@@ -266,7 +269,7 @@ export default function PlanPage() {
                       key={b.id}
                       type="button"
                       onClick={() => setBudget(b.id)}
-                      className={`py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale cursor-pointer ${
+                      className={`micro-pill py-2 rounded-lg text-xs font-bold border transition-all hover-lift press-scale cursor-pointer ${
                         budget === b.id
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
@@ -296,7 +299,7 @@ export default function PlanPage() {
                       key={styleOpt.id}
                       type="button"
                       onClick={() => setTheme(styleOpt.id)}
-                      className={`py-2 rounded-lg text-[11px] font-bold border transition-all hover-lift press-scale cursor-pointer ${
+                      className={`micro-pill py-2 rounded-lg text-[11px] font-bold border transition-all hover-lift press-scale cursor-pointer ${
                         theme === styleOpt.id
                           ? "bg-primary/10 border-primary text-primary"
                           : "bg-surface hover:bg-surface-hover border-border/50 text-on-surface"
@@ -322,7 +325,7 @@ export default function PlanPage() {
                     type="date"
                     value={checkInDate}
                     onChange={(e) => setCheckInDate(e.target.value)}
-                    className="w-full py-1.5 px-3 rounded-lg text-xs font-bold border border-border/50 bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
+                    className="micro-pill w-full py-1.5 px-3 rounded-lg text-xs font-bold border border-border/50 bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -331,7 +334,7 @@ export default function PlanPage() {
                     type="date"
                     value={checkOutDate}
                     onChange={(e) => setCheckOutDate(e.target.value)}
-                    className="w-full py-1.5 px-3 rounded-lg text-xs font-bold border border-border/50 bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
+                    className="micro-pill w-full py-1.5 px-3 rounded-lg text-xs font-bold border border-border/50 bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
                   />
                 </div>
               </div>
@@ -339,7 +342,7 @@ export default function PlanPage() {
 
             {/* Profile Settings Reminder */}
             {userPreferences && (
-              <div className="text-[10px] text-on-surface-variant bg-primary/10 border border-primary/20 px-3 py-2 rounded-xl flex items-center gap-2 mt-1">
+              <div className="reveal-fade text-[10px] text-on-surface-variant bg-primary/10 border border-primary/20 px-3 py-2 rounded-xl flex items-center gap-2 mt-1">
                 <Settings className="w-3.5 h-3.5 text-primary shrink-0" />
                 <span>
                   {t.profilePreferencesActive} <strong>{userPreferences.budgetLevel === "low" ? t.budgetLow : userPreferences.budgetLevel === "medium" ? t.budgetMedium : t.budgetHigh}</strong>
@@ -374,7 +377,7 @@ export default function PlanPage() {
       )}
 
       {/* Suggested Templates list */}
-      <div className="flex flex-col gap-2.5 mt-2">
+      <div className="reveal-fade section-spotlight flex flex-col gap-2.5 mt-2 rounded-[28px]" style={{ animationDelay: "260ms" }}>
         <p className="text-xs font-bold text-on-surface-variant">{t.sampleTrips}</p>
         <div className="flex flex-wrap gap-2">
           {[
@@ -408,7 +411,7 @@ export default function PlanPage() {
               budget: "high",
               theme: "food",
             },
-          ].map((item) => (
+          ].map((item, index) => (
             <button
               key={item.title}
               type="button"
@@ -419,7 +422,8 @@ export default function PlanPage() {
                 setBudget(item.budget);
                 setTheme(item.theme);
               }}
-              className="glass-panel text-xs px-3.5 py-1.5 rounded-full hover:bg-surface-hover hover:border-primary/35 text-on-surface cursor-pointer interactive-bounce"
+              className="reveal-scale micro-pill sheen-surface glass-panel text-xs px-3.5 py-1.5 rounded-full hover:bg-surface-hover hover:border-primary/35 text-on-surface cursor-pointer interactive-bounce"
+              style={{ animationDelay: `${320 + index * 80}ms` }}
             >
               {item.title}
             </button>
