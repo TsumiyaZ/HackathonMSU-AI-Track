@@ -9,15 +9,18 @@ export async function GET() {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const [allBookings, allTickets, hotels, flights] = await Promise.all([
+    const [allBookings, allTickets, allFoodOrders, hotels, flights, restaurants] = await Promise.all([
       readJSON<any[]>(DATA.hotelBookings),
       readJSON<any[]>(DATA.flightTickets),
+      readJSON<any[]>(DATA.foodOrders),
       readJSON<any[]>(DATA.hotels),
       readJSON<any[]>(DATA.flights),
+      readJSON<any[]>(DATA.restaurants),
     ]);
 
     const userBookings = allBookings.filter((b: any) => b.user_id === userId);
     const userTickets = allTickets.filter((t: any) => t.user_id === userId);
+    const userFoodOrders = allFoodOrders.filter((o: any) => o.user_id === userId);
 
     return NextResponse.json({
       success: true,
@@ -48,6 +51,19 @@ export async function GET() {
             seat: t.seat,
             status: t.status,
             price: flight.price || 0,
+          };
+        }),
+        foodOrders: userFoodOrders.map((o: any) => {
+          const restaurant = restaurants.find((r: any) => r.res_id === o.restaurant_id) ?? {};
+          return {
+            id: o.order_id,
+            type: 'food',
+            restaurantName: restaurant.name || '',
+            cuisine: restaurant.cuisine || '',
+            createdAt: o.created_at || '',
+            status: o.status,
+            price: o.total_price || 0,
+            menuItems: o.menu_items || [],
           };
         }),
       },

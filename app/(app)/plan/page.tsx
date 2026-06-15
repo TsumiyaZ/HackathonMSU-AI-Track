@@ -1,11 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useTripStore, useLanguage } from "@/lib/store";
 import { Sparkles, Loader2, Settings } from "lucide-react";
 import { requireAuth } from "@/lib/auth-check";
 import { TRANSLATIONS } from "@/lib/translations";
+
+const DESTINATION_HINTS = [
+  { value: "เชียงใหม่", aliases: ["เชียงใหม่", "chiang mai"] },
+  { value: "ภูเก็ต", aliases: ["ภูเก็ต", "phuket"] },
+  { value: "กรุงเทพฯ", aliases: ["กรุงเทพ", "กรุงเทพฯ", "bangkok", "กทม"] },
+  { value: "พัทยา", aliases: ["พัทยา", "pattaya"] },
+  { value: "สมุย", aliases: ["สมุย", "เกาะสมุย", "samui", "koh samui"] },
+  { value: "โตเกียว", aliases: ["โตเกียว", "tokyo"] },
+];
+
+function extractPromptDays(prompt: string): number | null {
+  const match = prompt.match(/(\d+)\s*(?:วัน|days?|day)/i);
+  if (!match) return null;
+
+  const value = Number.parseInt(match[1], 10);
+  if (!Number.isFinite(value) || value <= 0) return null;
+
+  return Math.min(value, 14);
+}
+
+function extractPromptDestination(prompt: string): string | null {
+  const lower = prompt.toLowerCase();
+  return DESTINATION_HINTS.find((entry) => entry.aliases.some((alias) => lower.includes(alias.toLowerCase())))?.value ?? null;
+}
 
 export default function PlanPage() {
   const lang = useLanguage();
@@ -37,6 +61,20 @@ export default function PlanPage() {
   const setTrip = useTripStore((state) => state.setTrip);
   const userPreferences = useTripStore((state) => state.userPreferences);
 
+  const effectiveDays = useMemo(() => {
+    if (!checkInDate || !checkOutDate) return days;
+
+    const start = new Date(checkInDate);
+    const end = new Date(checkOutDate);
+
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+      return days;
+    }
+
+    const diffInDays = Math.round((end.getTime() - start.getTime()) / 86400000);
+    return Math.max(diffInDays, 1);
+  }, [checkInDate, checkOutDate, days]);
+
   // Increment loading step every 2 seconds during loading phase
   useEffect(() => {
     if (!loading) {
@@ -53,27 +91,32 @@ export default function PlanPage() {
     if (e) e.preventDefault();
     if (!promptInput.trim()) return;
 
-    // Construct the structured prompt based on primary input and advanced options
-    let finalPrompt = promptInput.trim();
-    if (showAdvanced) {
-      finalPrompt += ` (ข้อมูลเพิ่มเติม - ปลายทาง: ${selectedCity}, ระยะเวลา: ${days} วัน, งบประมาณ: ${
-        budget === "low" ? "ประหยัด" : budget === "medium" ? "ปานกลาง" : "หรูหราพรีเมียม"
-      }, สไตล์: ${
-        theme === "nature"
-          ? "ธรรมชาติ"
-          : theme === "food"
-          ? "เน้นกินชิมอาหาร"
-          : theme === "cafe"
-          ? "ถ่ายรูปคาเฟ่"
-          : theme === "relaxation"
-          ? "พักผ่อนสบายๆ"
-          : "ผจญภัยแอดเวนเจอร์"
-      }`;
+    const inferredPromptDays = extractPromptDays(promptInput);
+    const inferredPromptDestination = extractPromptDestination(promptInput);
+    const shouldUseAdvancedMeta = showAdvanced || Boolean(checkInDate) || Boolean(checkOutDate);
 
-      if (checkInDate) finalPrompt += `, วันที่เข้า: ${checkInDate}`;
-      if (checkOutDate) finalPrompt += `, วันที่ออก: ${checkOutDate}`;
-      finalPrompt += `)`;
-    }
+    const promptMeta = [
+      shouldUseAdvancedMeta
+        ? `destination="${selectedCity}"`
+        : inferredPromptDestination
+          ? `destination="${inferredPromptDestination}"`
+          : null,
+      shouldUseAdvancedMeta
+        ? `days=${effectiveDays}`
+        : inferredPromptDays
+          ? `days=${inferredPromptDays}`
+          : null,
+      shouldUseAdvancedMeta ? `budget="${budget}"` : null,
+      shouldUseAdvancedMeta ? `theme="${theme}"` : null,
+      shouldUseAdvancedMeta && checkInDate ? `checkIn="${checkInDate}"` : null,
+      shouldUseAdvancedMeta && checkOutDate ? `checkOut="${checkOutDate}"` : null,
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    const finalPrompt = promptMeta
+      ? `${promptInput.trim()} [TRIP_META ${promptMeta}]`
+      : promptInput.trim();
 
     const authed = await requireAuth("/plan");
     if (!authed) return;
@@ -230,7 +273,7 @@ export default function PlanPage() {
                     <span className="material-symbols-outlined text-[16px] text-primary">calendar_month</span>
                     {t.duration}
                   </span>
-                  <span className="text-primary font-bold text-xs">{days} {t.daysUnit} {days - 1} {t.nightsUnit}</span>
+                  <span className="text-primary font-bold text-xs">{effectiveDays} {t.daysUnit} {Math.max(effectiveDays - 1, 0)} {t.nightsUnit}</span>
                 </label>
                 <div className="grid grid-cols-5 gap-1.5">
                   {[1, 2, 3, 5, 7].map((d) => (

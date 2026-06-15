@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { readJSON, DATA } from '@/lib/json-db';
-import { createFlightTicket, createHotelBooking } from '@/lib/bookings';
+import { createFlightTicket, createFoodOrder, createHotelBooking } from '@/lib/bookings';
 import { getSessionUserId } from '@/lib/session';
 
 export async function POST(req: Request) {
@@ -18,10 +18,13 @@ export async function POST(req: Request) {
 
     const flightItems = trip.items.filter((i: any) => i.type === 'flight');
     const hotelItems = trip.items.filter((i: any) => i.type === 'hotel');
+    const foodItems = trip.items.filter((i: any) => i.type === 'food');
+    const hotelNights = Math.max((trip.days || 1) - 1, 0);
 
-    const [allFlights, allHotels] = await Promise.all([
+    const [allFlights, allHotels, allRestaurants] = await Promise.all([
       readJSON<any[]>(DATA.flights),
       readJSON<any[]>(DATA.hotels),
+      readJSON<any[]>(DATA.restaurants),
     ]);
 
     const createdFlights: any[] = [];
@@ -53,7 +56,7 @@ export async function POST(req: Request) {
         user_id: userId,
         hotel_id: hotelId,
         check_in: new Date(),
-        check_out: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        check_out: new Date(Date.now() + Math.max(hotelNights, 1) * 24 * 60 * 60 * 1000),
         guests: 2,
         total_price: item.price,
         status: 'CONFIRMED',
@@ -61,10 +64,35 @@ export async function POST(req: Request) {
       createdHotels.push(newBooking);
     }
 
+    const createdFoods: any[] = [];
+    for (const item of foodItems) {
+      const foodData = item.data || {};
+      let restaurantId = foodData.res_id || foodData.restaurant_id || foodData.id;
+      if (!restaurantId) restaurantId = allRestaurants[0]?.res_id;
+      if (!restaurantId) continue;
+
+      const restaurant = allRestaurants.find((r: any) => r.res_id === restaurantId);
+      const newOrder = await createFoodOrder({
+        order_id: `fd-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        user_id: userId,
+        restaurant_id: restaurantId,
+        menu_items: restaurant?.cuisine ? [`${restaurant.cuisine} Signature Set`] : [item.title],
+        total_price: item.price,
+        status: 'PENDING',
+        rider_name: null,
+        created_at: new Date().toISOString(),
+      });
+
+      createdFoods.push({
+        ...newOrder,
+        restaurant_name: restaurant?.name || '',
+      });
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Booking completed successfully',
-      data: { flights: createdFlights, hotels: createdHotels },
+      data: { flights: createdFlights, hotels: createdHotels, foods: createdFoods },
     });
   } catch (error: any) {
     console.error('Checkout API Error:', error);

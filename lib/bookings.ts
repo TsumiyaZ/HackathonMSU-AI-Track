@@ -38,6 +38,25 @@ export interface RawHotel {
   amenities: string[];
 }
 
+export interface RawRestaurant {
+  res_id: string;
+  name: string;
+  cuisine: string;
+  rating: number;
+  delivery_time_min: number;
+}
+
+export interface RawFoodOrder {
+  order_id: string;
+  user_id: string;
+  restaurant_id: string;
+  menu_items: string[];
+  total_price: number;
+  status: string;
+  rider_name: string | null;
+  created_at?: string;
+}
+
 // ── Hotel Bookings ──
 
 export async function getAllHotelBookings(): Promise<RawHotelBooking[]> {
@@ -138,4 +157,60 @@ export async function createFlightTicket(data: {
   tickets.push(newTicket);
   await writeJSON(DATA.flightTickets, tickets);
   return newTicket;
+}
+
+// —— Food Orders ——
+
+export async function getAllFoodOrders(): Promise<RawFoodOrder[]> {
+  return readJSON<RawFoodOrder[]>(DATA.foodOrders);
+}
+
+export async function getUserFoodOrders(
+  userId: string,
+): Promise<RawFoodOrder[]> {
+  const all = await getAllFoodOrders();
+  return all.filter((o) => o.user_id === userId);
+}
+
+export async function getFoodOrderById(
+  orderId: string,
+): Promise<(RawFoodOrder & { restaurant: RawRestaurant; user: any }) | null> {
+  const orders = await getAllFoodOrders();
+  const order = orders.find((o) => o.order_id === orderId);
+  if (!order) return null;
+
+  const [restaurants, users] = await Promise.all([
+    readJSON<RawRestaurant[]>(DATA.restaurants),
+    readJSON<any[]>(DATA.users),
+  ]);
+
+  const restaurant = restaurants.find((r) => r.res_id === order.restaurant_id) ?? ({} as RawRestaurant);
+  const user = users.find((u: any) => u.user_id === order.user_id) ?? {};
+  return { ...order, restaurant, user };
+}
+
+export async function createFoodOrder(data: {
+  order_id: string;
+  user_id: string;
+  restaurant_id: string;
+  menu_items: string[];
+  total_price: number;
+  status: string;
+  rider_name?: string | null;
+  created_at?: string;
+}): Promise<RawFoodOrder> {
+  const orders = await getAllFoodOrders();
+  const newOrder: RawFoodOrder = {
+    order_id: data.order_id,
+    user_id: data.user_id,
+    restaurant_id: data.restaurant_id,
+    menu_items: data.menu_items,
+    total_price: data.total_price,
+    status: data.status,
+    rider_name: data.rider_name ?? null,
+    created_at: data.created_at ?? new Date().toISOString(),
+  };
+  orders.push(newOrder);
+  await writeJSON(DATA.foodOrders, orders);
+  return newOrder;
 }
