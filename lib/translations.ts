@@ -1,7 +1,7 @@
 export const TRANSLATIONS = {
   th: {
     // Auth & Layout
-    signIn: "Sign In",
+    signIn: "เข้าสู่ระบบ",
     profile: "โปรไฟล์",
     logout: "ออกจากระบบ",
     cancel: "ยกเลิก",
