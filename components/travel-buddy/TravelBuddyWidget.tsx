@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Bot,
@@ -30,6 +31,7 @@ const DEFAULT_SUGGESTIONS = [
 ];
 
 export function TravelBuddyWidget() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -49,9 +51,28 @@ export function TravelBuddyWidget() {
     node.scrollTo({ top: node.scrollHeight, behavior: "smooth" });
   }, [messages, isOpen]);
 
-  const canSend = input.trim().length > 0 && !isSending;
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
+  const canSend = input.trim().length > 0 && !isSending;
   const starterPrompts = useMemo(() => suggestions.slice(0, 3), [suggestions]);
+  const isLandingPage = pathname === "/";
+  const isAppShellPage = [
+    "/home",
+    "/explore",
+    "/plan",
+    "/bookings",
+    "/profile",
+    "/checkout",
+    "/trip",
+    "/admin",
+    "/help",
+  ].some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+
+  if (isLandingPage) {
+    return null;
+  }
 
   async function sendMessage(message: string) {
     const trimmed = message.trim();
@@ -111,7 +132,13 @@ export function TravelBuddyWidget() {
   }
 
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex max-w-[calc(100vw-1.5rem)] flex-col items-end gap-3 sm:bottom-6 sm:right-6">
+    <div
+      className={`pointer-events-none fixed right-4 z-50 flex max-w-[calc(100vw-1.5rem)] flex-col items-end gap-3 sm:right-6 ${
+        isAppShellPage
+          ? "bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:bottom-6"
+          : "bottom-4 sm:bottom-6"
+      }`}
+    >
       {isOpen ? (
         <section className="pointer-events-auto flex h-[min(560px,76dvh)] w-[min(380px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[28px] border border-[#b7cdf5]/70 bg-white/96 shadow-[0_30px_80px_rgba(18,51,111,0.24)] backdrop-blur-2xl">
           <div className="relative overflow-hidden border-b border-[#d6e4fb] bg-[linear-gradient(145deg,#1d67da_0%,#11377f_100%)] px-5 py-4 text-white">
@@ -230,16 +257,12 @@ export function TravelBuddyWidget() {
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className="pointer-events-auto inline-flex items-center gap-3 rounded-full border border-[#bfd2f5] bg-white/92 px-4 py-3 text-left shadow-[0_18px_44px_rgba(18,51,111,0.18)] backdrop-blur-xl transition-all duration-200 hover:-translate-y-0.5 hover:bg-white"
+        className="pointer-events-auto inline-flex h-14 w-14 items-center justify-center rounded-full border border-[#bfd2f5] bg-white/92 shadow-[0_18px_44px_rgba(18,51,111,0.18)] backdrop-blur-xl transition-all duration-200 hover:-translate-y-0.5 hover:bg-white"
         aria-expanded={isOpen}
         aria-label="Open Travel Buddy"
       >
         <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[linear-gradient(145deg,#1d67da_0%,#11377f_100%)] text-white shadow-[0_10px_24px_rgba(18,51,111,0.22)]">
           <MessageCircleMore className="h-5 w-5" />
-        </span>
-        <span className="min-w-0">
-          <span className="block font-display text-sm font-bold text-[#12336f]">Travel Buddy</span>
-          <span className="block text-xs text-slate-500">ถามเรื่องทริป โรงแรม และเที่ยวบิน</span>
         </span>
       </button>
     </div>

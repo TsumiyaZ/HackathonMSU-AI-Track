@@ -481,6 +481,9 @@
   .bottom-\[-300px\] {
     bottom: -300px;
   }
+  .bottom-\[calc\(5\.5rem\+env\(safe-area-inset-bottom\,0px\)\)\] {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom,0px));
+  }
   .bottom-auto {
     bottom: auto;
   }
@@ -5426,6 +5429,11 @@
     @media (width >= 40rem) {
       font-size: var(--text-7xl);
       line-height: var(--tw-leading, var(--text-7xl--line-height));
+    }
+  }
+  .md\:bottom-6 {
+    @media (width >= 48rem) {
+      bottom: calc(var(--spacing) * 6);
     }
   }
   .md\:left-12 {
